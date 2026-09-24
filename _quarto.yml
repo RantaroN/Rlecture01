@@ -1,0 +1,27 @@
+project:
+  type: book
+
+book:
+  title: "Rによる社会調査データ分析（基礎の基礎）"
+  author: "那須蘭太郎"
+  chapters:
+    - index.qmd
+    - Rlecture2.qmd
+    - Rlecture3.qmd
+    - Rlecture4.qmd
+    - Rlecture5.qmd
+    - Rlecture6.qmd
+    - Rlecture7.qmd
+    - Rlecture8.qmd
+    - Rlecture9.qmd
+    - Rlecture10.qmd
+    - Rlecture11.qmd
+    - Rlecture12.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+  pdf:
+    documentclass: scrreprt

@@ -1,0 +1,452 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Rによる社会調査データ分析（基礎の基礎）",
+    "section": "",
+    "text": "1 本資料の目的\n　本資料は、R言語を使用した社会調査データ（特に個票データ）の分析について、基礎的な操作や分析方法をまとめたものです。本資料は、随時更新されます。\n　本資料の構成は、以下の通りです。サイドバーから各回の資料に飛ぶことができます。\n\nはじめに\nRの準備\n基本的な操作と演算子\n演習用データの準備\n変数の種類\n変数の要約\n統計的推測（準備中）\n標準誤差と区間推定（準備中）\n統計的仮説検定（準備中）\n相関係数（準備中）\nクロス表と連関の指標（準備中）\n単回帰分析（準備中）\n重回帰分析と統計的統制（準備中）",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>はじめに</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture1.html",
+    "href": "Rlecture1.html",
+    "title": "2  Rの準備",
+    "section": "",
+    "text": "2.1 Rとは\n統計分析ソフト「R言語」とは、主に統計分析・解析を目的としたオープンソースのプログラミング言語です。Rを使用することで、様々な統計分析や集計を容易に行うことができます。\n統計分析を行うことができるソフトウェアには、みなさんご存知のExcelをはじめとし、StataやSPSSなど、様々なものがあります。その中でもRには、以下のような長所があるとされています（星野・田中 2016）。\n特に近年は生成AIなどと対話をしながらプログラミングのコードを書くと思いますが、オープンソースでありweb上に関連情報が大量にあるRは、この点で有利になるかと思います。",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture1.html#rのインストール",
+    "href": "Rlecture1.html#rのインストール",
+    "title": "2  Rの準備",
+    "section": "2.2 Rのインストール",
+    "text": "2.2 Rのインストール\n　まず何はともあれ、Rをインストールしましょう。Rのインストールは、こちらから行うことができます。このCRAN（シーラン/クラン）と呼ばれるサイトは、Rのコードやバージョンを保存するネットワークで、ネットワーク負荷軽減のために世界中にミラーサイトが用意されています。ミラーサイトとは、同一の内容をそのまま複製し、別のサーバーやドメインで公開するサイトのことです。\n　R CRANにアクセスしたら、使用しているOSに従って、「Download R for macOS」もしくは「Download R for Windows」を選択してください。\n\n\nmacOSの場合windowsの場合\n\n\n\n「Download R for macOS」をクリック\nご自身のOSバージョンに従い、「R-4.6.0-arm64.pkg」もしくは「R-4.6.0-x86_64.pkg」をクリック\n\n\n\npkgファイルがインストールされるので、インストーラーを開き、指示に従って「続ける」「同意する」をクリック\n\n\n\n以下の場合にも「同意する」をクリック\n\n\n\n最後に「インストール」をクリックするとインストールが開始されます。\n\n\n\n「インストールが完了しました」と表示されたら「閉じる」をクリックし、インストーラーはゴミ箱に入れてしまう。\n「アプリケーション」を確認すると、「R」がインストールされているはずなので、わかりやすいようにDock（デスクトップに表示されるアプリケーションバー）に移しておく。（ドラッグ&ドロップで移動できるはず）\n\n\n\n\n\n「Download R for Windows」をクリック\n「Install R for the first time」をクリック\n\n\n\n「Download R-4.6.0 for Windows」をクリック（バージョン番号は順次更新される）\n\n\n\nインストーラー（R-4.6.0-win.exe）を起動する\nセットアップ言語の選択画面が表示されたら、「日本語」を選択し「OK」をクリック\n指示に従って「次へ」をクリック\n「コンポーネントを選択」が表示されたら、「Main Files」など全てにチェックを入れて「次へ」をクリック\n「起動時オプション」は「いいえ」が良いと思います。\n指示に従って「次へ」をクリックし、「完了」をクリック",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture1.html#r-studioのインストール",
+    "href": "Rlecture1.html#r-studioのインストール",
+    "title": "2  Rの準備",
+    "section": "2.3 R Studioのインストール",
+    "text": "2.3 R Studioのインストール\n　Rだけでも分析はできますが、よりやりやすく効率的に分析を行うために、R Studioという統合開発環境（IDE）をインストールします。こちらにアクセスしてください。\n\nmacOSの場合windowsの場合\n\n\n\n画面をスクロールし、「macOS 14/15/26」の箇所にある「 RStudio-2026.04.0-526.dmg」をクリック\n\n\n\nインストーラーを起動すると、「アプリケーション（Applications）」と「RStudio.app」のフォルダが表示されるので、「RStudio.app」を「アプリケーション（Applications）」にドラッグ&ドロップ\nアプリケーション一覧から、「RStudio」を開く\n必要に応じて、Dockに「RStudio」を移しておく\n\n\n\n\n画面をスクロールし、「Windows 11」の箇所にある「 RStudio-2026.04.0-526.exe」をクリック\n\n\n\n勝手にダウンロードが始まる\nインストーラーを起動し、指示に従って「次へ」をクリック\nスタートメニューの選択が表示されたら、そのまま「インストール」をクリック\n「完了」をクリックし、完了",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html",
+    "href": "Rlecture2.html",
+    "title": "2  Rの準備",
+    "section": "",
+    "text": "2.1 Rとは\n統計分析ソフト「R言語」とは、主に統計分析・解析を目的としたオープンソースのプログラミング言語です。Rを使用することで、様々な統計分析や集計を容易に行うことができます。\n統計分析を行うことができるソフトウェアには、みなさんご存知のExcelをはじめとし、StataやSPSSなど、様々なものがあります。その中でもRには、以下のような長所があるとされています（星野・田中 2016）。\n特に近年は生成AIなどと対話をしながらプログラミングのコードを書くと思いますが、オープンソースでありweb上に関連情報が大量にあるRは、この点で有利になるかと思います。",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#rとは",
+    "href": "Rlecture2.html#rとは",
+    "title": "2  Rの準備",
+    "section": "",
+    "text": "フリーソフト（完全無料）であること\nオープンソースであり、最新の分析手法がいち早く使えること。\nweb上でのサポートや情報交換が活発であること。",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#rのインストール",
+    "href": "Rlecture2.html#rのインストール",
+    "title": "2  Rの準備",
+    "section": "2.2 Rのインストール",
+    "text": "2.2 Rのインストール\n　まず何はともあれ、Rをインストールしましょう。Rのインストールは、こちらから行うことができます。このCRAN（シーラン/クラン）と呼ばれるサイトは、Rのコードやバージョンを保存するネットワークで、ネットワーク負荷軽減のために世界中にミラーサイトが用意されています。ミラーサイトとは、同一の内容をそのまま複製し、別のサーバーやドメインで公開するサイトのことです。\n　R CRANにアクセスしたら、使用しているOSに従って、「Download R for macOS」もしくは「Download R for Windows」を選択してください。\n\n\nmacOSの場合windowsの場合\n\n\n\n「Download R for macOS」をクリック\nご自身のOSバージョンに従い、「R-4.6.0-arm64.pkg」もしくは「R-4.6.0-x86_64.pkg」をクリック\n\n\n\npkgファイルがインストールされるので、インストーラーを開き、指示に従って「続ける」「同意する」をクリック\n\n\n\n以下の場合にも「同意する」をクリック\n\n\n\n最後に「インストール」をクリックするとインストールが開始されます。\n\n\n\n「インストールが完了しました」と表示されたら「閉じる」をクリックし、インストーラーはゴミ箱に入れてしまう。\n「アプリケーション」を確認すると、「R」がインストールされているはずなので、わかりやすいようにDock（デスクトップに表示されるアプリケーションバー）に移しておく。（ドラッグ&ドロップで移動できるはず）\n\n\n\n\n\n「Download R for Windows」をクリック\n「Install R for the first time」をクリック\n\n\n\n「Download R-4.6.0 for Windows」をクリック（バージョン番号は順次更新される）\n\n\n\nインストーラー（R-4.6.0-win.exe）を起動する\nセットアップ言語の選択画面が表示されたら、「日本語」を選択し「OK」をクリック\n指示に従って「次へ」をクリック\n「コンポーネントを選択」が表示されたら、「Main Files」など全てにチェックを入れて「次へ」をクリック\n「起動時オプション」は「いいえ」が良いと思います。\n指示に従って「次へ」をクリックし、「完了」をクリック",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#r-studioのインストール",
+    "href": "Rlecture2.html#r-studioのインストール",
+    "title": "2  Rの準備",
+    "section": "2.3 R Studioのインストール",
+    "text": "2.3 R Studioのインストール\n　Rだけでも分析はできますが、よりやりやすく効率的に分析を行うために、R Studioという統合開発環境（IDE）をインストールします。こちらにアクセスしてください。\n\nmacOSの場合windowsの場合\n\n\n\n画面をスクロールし、「macOS 14/15/26」の箇所にある「 RStudio-2026.04.0-526.dmg」をクリック\n\n\n\nインストーラーを起動すると、「アプリケーション（Applications）」と「RStudio.app」のフォルダが表示されるので、「RStudio.app」を「アプリケーション（Applications）」にドラッグ&ドロップ\nアプリケーション一覧から、「RStudio」を開く\n必要に応じて、Dockに「RStudio」を移しておく\n\n\n\n\n画面をスクロールし、「Windows 11」の箇所にある「 RStudio-2026.04.0-526.exe」をクリック\n\n\n\n勝手にダウンロードが始まる\nインストーラーを起動し、指示に従って「次へ」をクリック\nスタートメニューの選択が表示されたら、そのまま「インストール」をクリック\n「完了」をクリックし、完了",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#文献情報",
+    "href": "Rlecture2.html#文献情報",
+    "title": "2  Rの準備",
+    "section": "2.8 文献情報",
+    "text": "2.8 文献情報\n\n星野匡郎・田中久稔，2016，『Rによる実証分析ーー回帰分析から因果分析へ』オーム社．",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#rrstudioを開く",
+    "href": "Rlecture2.html#rrstudioを開く",
+    "title": "2  Rの準備",
+    "section": "2.4 R/RStudioを開く",
+    "text": "2.4 R/RStudioを開く\n　インストールが完了したら、R Studioを開いてみましょう。おおよそ以下のような画面が表示されるはずです（画面が暗いのは設定の問題なので、白で問題ありません）。\n\n　左側の「&gt;」が見えるパネルがコマンドを打ち込むconsoleという箇所です。右側の上部は、現在あるオブジェクト（データセットなど）が表示される箇所です。右下には、フォルダ内に保存されているファイルや、分析結果のプロットなどが表示されます。",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#分析用フォルダの作成",
+    "href": "Rlecture2.html#分析用フォルダの作成",
+    "title": "2  Rの準備",
+    "section": "2.5 分析用フォルダの作成",
+    "text": "2.5 分析用フォルダの作成\n　本授業で使用するRのコードや分析用データをわかりやすく管理するために、みなさんのPCのお好きな箇所に、授業用のフォルダを作成しておきましょう。作成しないと、後ほどどこのフォルダにデータやコードが置かれているのかわからなくなってきます。 　 　おすすめの方法としては、ご自身のPCのローカルの「文書」フォルダに、「授業」などのフォルダを作成し、そのまた中に、「XXXX（授業名）」というフォルダを作成します。そのフォルダの中に、今後分析用ファイルを入れていけば、綺麗に整理され、わからなくなることはないと思います。\n\n\n\n\n\n\nNote分析用フォルダの構造の例\n\n\n\n\n  文書\n  -       授業\n          -       社会学\n          -       社会調査演習\n          -       社会統計学\n          -       ・・・（授業名）",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#r-projectの作成",
+    "href": "Rlecture2.html#r-projectの作成",
+    "title": "2  Rの準備",
+    "section": "2.6 R Projectの作成",
+    "text": "2.6 R Projectの作成\n　次に、R Projectというものを作成します。R Projectは、分析に使うデータセットや分析コードなどを一つのフォルダにまとめる役割を持ちます。作業手順は以下の通りです。\n\nR Studioの左上部のバーにある左から2つ目のアイコン（Rと書かれている青色のもの）をクリック\n\n\n\n「New Directory」をクリック\n\n\n\n「New Project」をクリック\n\n\n\n「Directory name」に、わかりやすい名前をつける（「授業名(英語)」など）\n右側にある「Browse…」をクリックし、R Projectの保存場所を選択（先ほど作成した授業用フォルダ内に保存するとわかりやすい）\n\n\n\nこれでR Projectが完成する",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#r-コードの作成",
+    "href": "Rlecture2.html#r-コードの作成",
+    "title": "2  Rの準備",
+    "section": "2.7 R コードの作成",
+    "text": "2.7 R コードの作成\n　次に、作成したR Project内に、Rの分析用コードを作成していきます。\n\nR Studioの左上部のバーにある左から1つ目のアイコン（+と書かれている白色のもの）をクリック\n\n\n\n「R script」をクリック\n\n\n\n「Untitled1」という新たなタブがR Studio画面の左上に表示される\n\n\n\n「command + S」（windowsの場合は「Ctrl + S」？）を押して保存\n保存画画面が出るので、適当な名前をつけ、先ほどのR Projectと同じ箇所に保存\n\n\n\nR Studio画面の右下のタブのうち「Files」をクリック\n先ほど作成したRコードが含まれていれば成功（拡張子は「.R」）\n\nここまで実行すれば、Rで分析を行う準備は完了です。",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture3.html",
+    "href": "Rlecture3.html",
+    "title": "3  基礎的な操作と演算子",
+    "section": "",
+    "text": "3.1 基礎的な操作方法\n「2.Rの準備」で作成したR script（.R）にコードを記載していきます。たとえば、以下のように入力してみてください。その上で、「1+1」と記載した行にカーソルを置き、「command + enter」（Windowsの場合は「Ctrl + enter」）を押すと、コードが実行されます。左下のconsoleに1+1の計算結果が表示されるはずです。\n1 + 1\n\n[1] 2\nちなみに、consoleに直接「1+1」と入力しても計算ができます。ただ、今後複雑なコードを書くときには、「.R」のコードとして保存しておく必要があるため、左上のコードウィンドウでコードを記載することをお勧めします。\nこのように、左上のコードウィンドウでコードを書き、「command + enter」（Windowsの場合は「Ctrl + enter」）で実行することで、分析を実行することができます。",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>基礎的な操作と演算子</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture3.html#算術演算子",
+    "href": "Rlecture3.html#算術演算子",
+    "title": "3  基礎的な操作と演算子",
+    "section": "3.2 算術演算子",
+    "text": "3.2 算術演算子\n　ここでは、基本的な算術演算子を紹介します。\n\n3.2.1 四則演算子\n\n加法減法乗法除法\n\n\n\n2 + 3\n\n[1] 5\n\n\n\n\n\n2 - 3\n\n[1] -1\n\n\n\n\n\n2 * 3\n\n[1] 6\n\n\n\n\n\n2 / 3\n\n[1] 0.6666667\n\n\n\n\n\n\n\n3.2.2 そのほかの基本的な演算子\n\nべき乗整数の割り算の商整数の割り算のあまり\n\n\n\n2 ^ 3\n\n[1] 8\n\n\n\n\n\n10 %/% 3\n\n[1] 3\n\n\n\n\n\n10 %% 3\n\n[1] 1\n\n\n\n\n\n\n\n3.2.3 数学演算子\n\n平方根絶対値合計四捨五入対数指数関数\n\n\n\nsqrt(36)\n\n[1] 6\n\n\n\n\n\nabs(-90)\n\n[1] 90\n\n\n\n\n\nsum(1:10)\n\n[1] 55\n\n\n\n\n\nround(123.456,2)\n\n[1] 123.46\n\n\nround(x,y)のうち、yの方で、桁数を指定。負の数にすると10の位、100の位まで丸める。\n\nround(123.456,-1)\n\n[1] 120\n\n\n\n\n\nlog(10)\n\n[1] 2.302585\n\n\nデフォルトでは底をeとした自然対数。オプションでbase=yとすればyを底とした対数になる。\n\nlog(100, base=10)\n\n[1] 2\n\n\n\n\n\nexp(2)\n\n[1] 7.389056",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>基礎的な操作と演算子</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture3.html#論理演算子",
+    "href": "Rlecture3.html#論理演算子",
+    "title": "3  基礎的な操作と演算子",
+    "section": "3.5 論理演算子",
+    "text": "3.5 論理演算子\n　次に、代表的な論理演算子を紹介します。\n\n論理積（かつ）：&の右側と左側がともにTRUEであればTRUE、そうでなければFALSE\n\n\nx &lt;- 5  # xに5を代入\ny &lt;- 3  # yに3を代入\nx == 5 & y == 3  # x=5かつy=3のときにTRUE、そうでないときにFALSE\n\n[1] TRUE\n\n\n\n論理和（または）：&の右側と左側のどちらか一方がTRUEであればTRUE、そうでなければFALSE\n\n\nx &lt;- 5  # xに5を代入\ny &lt;- 3  # yに3を代入\nx == 5 | y == 4  # x=5またはy=4のときにTRUE、そうでないときにFALSE\n\n[1] TRUE\n\n\n\n%in%演算子：左側の要素が右側のベクトルに属しているかを判定し真偽を判定する。\n\n\nx &lt;- 5  # xに5を代入\nx %in% c(1:5) # xが、1~5の整数の中に含まれているかどうか？\n\n[1] TRUE\n\nx %in% c(9:12) # xが、9~12の整数の中に含まれているかどうか？\n\n[1] FALSE\n\n\nパイプ演算子：左側を右側の関数の最初の引数に渡す。\n\n1:10 |&gt; sum() # 1~10の整数のベクトルを、sum()（合計）に渡す\n\n[1] 55",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>基礎的な操作と演算子</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture3.html#代入演算子",
+    "href": "Rlecture3.html#代入演算子",
+    "title": "3  基礎的な操作と演算子",
+    "section": "3.3 代入演算子",
+    "text": "3.3 代入演算子\n　Rでは、何らかの値やベクトル（値が並んだもの）をオブジェクトに代入（格納）することができます。たとえば、xというオブジェクトに何らかの値やベクトルを格納します。\n\nx &lt;- 6\n\n　これを実行すると、右上の「Environment」の箇所に、「x」というvalueが追加されます。これは、このR Projectに、6という数値が格納された「x」というオブジェクトが作成されたことを意味します。\n　これは、ベクトルでも同様です。Rでは、ベクトル（数値の列）を表す際に、c()という表現を使用します。たとえば、以下を実行してみてください。\n\ny &lt;- c(1,2,3,4,5)\n\n　すると、「Environment」の欄に、「y」というオブジェクトが追加されます。この「y」には、「1,2,3,4,5」の連続する1から5の整数が格納されています。\n　あるいは、c(1,2,3,4,5)は、以下のようにも表現できます。連続する整数は、c(1:5)のように省略して表現できます。\n\nz &lt;- c(1:5)",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>基礎的な操作と演算子</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture3.html#比較演算子",
+    "href": "Rlecture3.html#比較演算子",
+    "title": "3  基礎的な操作と演算子",
+    "section": "3.4 比較演算子",
+    "text": "3.4 比較演算子\n\n3.4.1 等号・不等号\n　次に、代表的な比較演算子を紹介します。\n\n等しい：右側と左側が等しい場合にはTRUE、等しくない場合にはFALSEを返します。\n\n\nx &lt;- 5  # xに5を代入\nx == 4\n\n[1] FALSE\n\n\n\n等しくない：右側と左側が等しくない場合にはTRUE、等しい場合にはFALSEを返します。\n\n\nx != 4  # xには5が代入されている\n\n[1] TRUE\n\n\n\n\n3.4.2 大小比較\n\n適合すればTRUE、そうでなければFALSEを返します。\n\n\nx &gt; 5  # xが5より大きいかどうか\n\n[1] FALSE\n\nx &lt; 6  # xが6未満かどうか\n\n[1] TRUE\n\nx &gt;= 5  # xが5以上かどうか\n\n[1] TRUE\n\nx &lt;= 6  # xが6より小さいかどうか\n\n[1] TRUE",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>基礎的な操作と演算子</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture1.html#rとは",
+    "href": "Rlecture1.html#rとは",
+    "title": "2  Rの準備",
+    "section": "",
+    "text": "フリーソフト（完全無料）であること\nオープンソースであり、最新の分析手法がいち早く使えること。\nweb上でのサポートや情報交換が活発であること。",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture1.html#rrstudioを開く",
+    "href": "Rlecture1.html#rrstudioを開く",
+    "title": "2  Rの準備",
+    "section": "2.4 R/RStudioを開く",
+    "text": "2.4 R/RStudioを開く\n　インストールが完了したら、R Studioを開いてみましょう。おおよそ以下のような画面が表示されるはずです（画面が暗いのは設定の問題なので、白で問題ありません）。\n\n　左側の「&gt;」が見えるパネルがコマンドを打ち込むconsoleという箇所です。右側の上部は、現在あるオブジェクト（データセットなど）が表示される箇所です。右下には、フォルダ内に保存されているファイルや、分析結果のプロットなどが表示されます。",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture1.html#分析用フォルダの作成",
+    "href": "Rlecture1.html#分析用フォルダの作成",
+    "title": "2  Rの準備",
+    "section": "2.5 分析用フォルダの作成",
+    "text": "2.5 分析用フォルダの作成\n　本授業で使用するRのコードや分析用データをわかりやすく管理するために、みなさんのPCのお好きな箇所に、授業用のフォルダを作成しておきましょう。作成しないと、後ほどどこのフォルダにデータやコードが置かれているのかわからなくなってきます。 　 　おすすめの方法としては、ご自身のPCのローカルの「文書」フォルダに、「授業」などのフォルダを作成し、そのまた中に、「XXXX（授業名）」というフォルダを作成します。そのフォルダの中に、今後分析用ファイルを入れていけば、綺麗に整理され、わからなくなることはないと思います。\n\n\n\n\n\n\nNote分析用フォルダの構造の例\n\n\n\n\n  文書\n  -       授業\n          -       社会学\n          -       社会調査演習\n          -       社会統計学\n          -       ・・・（授業名）",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture1.html#r-projectの作成",
+    "href": "Rlecture1.html#r-projectの作成",
+    "title": "2  Rの準備",
+    "section": "2.6 R Projectの作成",
+    "text": "2.6 R Projectの作成\n　次に、R Projectというものを作成します。R Projectは、分析に使うデータセットや分析コードなどを一つのフォルダにまとめる役割を持ちます。作業手順は以下の通りです。\n\nR Studioの左上部のバーにある左から2つ目のアイコン（Rと書かれている青色のもの）をクリック\n\n\n\n「New Directory」をクリック\n\n\n\n「New Project」をクリック\n\n\n\n「Directory name」に、わかりやすい名前をつける（「授業名(英語)」など）\n右側にある「Browse…」をクリックし、R Projectの保存場所を選択（先ほど作成した授業用フォルダ内に保存するとわかりやすい）\n\n\n\nこれでR Projectが完成する",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture1.html#r-コードの作成",
+    "href": "Rlecture1.html#r-コードの作成",
+    "title": "2  Rの準備",
+    "section": "2.7 R コードの作成",
+    "text": "2.7 R コードの作成\n　次に、作成したR Project内に、Rの分析用コードを作成していきます。\n\nR Studioの左上部のバーにある左から1つ目のアイコン（+と書かれている白色のもの）をクリック\n\n\n\n「R script」をクリック\n\n\n\n「Untitled1」という新たなタブがR Studio画面の左上に表示される\n\n\n\n「command + S」（windowsの場合は「Ctrl + S」？）を押して保存\n保存画画面が出るので、適当な名前をつけ、先ほどのR Projectと同じ箇所に保存\n\n\n\nR Studio画面の右下のタブのうち「Files」をクリック\n先ほど作成したRコードが含まれていれば成功（拡張子は「.R」）\n\nここまで実行すれば、Rで分析を行う準備は完了です。",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture1.html#文献情報",
+    "href": "Rlecture1.html#文献情報",
+    "title": "2  Rの準備",
+    "section": "2.8 文献情報",
+    "text": "2.8 文献情報\n\n星野匡郎・田中久稔，2016，『Rによる実証分析ーー回帰分析から因果分析へ』オーム社．",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Rの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#算術演算子",
+    "href": "Rlecture2.html#算術演算子",
+    "title": "3  基礎的な操作と演算子",
+    "section": "3.2 算術演算子",
+    "text": "3.2 算術演算子\n　ここでは、基本的な算術演算子を紹介します。\n\n3.2.1 四則演算\n\n足し算（加法）\n\n\n2 + 3\n\n[1] 5\n\n\n\n引き算（減法）\n\n\n2 - 3\n\n[1] -1\n\n\n\n掛け算（乗法）\n\n\n2 * 3\n\n[1] 6\n\n\n\n割り算（除法）\n\n\n2 / 3\n\n[1] 0.6666667\n\n\n\nべき乗\n\n\n2 ^ 3\n\n[1] 8\n\n\n\n整数の割り算の商\n\n\n10 %/% 3\n\n[1] 3\n\n\n\n整数の割り算のあまり\n\n\n10 %% 3\n\n[1] 1",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>基礎的な操作と演算子</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#代入演算子",
+    "href": "Rlecture2.html#代入演算子",
+    "title": "3  基礎的な操作と演算子",
+    "section": "3.3 代入演算子",
+    "text": "3.3 代入演算子\n　Rでは、何らかの値やベクトル（値が並んだもの）をオブジェクトに代入（格納）することができます。たとえば、xというオブジェクトに何らかの値やベクトルを格納します。\n\nx &lt;- 6\n\n　これを実行すると、右上の「Environment」の箇所に、「x」というvalueが追加されます。これは、このR Projectに、6という数値が格納された「x」というオブジェクトが作成されたことを意味します。\n　これは、ベクトルでも同様です。Rでは、ベクトル（数値の列）を表す際に、c()という表現を使用します。たとえば、以下を実行してみてください。\n\ny &lt;- c(1,2,3,4,5)\n\n　すると、「Environment」の欄に、「y」というオブジェクトが追加されます。この「y」には、「1,2,3,4,5」の連続する1から5の整数が格納されています。\n　あるいは、c(1,2,3,4,5)は、以下のようにも表現できます。連続する整数は、c(1:5)のように省略して表現できます。\n\nz &lt;- c(1:5)",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>基礎的な操作と演算子</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#比較演算子",
+    "href": "Rlecture2.html#比較演算子",
+    "title": "3  基礎的な操作と演算子",
+    "section": "3.4 比較演算子",
+    "text": "3.4 比較演算子\n\n3.4.1 等号・不等号\n　次に、代表的な比較演算子を紹介します。\n\n等しい：右側と左側が等しい場合にはTRUE、等しくない場合にはFALSEを返します。\n\n\nx &lt;- 5  # xに5を代入\nx == 4\n\n[1] FALSE\n\n\n\n等しくない：右側と左側が等しくない場合にはTRUE、等しい場合にはFALSEを返します。\n\n\nx != 4  # xには5が代入されている\n\n[1] TRUE\n\n\n\n\n3.4.2 大小比較\n\n適合すればTRUE、そうでなければFALSEを返します。\n\n\nx &gt; 5  # xが5より大きいかどうか\n\n[1] FALSE\n\nx &lt; 6  # xが6未満かどうか\n\n[1] TRUE\n\nx &gt;= 5  # xが5以上かどうか\n\n[1] TRUE\n\nx &lt;= 6  # xが6より小さいかどうか\n\n[1] TRUE",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>基礎的な操作と演算子</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture2.html#論理演算子",
+    "href": "Rlecture2.html#論理演算子",
+    "title": "3  基礎的な操作と演算子",
+    "section": "3.5 論理演算子",
+    "text": "3.5 論理演算子\n　次に、代表的な論理演算子を紹介します。\n\n論理積（かつ）：&の右側\n\n\nx &lt;- 5  # xに5を代入\ny &lt;- 3  # yに3を代入\nx == 5 & y == 3  # x=5かつy=3のときにTRUE、そうでないときにFALSE\n\n[1] TRUE\n\n\n\n論理和（または）",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>基礎的な操作と演算子</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture4.html",
+    "href": "Rlecture4.html",
+    "title": "4  演習用データの準備",
+    "section": "",
+    "text": "4.1 非制限公開疑似データとは\nこの授業では、「非制限公開疑似データ」というものを使用します。実際に行われた社会調査データは，当然ではありますが、さまざまな調査対象者の個人情報が含まれていますので、扱いには十分に注意する必要があります。SSJデータアーカイブも、非常に多くの社会調査データを公開していますが、それらを利用する際には、十分に訓練された研究者が、個人情報の取り扱いに気をつけて使用する必要があります。\n社会調査の授業は、あくまでも練習ですから、実際に行われた社会調査データを使用する必要性は必ずしもありません。そのようなニーズに対応するために、SSJデータアーカイブは、「非制限公開疑似データ」という、実際のデータにランダムなばらつきを付与して、（つまりノイズを加えて、）練習用に使用できる架空のデータを提供しています。これらの調査データは、あくまでも疑似データなので、研究成果として公に出すことはできませんお気をつけください。\n今回の授業では、この練習用データを使用して、社会調査データの統計分析の方法を学んでいこうと思います。",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>演習用データの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture4.html#section",
+    "href": "Rlecture4.html#section",
+    "title": "4  演習用データの準備",
+    "section": "4.2 ",
+    "text": "4.2",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>演習用データの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture4.html#非制限公開疑似データの入手方法",
+    "href": "Rlecture4.html#非制限公開疑似データの入手方法",
+    "title": "4  演習用データの準備",
+    "section": "4.2 非制限公開疑似データの入手方法",
+    "text": "4.2 非制限公開疑似データの入手方法\n　SSJデータアーカイブのページへアクセスしてください。2026年時点では、「東大社研・若年パネル調査の非制限公開疑似データ」と、「2015年SSM調査の非制限公開疑似データ」が利用可能です。今回は、「東大社研・若年パネル調査の非制限公開疑似データ」の方を使用します。\n\n　「2015年SSM調査の非制限公開疑似データ」をクリックすると、疑似データについての説明ページに飛びます。それらを確認した上で、「データのダウンロード」の箇所にある、「u001」をクリックしてください。すると、ダウンロードが開始されます。\n\n　ダウンロードされたファイルはzipで固められていると思うので、各自のPCで展開し、使用してください。展開されたデータを、授業フォルダ内などに作成した、R projectと同じ場所に保存してください。適切な場所に保存されれば、R studioの右下の「files」の箇所に、「u001」のファイルが表示されるはずです。",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>演習用データの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture5.html",
+    "href": "Rlecture5.html",
+    "title": "5  変数の種類",
+    "section": "",
+    "text": "5.1 変数の種類\n変数にはさまざまな種類がある。特に以下の4つに分類することが多い。",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>変数の種類</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture5.html#変数の種類",
+    "href": "Rlecture5.html#変数の種類",
+    "title": "5  変数の種類",
+    "section": "",
+    "text": "変数の種類\n特徴\n\n\n\n\n名義尺度\n取りうる値の間に順序関係が成り立たないもの。\n\n\n順序尺度\n取りうる値の間に大小関係は成り立つが、1単位あたりの差が等価ではないもの。\n\n\n間隔尺度\n取りうる値の間の、1単位あたりの差が等価であるもの。\n\n\n比例尺度\n取りうる値の間の、1単位あたりの差が等価であり、原点0にも実質的な意味があるもの。\n\n\n\n\n5.1.1 名義尺度\n名義尺度は、カテゴリに意味がある変数である。\n\n「血液型」という変数は、「A」「B」「O」「AB」の間に順序関係がない。\n「性別」という変数は、「男性」「女性」「その他」の間に順序関係がない。\n\n\n\n\n\n\n\nNoteグループ・ワーク\n\n\n\n先ほどダウンロードした「u001」のフォルダの中には、調査票が入っています（u001c.pdf）。その調査票の中から、名義尺度を探してみましょう。\n\n\n\n\n5.1.2 順序尺度\n順序尺度は、変数の値の間に大小関係はあるものの、その差は等しくなく、足し算や引き算には適さない変数である。平均値も意味をなさない。\n\n「運動会の100m走の順位」という変数は、1位の方が5位よりも優れていることを意味するが、1位と5位を足したり引いたり、平均値を算出しても意味がない。\n\n\n\n\n\n\n\nNoteグループ・ワーク\n\n\n\n先ほどダウンロードした「u001」のフォルダの中には、調査票が入っています（u001c.pdf）。その調査票の中から、順序尺度を探してみましょう。\n\n\n\n\n5.1.3 間隔尺度\n間隔尺度は，変数の取りうる値の1単位あたりの差が等価で、足し算や引き算は可能であるが、原点0に便宜的な意味しかないため、積や商には意味がない変数のことである。\n\n「西暦」という変数は、1990年と2000年の間に、10年の差があるということは意味するが、2000年は1000年の2倍というものは意味をなさない。\n\n\n\n\n\n\n\nNoteグループ・ワーク\n\n\n\n先ほどダウンロードした「u001」のフォルダの中には、調査票が入っています（u001c.pdf）。その調査票の中から、間隔尺度を探してみましょう。\n\n\n\n\n5.1.4 比例尺度\n比例尺度は、変数の取りうる値の間の1単位あたりの差が等価であるだけでなく、原点0にも実質的な意味があり、値同士の和・差・積・商の全てに意味がある変数のことである。\n\n「50m走のタイム」という変数は、AさんがBさんよりt秒早いということも意味するし、CさんがDさんの2倍早いということにも意味がある。\n\n\n\n\n\n\n\nNoteグループ・ワーク\n\n\n\n先ほどダウンロードした「u001」のフォルダの中には、調査票が入っています（u001c.pdf）。その調査票の中から、比例尺度を探してみましょう。",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>変数の種類</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture5.html#社会科学における分類",
+    "href": "Rlecture5.html#社会科学における分類",
+    "title": "5  変数の種類",
+    "section": "5.2 社会科学における分類",
+    "text": "5.2 社会科学における分類\n　以上で、4つの尺度を見てきたが、実際の社会科学研究においては、ここまで厳密に分類することは稀である。実際には、「質的変数」と「量的変数」という2分類で十分なことがほとんどであり、一般的には名義尺度や順序尺度で測定された変数を質的変数、間隔尺度や比例尺度で測定された変数を量的変数と呼ぶ。\n　質的変数と量的変数の境目も明確ではない。「賛成」「やや賛成」「やや反対」「反対」という4つの選択肢（値）をとる変数の場合、「賛成-やや賛成」と「やや賛成-やや反対」の間の間隔が等間隔であると仮定することには無理がある場合が多い。そのため、この変数を質的変数と捉えるか、量的変数と捉えるかは、最終的には変数の各値の意味を考えて、検討する必要がある。",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>変数の種類</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture5.html#変数の要約",
+    "href": "Rlecture5.html#変数の要約",
+    "title": "5  変数の種類と変数の要約",
+    "section": "5.3 変数の要約",
+    "text": "5.3 変数の要約",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>変数の種類と変数の要約</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture6.html",
+    "href": "Rlecture6.html",
+    "title": "6  変数の要約",
+    "section": "",
+    "text": "6.1 質的変数の要約\n質的変数の要約には、カテゴリ（値）ごとの出現度数（頻度）をカウントした、度数分布表が使用されることが多い。度数分布表にまとめる際には、わかりやすいように、そのカテゴリが全体に占める割合を示すのが一般的である。\nRで度数分布を確認したい場合には、以下のように行う。\n婚姻状態（質的変数）の度数分布表が作成される。\nこれに、割合を付け加えたい場合には、以下のように実行する。",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>変数の要約</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture6.html#質的変数の要約",
+    "href": "Rlecture6.html#質的変数の要約",
+    "title": "6  変数の要約",
+    "section": "",
+    "text": "Warning度数分布の作成方法\n\n\n\n\n#install.packages(\"dplyr\") # インストールしていない場合\n#install.packages(\"haven\") # インストールしていない場合\nlibrary(dplyr) # dplyrというパッケージを使用（count関数）\nlibrary(haven) # データ読み込みの際に使用\n\n# データの読み込み（まだ読み込んでいない場合）\ndata &lt;- read_sav(\"u001.sav\")\n\n# 問50（婚姻状態）の度数分布を確認\ndata |&gt; count(ZQ50)\n\n# A tibble: 3 × 2\n  ZQ50                       n\n  &lt;dbl+lbl&gt;              &lt;int&gt;\n1 1 [未婚]                 637\n2 2 [既婚（配偶者あり）]   345\n3 4 [離別]                  18\n\n\n\n\n\n\n\nパーセント表記小数表記小数点を揃えたい\n\n\n\ndata |&gt; count(ZQ50) |&gt;\n  mutate(prop = n / sum(n) * 100)\n\n# A tibble: 3 × 3\n  ZQ50                       n  prop\n  &lt;dbl+lbl&gt;              &lt;int&gt; &lt;dbl&gt;\n1 1 [未婚]                 637  63.7\n2 2 [既婚（配偶者あり）]   345  34.5\n3 4 [離別]                  18   1.8\n\n\n\n\n\ndata |&gt; count(ZQ50) |&gt;\n  mutate(prop = n / sum(n))\n\n# A tibble: 3 × 3\n  ZQ50                       n  prop\n  &lt;dbl+lbl&gt;              &lt;int&gt; &lt;dbl&gt;\n1 1 [未婚]                 637 0.637\n2 2 [既婚（配偶者あり）]   345 0.345\n3 4 [離別]                  18 0.018\n\n\n\n\n\ndata |&gt; \n  count(ZQ50) |&gt; \n  mutate(prop = round(n / sum(n) * 100, 0))\n\n# A tibble: 3 × 3\n  ZQ50                       n  prop\n  &lt;dbl+lbl&gt;              &lt;int&gt; &lt;dbl&gt;\n1 1 [未婚]                 637    64\n2 2 [既婚（配偶者あり）]   345    34\n3 4 [離別]                  18     2\n\n\n\n\n\n\n\n\n\n\n\nNoteグループ・ワーク\n\n\n\n調査対象者の学歴の度数分布表を作成してみましょう。",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>変数の要約</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture6.html#量的変数の要約",
+    "href": "Rlecture6.html#量的変数の要約",
+    "title": "6  変数の要約",
+    "section": "6.2 量的変数の要約",
+    "text": "6.2 量的変数の要約\n\n6.2.1 代表値\n　量的変数の中心傾向をひとつの数値で示したものを、代表値と呼ぶ。代表値の中でも基本的なものが、平均値である。平均値には、いくつかの種類があるが、ここでは最も一般的な算術平均値について扱う。\n\n\n\n\n\n\nWarning平均値\n\n\n\n　平均値（\\(\\bar{x}\\)）は、\\(n\\)個の観測値の総和を、\\(n\\)で割ったものである。\n\\[\n\\bar{x} = \\frac{1}{n}\\sum_{i=1}^{n} x_i\n\\]\n\n\n　ある連続変数の平均値をRで計算するには、以下のように実行する。\n　例えば、問35（階層帰属意識）を連続変数とみなし、その平均を計算するとする。\n\n# まず、前提として度数分布を確認する\ndata |&gt; count(ZQ35)\n\n# A tibble: 11 × 2\n   ZQ35            n\n   &lt;dbl+lbl&gt;   &lt;int&gt;\n 1  1              3\n 2  2             13\n 3  3             45\n 4  4            115\n 5  5            265\n 6  6            166\n 7  7            174\n 8  8            121\n 9  9             48\n10 10             30\n11 99 [無回答]    20\n\n# 無回答（99）があるので、これは欠損値（NA）に指定する\ndata2 &lt;- data |&gt;\n  mutate(ZQ35 = ifelse(ZQ35==99,NA,ZQ35))\ndata2 |&gt; count(ZQ35)\n\n# A tibble: 11 × 2\n    ZQ35     n\n   &lt;dbl&gt; &lt;int&gt;\n 1     1     3\n 2     2    13\n 3     3    45\n 4     4   115\n 5     5   265\n 6     6   166\n 7     7   174\n 8     8   121\n 9     9    48\n10    10    30\n11    NA    20\n\n# 欠損値NAを除いた上で、平均値を計算する\nmean(data2$ZQ35, na.rm = TRUE)\n\n[1] 5.982653\n\n# あるいは、次のような方法でも計算できる\ndata2 |&gt;\n  summarise(mean = mean(ZQ35, na.rm = TRUE))\n\n# A tibble: 1 × 1\n   mean\n  &lt;dbl&gt;\n1  5.98\n\n\n　この方法で、平均値が計算できた。しかし、平均値は万能ではない。平均値は、外れ値に弱く、外れ値の影響を受けやすい。例えば年収を例にとると、年収の高いごくわずかな観測値の影響を大きく受けてしまうことがある。以降では、年収を例に、平均値の抱える問題点を説明する。\n\n# 年収（あなた個人）の度数分布を確認する\ndata |&gt; count(ZQ47A)\n\n# A tibble: 14 × 2\n   ZQ47A                                            n\n   &lt;dbl+lbl&gt;                                    &lt;int&gt;\n 1  1 [なし]                                      113\n 2  2 [25万円未満]                                 61\n 3  3 [50万円くらい（25～75万円未満）]             60\n 4  4 [100万円くらい（75～150万円未満）]          133\n 5  5 [200万円くらい（150～250万円未満）]         163\n 6  6 [300万円くらい（250～350万円未満）]         176\n 7  7 [400万円くらい（350～450万円未満）]         118\n 8  8 [500万円くらい（450～600万円未満）]          76\n 9  9 [700万円くらい（600～850万円未満）]          16\n10 10 [1,000万円くらい（850～1,250万円未満）]       7\n11 11 [1,500万円くらい（1,250～1,750万円未満）]     1\n12 12 [2,000万円くらい（1,750～2,250万円未満）]     1\n13 14 [わからない]                                 42\n14 99 [無回答]                                     33\n\n# 現状では、1~14の値になっているので、これを階級値に変更する\n# 今回は、説明の都合上、0万円はNAとする\ndata3 &lt;- data |&gt;\n  mutate(income = case_match(ZQ47A,\n                               1  ~ NA,\n                               2  ~ 12.5,\n                               3  ~ 50,\n                               4  ~ 100,\n                               5  ~ 200,\n                               6  ~ 300,\n                               7  ~ 400,\n                               8  ~ 500,\n                               9  ~ 700,\n                               10 ~ 1000,\n                               11 ~ 1500,\n                               12 ~ 2000,\n                               13 ~ 2250,\n                               14 ~ NA,\n                               99 ~ NA))\n\nWarning: There was 1 warning in `mutate()`.\nℹ In argument: `income = case_match(...)`.\nCaused by warning:\n! `case_match()` was deprecated in dplyr 1.2.0.\nℹ Please use `recode_values()` instead.\n\ndata3 |&gt; count(income)\n\n# A tibble: 12 × 2\n   income     n\n    &lt;dbl&gt; &lt;int&gt;\n 1   12.5    61\n 2   50      60\n 3  100     133\n 4  200     163\n 5  300     176\n 6  400     118\n 7  500      76\n 8  700      16\n 9 1000       7\n10 1500       1\n11 2000       1\n12   NA     188\n\n\n　次に、年収の分布を、ヒストグラムでわかりやすく視覚化してみる。\n\nhist(data3$income, breaks=seq(0,2300,100), main = \"income\", xlab = \"income\")\n\n\n\n\n\n\n\n\n　ヒストグラムを眺めてみると、0万円に近いほど度数が大きく、年収が多くなるに従って、おおよそ度数が小さくなることが確認できる。\n　これをふまえ、年収の平均値を計算する。\n\nmean(data3$income, na.rm = TRUE)\n\n[1] 257.8356\n\n\n　この平均値は、低収入の観測値が多いにも関わらず、比較的大きく計算されている。これは、少ない外れ値の影響を受けているためである。\n　外れ値に引っ張られないような代表値として、中央値（メディアン）と最頻値（モード）がある。\n\n\n\n\n\n\nWarning中央値と最頻値\n\n\n\n\n中央値：データを大きい（小さい）順に並べた時、ちょうど真ん中に位置する値のこと。ケース数が偶数の場合、ちょうど真ん中の値を決定することができないが、この場合には中央の2つの値の平均を取る。\n最頻値：データの中で、最も多く存在する数値やカテゴリのこと。名義変数にも使用することができる。\n\n\n\n　中央値の計算には、以下のようなコマンドを実行する。\n\nmedian(data3$income, na.rm = TRUE)\n\n[1] 200\n\n\n　最頻値を調べたい場合には、先ほど示したような度数分布表を出力すれば良い。\n　今回の例は、そこまで大きな乖離はなかったものの、平均値のみから分布の特徴を判断することは危険である。分布を確認してみて、左右対称から大きく外れる場合には、他の代表値も使用するべきである。\n　さらに、分位数やパーセンタイルも重要な代表値である。\n\n\n\n\n\n\nWarning中央値と最頻値\n\n\n\n\n分位数：変数の分布を、任意の数の同じ大きさの集団に分割する数値。例えば、4分割の場合、分布の\\(\\frac{1}{4}\\)がそれ以下に入る点を第1四分位数（\\(Q_1\\)）と呼び、同様に\\(\\frac{2}{4}\\)を第二子分位数（\\(Q_2\\)）と呼ぶ。\nパーセンタイル：分位数の一種で、データを小さい順に並べた場合に、任意の%の序列上に位置する数値を指す。（=百分位数）\n\n\n\n　分位数の計算は、以下のように行うことができる。\n\n# 四分位数の計算\nquantile(data3$income, na.rm = TRUE)\n\n    0%    25%    50%    75%   100% \n  12.5  100.0  200.0  400.0 2000.0 \n\n# 任意のパーセンタイルを計算したい場合（例：20%と80%）\nquantile(data3$income, probs = c(0.2, 0.8), na.rm = TRUE)\n\n20% 80% \n100 400 \n\n\n\n\n6.2.2 散布度\n　代表値だけでは、変数の分布の特徴を表すには不十分である場合が多い。その場合には、変数のばらつきの特徴を見る必要がある。そのような場合に、様々な散布度が有用である。\n　例えば、1組と2組の間のテストの得点の分布を比較するとする。両クラスとも、平均点は60点だとしても、点数の分布が異なる場合がありうる。このような場合に、変数のばらつきを示す数値が計算できると、両クラスの分布を比較することができる。\n\n\n\n出典：Claudeによる自動生成\n\n\n　まず、もっとも基本的な散布度に、分散がある。\n\n\n\n\n\n\nWarning分散\n\n\n\n分散（\\(s^2\\)）とは、個々の値（\\(x_i\\)）と平均値（\\(\\bar{x}\\)）との差（偏差）を2乗して足し合せ（偏差平方和）、ケース数（\\(n\\)）で割ったもの。 \\[\ns^2 = \\frac{1}{n}\\sum_{i=1}^{n} (x_i - \\bar{x})^2\n\\]\n\n\n　この数式の意味を、よりわかりやすく示すと、以下のようになる。\n\n分散の計算イメージ分散の大きさのイメージ\n\n\n\n\n\n\n\n\n\n　分散を手計算する場合には、以下のような流れとなる。\n\n# 先ほどと同様に、収入変数を使用する\n# 収入変数の、最初の10行だけ表示してみる\ndata3 |&gt; \n  select(income) |&gt; \n  head(10)\n\n# A tibble: 10 × 1\n   income\n    &lt;dbl&gt;\n 1  300  \n 2  700  \n 3  300  \n 4  300  \n 5   NA  \n 6   12.5\n 7  400  \n 8  300  \n 9  100  \n10  200  \n\n# （1）平均値を計算し、mean_ZQ74Aというobjectに格納\nmean_ZQ74A &lt;- mean(data3$income, na.rm = TRUE)\nmean_ZQ74A # しっかりと格納された\n\n[1] 257.8356\n\n# （2）観測値から、平均値（mean）を引き算した変数（a）を作成する\ndata3 &lt;- data3 |&gt;\n  mutate(mean = mean_ZQ74A,\n         a = income - mean)\n\ndata3 |&gt;\n  select(income, mean, a) |&gt;\n  head(10)\n\n# A tibble: 10 × 3\n   income  mean      a\n    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;\n 1  300    258.   42.2\n 2  700    258.  442. \n 3  300    258.   42.2\n 4  300    258.   42.2\n 5   NA    258.   NA  \n 6   12.5  258. -245. \n 7  400    258.  142. \n 8  300    258.   42.2\n 9  100    258. -158. \n10  200    258.  -57.8\n\n# （3）試しに、aをたしあわせてみる→0に限りなく近い\nsum(data3$a, na.rm = TRUE)\n\n[1] -2.114575e-11\n\n# （4）平均値（mean）を引き算した変数（a）を2乗した変数（b）を作成する\ndata3 &lt;- data3 |&gt;\n  mutate(b = a^2)\n\ndata3 |&gt;\n  select(income, mean, a, b) |&gt;\n  head(10)\n\n# A tibble: 10 × 4\n   income  mean      a       b\n    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;\n 1  300    258.   42.2   1778.\n 2  700    258.  442.  195509.\n 3  300    258.   42.2   1778.\n 4  300    258.   42.2   1778.\n 5   NA    258.   NA       NA \n 6   12.5  258. -245.   60190.\n 7  400    258.  142.   20211.\n 8  300    258.   42.2   1778.\n 9  100    258. -158.   24912.\n10  200    258.  -57.8   3345.\n\n# 最後に、bを足しあげ、サンプルサイズで割れば、分散が計算できる\nsum(data3$b, na.rm = TRUE) # bの合計\n\n[1] 28838427\n\nn &lt;- sum(!is.na(data3$income)) # サンプルサイズを計算し\nn\n\n[1] 812\n\nsum(data3$b, na.rm = TRUE)/n # bの合計をnで割る\n\n[1] 35515.3\n\n\n　このようにして、分散は計算できる。このような式で計算できる分散は、標本分散と呼ばれる。なお、標本分散とは別に、母集団の分散の推定値である、不偏分散というものもある。不偏分散は、以下の式によって計算される。\n\n\n\n\n\n\nWarning不偏分散\n\n\n\n\\[\n\\hat{\\sigma^2} = \\frac{1}{n-1}\\sum_{i=1}^{n} (x_i - \\bar{x})^2\n\\]\n\n\n　不偏分散は、偏差平方和をサンプルサイズ-1で割ったものである。この不偏分散は、平均的には母分散（母集団の分散）に一致する。この点は、統計的推測の箇所で詳しく学ぶ。\n　不偏分散は、以下のコマンドによって計算することができる。\n\nvar(data3$income, na.rm = TRUE)\n\n[1] 35559.1\n\n\n　分散の平方根を取ったものを、標準偏差と呼ぶ。分散は、偏差を2乗してたしあわせているため、値が大きくなる上に、元のデータと同じ単位で表現できない。そこで、分散の平方根を取ることで、元のデータと単位を揃えることができる。\n\n\n\n\n\n\nWarning標準偏差\n\n\n\n\\[\ns = \\sqrt{s^2}\n\\]\n\n\n　したがって、先ほどの分散の計算結果に対して、平方根を取れば良い。\n\nsqrt(sum(data3$b, na.rm = TRUE)/n)\n\n[1] 188.455\n\n\n　分散と同様に、不偏標準偏差は、以下のようにコマンドで計算することができる。\n\nsd(data3$income, na.rm = TRUE)\n\n[1] 188.5712\n\n\n　このようにして、分散と標準偏差を計算することができるが、これらの値は、測定単位が異なる変数同士を比較することができない。例えば、10点満点のテストと100点満点のテストでは、同じばらつきであったとしても、標準偏差は100点満点のテストの方で大きく計算されてしまう。これでは、純粋にばらつきの大きさを比較できない。\n　そこで、変数の測定単位を考慮するために、標準偏差を、さらに平均値で割った、変動係数というものが使用される。\n\n\n\n\n\n\nWarning変動係数\n\n\n\n\\[\ncv = \\frac{s}{\\bar{x}}\n\\]\n\n\n　変動係数は、標準偏差を平均値で割れば良いので、Rでは以下のように計算できる。\n\ncv &lt;- sd(data3$income, na.rm = TRUE)/mean(data3$income, na.rm = TRUE)\ncv\n\n[1] 0.7313622\n\n\n\n\n6.2.3 グループ比較\n　これまでにみてきた代表値・散布度は、グループ間で比較して初めて意味をなす。そこで、社会的属性間での収入の代表値・散布度の違いを比べてみよう。\n　まず、性別ごとに、収入の代表値・散布度を比較してみる。\n\n# （1）性別変数の度数分布を確認する\ndata3 |&gt; count(sex)\n\n# A tibble: 2 × 2\n  sex            n\n  &lt;dbl+lbl&gt;  &lt;int&gt;\n1 1 [male]     499\n2 2 [female]   501\n\n# （2）性別で層化した上で、さまざまな代表値や散布度を計算する\ndata3 |&gt;\n  group_by(sex) |&gt; # グループ分けする変数を宣言\n  summarise(mean = mean(income, na.rm = TRUE), # 平均値\n            median = median(income, na.rm = TRUE), # 中央値\n            variance = var(income, na.rm = TRUE), # 分散\n            sd = sd(income, na.rm = TRUE),# 標準偏差\n            cv = sd/mean # 変動係数\n            ) |&gt;\n  ungroup()\n\n# A tibble: 2 × 6\n  sex         mean median variance    sd    cv\n  &lt;dbl+lbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 1 [male]    310.    300   37759.  194. 0.627\n2 2 [female]  198.    200   26451.  163. 0.821\n\n\n　収入について言えば、男性の方が平均値が高く、中央値も高い。ちらばりは、男性の方が大きいように見えるが、平均値を考慮した変動係数で比較すると、女性の方がばらつきが大きいことが確認できる。\n\n\n\n\n\n\nNoteグループ・ワーク\n\n\n\n調査対象者の学歴ごとに、収入の代表値・散布度を計算してみましょう。\n\n\n\n\n6.2.4 グラフの作成\n　これまでに紹介した代表値や散布度を効果的に示すための、いくつかのグラフを紹介する。\n　第1に、棒グラフは、グループ間の度数分布の違いを示すのに最適なグラフである。以降では、性別による健康状態の度数分布の違いを示す棒グラフを作成してみる。\n\n# まずは、健康状態の度数分布を確認\ndata |&gt; count(ZQ25)\n\n# A tibble: 6 × 2\n  ZQ25                   n\n  &lt;dbl+lbl&gt;          &lt;int&gt;\n1 1 [とても良い]       151\n2 2 [まあ良い]         339\n3 3 [普通]             385\n4 4 [あまり良くない]   111\n5 5 [悪い]               9\n6 9 [無回答]             5\n\n\n　健康状態の度数分布を確認すると、無回答（9）があるので、これはNA（欠損値）に変える。\n\ndata4 &lt;- data3 |&gt;\n  mutate(health = case_match(ZQ25,\n                             9 ~ NA,\n                             .default = ZQ25))\ndata4 |&gt; count(health)\n\n# A tibble: 6 × 2\n  health                  n\n  &lt;dbl+lbl&gt;           &lt;int&gt;\n1  1 [とても良い]       151\n2  2 [まあ良い]         339\n3  3 [普通]             385\n4  4 [あまり良くない]   111\n5  5 [悪い]               9\n6 NA                      5\n\n\n　まずは、性別ごとの度数分布表を作成してみる。\n\ndata4 |&gt;\n  group_by(sex) |&gt;\n  count(health)\n\n# A tibble: 12 × 3\n# Groups:   sex [2]\n   sex        health                  n\n   &lt;dbl+lbl&gt;  &lt;dbl+lbl&gt;           &lt;int&gt;\n 1 1 [male]    1 [とても良い]        75\n 2 1 [male]    2 [まあ良い]         163\n 3 1 [male]    3 [普通]             199\n 4 1 [male]    4 [あまり良くない]    51\n 5 1 [male]    5 [悪い]               7\n 6 1 [male]   NA                      4\n 7 2 [female]  1 [とても良い]        76\n 8 2 [female]  2 [まあ良い]         176\n 9 2 [female]  3 [普通]             186\n10 2 [female]  4 [あまり良くない]    60\n11 2 [female]  5 [悪い]               2\n12 2 [female] NA                      1\n\n\n　性別ごとの度数分布表から、棒グラフを作成する。\n\nlibrary(ggplot2)\ndata4 |&gt; \n  group_by(sex) |&gt; \n  count(health) |&gt; \n  ggplot(aes(x = factor(sex), y = n, fill = factor(health))) +\n  geom_bar(stat = \"identity\")\n\n\n\n\n\n\n\n\n　もし、見た目も整えたいのであれば、以下のようなコマンドを実行する。\n\ndata4 &lt;- data4 |&gt;\n  mutate(sex_fac = case_match(sex,\n                              1 ~ \"1. male\",\n                              2 ~ \"2. female\") |&gt; factor(),\n         health_fac = case_match(health,\n                                 1 ~ \"1. Very good\",\n                                 2 ~ \"2. Fairly good\",\n                                 3 ~ \"3. Average\",\n                                 4 ~ \"4. Not very good\",\n                                 5 ~ \"5. Poor\") |&gt; factor())\ndata4 |&gt;\n  group_by(sex_fac) |&gt;\n  count(health_fac) |&gt;\n  ggplot(aes(x = sex_fac, y = n, fill = health_fac)) +\n  geom_bar(stat = \"identity\") +\n  labs(x = \"sex\", y = \"frequency\", fill = \"health\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNoteグループ・ワーク\n\n\n\n調査対象者の性別ごとに、生活全般満足度（問30）の棒グラフを作成してみましょう。\n\n\n　量的変数をグループ間で比較したい場合には、代表値と散布度をグループごとにグラフ化すると良い。その一例として、箱ひげ図がある。箱ひげ図は、例えば以下のように作成することができる。\n　ここでは、例として、性別の収入を箱ひげ図にプロットしてみる。\n\ndata4 |&gt;\n  ggplot() +\n  geom_boxplot(aes(x = sex_fac, y = income)) +\n  labs(x = \"sex\", y=\"income\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNoteグループ・ワーク\n\n\n\n調査対象者の性別ごとに、階層帰属意識（問35）の棒グラフを作成してみましょう。",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>変数の要約</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture4.html#データの読み込み",
+    "href": "Rlecture4.html#データの読み込み",
+    "title": "4  演習用データの準備",
+    "section": "4.3 データの読み込み",
+    "text": "4.3 データの読み込み\n　R Studioにデータを読み込む場合には、以下のようにコマンドを実行する。\n\n4.3.1 .savファイルの場合\n\nlibrary(haven)\n\n# \"u001.sav\"という名前で保存されたデータを読み込み、dataというobjectに格納\ndata &lt;- read_sav(\"u001.sav\")\n\n\n\n4.3.2 .dtaファイルの場合\n\nlibrary(haven)\n\n# \"u001.dta\"という名前で保存されたデータを読み込み、dataというobjectに格納\ndata &lt;- read_dta(\"u001.dta\")\n\n\n\n4.3.3 .csvファイルの場合\n\n# \"u001.csv\"という名前で保存されたデータを読み込み、dataというobjectに格納\ndata &lt;- read.csv(\"u001.csv\")",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>演習用データの準備</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture7.html",
+    "href": "Rlecture7.html",
+    "title": "7  標準誤差と区間推定",
+    "section": "",
+    "text": "（準備中）",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>標準誤差と区間推定</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture8.html",
+    "href": "Rlecture8.html",
+    "title": "8  統計的仮説検定",
+    "section": "",
+    "text": "（準備中）",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>統計的仮説検定</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture9.html",
+    "href": "Rlecture9.html",
+    "title": "9  相関係数",
+    "section": "",
+    "text": "（準備中）",
+    "crumbs": [
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>相関係数</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture10.html",
+    "href": "Rlecture10.html",
+    "title": "10  クロス表と連関の指標",
+    "section": "",
+    "text": "（準備中）",
+    "crumbs": [
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>クロス表と連関の指標</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture11.html",
+    "href": "Rlecture11.html",
+    "title": "11  単回帰分析",
+    "section": "",
+    "text": "（準備中）",
+    "crumbs": [
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>単回帰分析</span>"
+    ]
+  },
+  {
+    "objectID": "Rlecture12.html",
+    "href": "Rlecture12.html",
+    "title": "12  重回帰分析と統計的統制",
+    "section": "",
+    "text": "（準備中）",
+    "crumbs": [
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>重回帰分析と統計的統制</span>"
+    ]
+  }
+]
