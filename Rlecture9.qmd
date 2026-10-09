@@ -96,18 +96,19 @@ set.seed(123)
 n <- 100
 x <- rnorm(n)
 
+lv <- c("Positive correlation", "Negative correlation", "No correlation")
+
 df <- data.frame(
   x = rep(x, 3),
   y = c(
-    2 * x + rnorm(n, sd = 1),    # 正の相関
-    -2 * x + rnorm(n, sd = 1),   # 負の相関
-    rnorm(n)                      # 相関なし
+    2 * x + rnorm(n, sd = 1),    # positive correlation
+    -2 * x + rnorm(n, sd = 1),   # negative correlation
+    rnorm(n)                      # no correlation
   ),
-  type = factor(rep(c("正の相関", "負の相関", "相関なし"), each = n),
-                levels = c("正の相関", "負の相関", "相関なし"))
+  type = factor(rep(lv, each = n), levels = lv)
 )
 
-# 各グループの相関係数をラベル用に計算
+# Compute the correlation coefficient for each group as a label
 r_df <- do.call(rbind, lapply(split(df, df$type), function(d) {
   data.frame(type = d$type[1],
              label = paste0("r = ", round(cor(d$x, d$y), 2)))
@@ -120,7 +121,7 @@ ggplot(df, aes(x = x, y = y)) +
             x = -Inf, y = Inf, hjust = -0.1, vjust = 1.5,
             inherit.aes = FALSE) +
   facet_wrap(~ type) +
-  labs(title = "Correlation types and regression lines", x = "x", y = "y") +
+  labs(title = "Types of correlation and regression lines", x = "x", y = "y") +
   theme_minimal()
 ```
 
@@ -146,6 +147,7 @@ $$
 　まず、シグマ（$\sum$）の中身を考えてみる。$(x_i-\bar{x})$は、xの各観測値$x_i$から、$x$の平均値（$\bar{x}$）を引き算したものである。同様に、$(y_i-\bar{y})$は、xの各観測値$y_i$から、$y$の平均値（$\bar{y}$）を引き算したものである。つまり、シグマ（$\sum$）の中身は、$x$と$y$の偏差（平均からの差）を掛け算したものである。図で示すと以下のようになる。
 
 ```{r, echo=FALSE}
+#| echo: false
 library(ggplot2)
 
 d <- data.frame(
@@ -159,7 +161,7 @@ ybar <- mean(d$y)
 d$dx   <- d$x - xbar
 d$dy   <- d$y - ybar
 d$prod <- d$dx * d$dy
-d$sign <- ifelse(d$prod > 0, "正(+)", "負(-)")
+d$sign <- ifelse(d$prod > 0, "Positive (+)", "Negative (-)")
 
 ggplot(d, aes(x = x, y = y)) +
   geom_rect(aes(xmin = pmin(x, xbar), xmax = pmax(x, xbar),
@@ -173,11 +175,11 @@ ggplot(d, aes(x = x, y = y)) +
            vjust = -0.5, hjust = -0.5) +
   annotate("text", x = -Inf, y = ybar, label = "bar(y)", parse = TRUE,
            hjust = -0.5, vjust = -0.5) +
-  scale_fill_manual(values = c("正(+)" = "tomato", "負(-)" = "steelblue")) +
-  labs(title = "偏差の積 = 長方形の面積",
-       x = "x", y = "y", fill = "偏差の積") +
-  theme_minimal() +
-  theme(text = element_text(family = "Hiragino Sans"))
+  scale_fill_manual(values = c("Positive (+)" = "tomato",
+                               "Negative (-)" = "steelblue")) +
+  labs(title = "Product of deviations = area of rectangle",
+       x = "x", y = "y", fill = "Product of\ndeviations") +
+  theme_minimal()
 ```
 
 　この図からわかるように、$x$と$y$についての偏差の積は、グラフの第1象限と第3象限では正に、第2象限と第4象限では負になる。そのため、これらをたしあわせた$\sum_{i=1}^n{(x_i-\bar{x})(y_i-\bar{y})}$は、「右上や左下に多く点が存在している場合」には正の値を、「左上や右下に多くの点が存在している場合」には負の値をとる。もし、4象限に満遍なく散らばっている場合には、打ち消しあって0に近い値を取ることになる。そのため、共分散は、正の関連があるか、負の関連があるかを示す指標となる。しかし、$n$が多いと、点が多いので面積が大きくなるため、$\frac{1}{n}$をかける。
@@ -188,6 +190,7 @@ ggplot(d, aes(x = x, y = y)) +
 　相関係数の分母は、$x$と$y$の標準偏差の積である。共分散も、$x$と$y$の関連を示すものであるが、共分散は$x$と$y$の単位や尺度に左右されてしまう。例えば、身長と体重の関連を考えるとき、身長の単位をcmからmに変えるだけで、共分散は$\frac{1}{100}$になってしまう。
 
 ```{r, echo=FALSE}
+#| echo: false
 library(ggplot2)
 
 set.seed(123)
@@ -196,7 +199,7 @@ height_cm <- rnorm(n, mean = 165, sd = 8)
 weight_kg <- 0.9 * height_cm - 90 + rnorm(n, sd = 5)
 height_m  <- height_cm / 100
 
-lv <- c("身長を cm で表した場合", "身長を m で表した場合")
+lv <- c("Height in cm", "Height in m")
 
 df <- data.frame(
   height = c(height_cm, height_m),
@@ -204,20 +207,20 @@ df <- data.frame(
   unit   = factor(rep(lv, each = n), levels = lv)
 )
 
-# 共分散・相関係数のラベル
+# Labels for covariance and correlation
 lab <- do.call(rbind, lapply(split(df, df$unit), function(d) {
   data.frame(unit = d$unit[1],
-             label = sprintf("共分散 = %.2f\n相関係数 = %.2f",
+             label = sprintf("Covariance = %.2f\nCorrelation = %.2f",
                              cov(d$height, d$weight),
                              cor(d$height, d$weight)))
 }))
 
-# 標準偏差の幅(矢印)用データ
+# Data for the standard deviation arrows
 sdf <- do.call(rbind, lapply(split(df, df$unit), function(d) {
   data.frame(unit = d$unit[1], m = mean(d$height), s = sd(d$height))
 }))
-sdf$label <- c(sprintf("標準偏差 = %.1f cm", sdf$s[1]),
-               sprintf("標準偏差 = %.2f m",  sdf$s[2]))
+sdf$label <- c(sprintf("SD = %.1f cm", sdf$s[1]),
+               sprintf("SD = %.2f m",  sdf$s[2]))
 sdf$y <- min(df$weight) - 4
 
 ggplot(df, aes(x = height, y = weight)) +
@@ -228,18 +231,16 @@ ggplot(df, aes(x = height, y = weight)) +
                arrow = arrow(ends = "both", length = unit(0.08, "inches")),
                color = "darkorange", linewidth = 1, inherit.aes = FALSE) +
   geom_text(data = sdf, aes(x = m, y = y, label = label),
-            vjust = 1.6, color = "darkorange",
-            family = "HiraKakuPro-W3", inherit.aes = FALSE) +
+            vjust = 1.6, color = "darkorange", inherit.aes = FALSE) +
   geom_text(data = lab, aes(label = label),
             x = -Inf, y = Inf, hjust = -0.1, vjust = 1.3,
-            family = "HiraKakuPro-W3", inherit.aes = FALSE) +
+            inherit.aes = FALSE) +
   facet_wrap(~ unit, scales = "free_x") +
   scale_y_continuous(expand = expansion(mult = c(0.2, 0.05))) +
-  labs(title = "身長の単位を変えると、ばらつき(標準偏差)も共分散も 1/100 になる",
-       x = "身長", y = "体重 (kg)") +
+  labs(title = "Changing the unit of height scales the SD and covariance by 1/100",
+       x = "Height", y = "Weight (kg)") +
   theme_minimal() +
-  theme(text = element_text(family = "Hiragino Sans"),
-        axis.text.x = element_text(face = "bold", size = 12))
+  theme(axis.text.x = element_text(face = "bold", size = 12))
 ```
 
 　そこで、共分散から単位を消したい。共分散は、$x$と$y$の偏差をかけたものであるので、単位は、($x$の単位)$\times$ ($y$の単位)である。そのため、$x$の標準偏差と$y$の標準偏差で割ってあげれば、単位が消える。また、標準偏差の積で割ることによって、相関係数の値は、-1から1の間に収まるようになる。
