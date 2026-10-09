@@ -4,7 +4,6 @@ editor: visual
 ---
 
 ```{r, include=FALSE}
-install.packages("modelsummary")
 data4 <- read.csv("data4.csv")
 library(dplyr)
 library(ggplot2)
