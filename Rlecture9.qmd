@@ -1,6 +1,278 @@
 ---
-title: "相関係数"
+title: "変数間の関連と相関係数"
 editor: visual
 ---
 
-（準備中）
+```{r, include=FALSE}
+data4 <- read.csv("data4.csv")
+library(dplyr)
+```
+
+## 変数間の関連
+
+　社会調査で明らかにしたいことの多くは、「変数Xと変数Yの関連は、（母集団では）こうなっているのではないか」というような、変数間の**関連性**についてことである。関連性とは、「**変数Xの値が異なれば、変数Yの値も異なる**」というようなことを指す。
+
+:::{.callout-note}
+### 変数間の関連性の例
+- 「未婚者よりも既婚者の方が健康である」（婚姻状態Xが、健康状態Yと関連する）
+- 「高学歴者の方が外国人に寛容である」（学歴Xが、外国人への寛容さYと関連する）
+:::
+
+　このような変数間の関連性を明らかにするためには、変数Xと変数Yを個別に集計するだけでは不十分である。二変数の関連性を明らかにするためには、変数Xと変数を同時に分析する必要がある。この章では、二変数の関連性を明らかにするための分析手法を紹介する。すでに学んだように、二変数の関連を示すだけでは、因果関係を示すことはできない。因果関係に（少しでも）迫るための方法についても、のちの章で紹介する。
+
+## 変数の種類と分析の方法
+
+　二変数の関連性を明らかにするためには，いくつかの分析方法がある。それらの分析方法のうち、どの方法を用いるかは、変数の種類によって決まる。一般的には、量的変数同士の関連性を**相関**、質的変数同士の関連性を**連関**（もしくは**関連**）と呼ぶことが多い。
+
+:::{.callout-note}
+### 変数の種類と分析の方法
+
+|独立変数|従属変数|分析方法              |
+|:------:|:------:|:---------------------|
+|量的    |量的    |相関分析、回帰分析    |
+|質的    |量的    |分散分析              |
+|量的    |質的    |ロジスティック回帰分析|
+|質的    |質的    |クロス表分析          |
+
+:::
+
+## 量的変数×量的変数の相関
+
+### 散布図の作成
+　ふたつの量的変数間の関連性を視覚的に知ることができるものとして、**散布図**が挙げられる。$x$と$y$という変数が$n$個観測されているとき、$x$を横軸、$y$を縦軸として、$i$個の観測値を追うロットすることができる。以下では、実際に散布図を作成してみる。
+
+　Rでは、ggplot2というパッケージを使用して、散布図を作成することができる。
+
+```{r, warning=FALSE}
+# (1)使用するパッケージをlibraryする
+library(ggplot2)
+library(dplyr)
+
+# (2)今回は、2つの量的変数として、出生年と労働時間を使用してみる
+# (2-1)まず、出生年(ybirth)と、労働時間(JC_41: 以前作成したもの)を確認
+data4 |> count(ybirth)
+data4 |> count(JC_41)
+
+# (2-2)労働時間JC_41には、非該当88と無回答99が含まれるので、これを欠損値にする
+data4 <- data4 |>
+  mutate(whours = ifelse(JC_41>=88,NA,JC_41))
+
+# (3)散布図を作成
+data4 |>
+  ggplot(aes(x = ybirth, y = whours)) +
+  geom_point()
+
+```
+
+　社会調査データでは、あまり量的変数が豊富にないので、R言語に付属しているサンプルデータを使ってみる。例えば、「mtcars」は、R言語にデフォルトで入っているサンプルデータで、1974年に測定された32台の自動車の燃費・設計・性能の10の側面を測定したデータである。R上で、「?mtcars」とコマンドを入力して実行すると、サンプルデータの詳細が確認できる。
+
+```{r}
+?mtcars
+```
+
+　このmtcarsデータから、車の重さ（wt）と、燃費（mpg）の散布図を作成してみる。
+
+```{r}
+mtcars |>
+  ggplot(aes(x = wt, y = mpg)) +
+  geom_point()
+```
+
+　車が重いほど、燃費が悪いことがわかる。
+
+:::{.callout-note}
+#### グループ・ワーク
+**Rには、デフォルトで、ペンギンに関するデータ（penguins）が提供されています。このpenguinsデータのうち、くちばしの長さ（bill_len）と翼の長さ（flipper_len）の散布図を作成してみよう。**
+:::
+
+### 相関係数とは何か
+　変数間の関連には、曲線など、さまざまな関連がありうる。散布図からは、「xが大きいほどyも大きい」というような、直線的関係を読み取ることができる場合がある。このようなxとyの間の関係を、**相関関係**と呼ぶ。xが増加するときにyも増加する関係のことを、「**正の相関関係**」、xが増加するとyが減少する関係のことを、「**負の相関関係**」と呼ぶ。
+
+```{r, echo=FALSE}
+library(ggplot2)
+
+set.seed(123)
+n <- 100
+x <- rnorm(n)
+
+df <- data.frame(
+  x = rep(x, 3),
+  y = c(
+    2 * x + rnorm(n, sd = 1),    # 正の相関
+    -2 * x + rnorm(n, sd = 1),   # 負の相関
+    rnorm(n)                      # 相関なし
+  ),
+  type = factor(rep(c("正の相関", "負の相関", "相関なし"), each = n),
+                levels = c("正の相関", "負の相関", "相関なし"))
+)
+
+# 各グループの相関係数をラベル用に計算
+r_df <- do.call(rbind, lapply(split(df, df$type), function(d) {
+  data.frame(type = d$type[1],
+             label = paste0("r = ", round(cor(d$x, d$y), 2)))
+}))
+
+ggplot(df, aes(x = x, y = y)) +
+  geom_point(alpha = 0.6, color = "steelblue") +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+  geom_text(data = r_df, aes(label = label),
+            x = -Inf, y = Inf, hjust = -0.1, vjust = 1.5,
+            inherit.aes = FALSE) +
+  facet_wrap(~ type) +
+  labs(title = "相関の種類と回帰直線", x = "x", y = "y") +
+  theme_minimal() +
+  theme(text = element_text(family = "HiraKakuPro-W3"))
+```
+
+　この相関関係の強さは、散布図の各点が直線からどの程度離れているか、つまり散らばりの「程度」として捉えることができる。このような相関関係の強さを測るために、**相関係数**と呼ばれる指標がある。相関関係のうち最もよく使用されるものが、**ピアソンの相関係数**であり、**r**という記号で表されることが多い。ピアソンの相関係数は、以下の式によって計算される。
+
+$$
+r_{xy} = \frac{s_{xy}}{s_xs_y}
+$$
+
+　ここで、$s_{xy$は、$x$と$y$の共分散であり、以下の式によって定義される。
+
+$$
+s_{xy} = \frac{1}{n}\sum_{i=1}^n{(x_i-\bar{x})(y_i-\bar{y})}
+$$
+　つまり、ピアソンの相関係数は、$x$と$y$の共分散を、$x$、$y$それぞれの標準偏差の積で割ったものである。この相関係数が、どのような意味を持つのか考えてみる。
+
+### 共分散について
+　まず、共分散について考えてみる。共分散の式を再度眺めてみよう。
+
+$$
+s_{xy} = \frac{1}{n}\sum_{i=1}^n{(x_i-\bar{x})(y_i-\bar{y})}
+$$
+　まず、シグマ（$\sum$）の中身を考えてみる。$(x_i-\bar{x})$は、xの各観測値$x_i$から、$x$の平均値（$\bar{x}$）を引き算したものである。同様に、$(y_i-\bar{y})$は、xの各観測値$y_i$から、$y$の平均値（$\bar{y}$）を引き算したものである。つまり、シグマ（$\sum$）の中身は、$x$と$y$の偏差（平均からの差）を掛け算したものである。図で示すと以下のようになる。
+
+```{r, echo=FALSE}
+library(ggplot2)
+
+d <- data.frame(
+  x = c(1, 2, 3, 4, 6, 7, 8, 9),
+  y = c(2, 4, 1, 6, 4, 8, 7, 9)
+)
+
+xbar <- mean(d$x)
+ybar <- mean(d$y)
+
+d$dx   <- d$x - xbar
+d$dy   <- d$y - ybar
+d$prod <- d$dx * d$dy
+d$sign <- ifelse(d$prod > 0, "正(+)", "負(-)")
+
+ggplot(d, aes(x = x, y = y)) +
+  geom_rect(aes(xmin = pmin(x, xbar), xmax = pmax(x, xbar),
+                ymin = pmin(y, ybar), ymax = pmax(y, ybar),
+                fill = sign),
+            alpha = 0.25) +
+  geom_vline(xintercept = xbar, linetype = "dashed") +
+  geom_hline(yintercept = ybar, linetype = "dashed") +
+  geom_point(size = 3) +
+  annotate("text", x = xbar, y = -Inf, label = "bar(x)", parse = TRUE,
+           vjust = -0.5, hjust = -0.5) +
+  annotate("text", x = -Inf, y = ybar, label = "bar(y)", parse = TRUE,
+           hjust = -0.5, vjust = -0.5) +
+  scale_fill_manual(values = c("正(+)" = "tomato", "負(-)" = "steelblue")) +
+  labs(title = "偏差の積 = 長方形の面積",
+       x = "x", y = "y", fill = "偏差の積") +
+  theme_minimal() +
+  theme(text = element_text(family = "HiraKakuPro-W3"))
+```
+
+　この図からわかるように、$x$と$y$についての偏差の積は、グラフの第1象限と第3象限では正に、第2象限と第4象限では負になる。そのため、これらをたしあわせた$\sum_{i=1}^n{(x_i-\bar{x})(y_i-\bar{y})}$は、「右上や左下に多く点が存在している場合」には正の値を、「左上や右下に多くの点が存在している場合」には負の値をとる。もし、4象限に満遍なく散らばっている場合には、打ち消しあって0に近い値を取ることになる。そのため、共分散は、正の関連があるか、負の関連があるかを示す指標となる。しかし、$n$が多いと、点が多いので面積が大きくなるため、$\frac{1}{n}$をかける。
+
+　このようにして計算される共分散が、相関係数の分子ににくることになる。
+
+## 相関係数の計算
+　相関係数の分母は、$x$と$y$の標準偏差の積である。共分散も、$x$と$y$の関連を示すものであるが、共分散は$x$と$y$の単位や尺度に左右されてしまう。例えば、身長と体重の関連を考えるとき、身長の単位をcmからmに変えるだけで、共分散は$\frac{1}{100}$になってしまう。
+
+```{r, echo=FALSE}
+library(ggplot2)
+
+set.seed(123)
+n <- 50
+height_cm <- rnorm(n, mean = 165, sd = 8)
+weight_kg <- 0.9 * height_cm - 90 + rnorm(n, sd = 5)
+height_m  <- height_cm / 100
+
+lv <- c("身長を cm で表した場合", "身長を m で表した場合")
+
+df <- data.frame(
+  height = c(height_cm, height_m),
+  weight = rep(weight_kg, 2),
+  unit   = factor(rep(lv, each = n), levels = lv)
+)
+
+# 共分散・相関係数のラベル
+lab <- do.call(rbind, lapply(split(df, df$unit), function(d) {
+  data.frame(unit = d$unit[1],
+             label = sprintf("共分散 = %.2f\n相関係数 = %.2f",
+                             cov(d$height, d$weight),
+                             cor(d$height, d$weight)))
+}))
+
+# 標準偏差の幅(矢印)用データ
+sdf <- do.call(rbind, lapply(split(df, df$unit), function(d) {
+  data.frame(unit = d$unit[1], m = mean(d$height), s = sd(d$height))
+}))
+sdf$label <- c(sprintf("標準偏差 = %.1f cm", sdf$s[1]),
+               sprintf("標準偏差 = %.2f m",  sdf$s[2]))
+sdf$y <- min(df$weight) - 4
+
+ggplot(df, aes(x = height, y = weight)) +
+  geom_point(alpha = 0.7, color = "steelblue") +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+  geom_segment(data = sdf,
+               aes(x = m - s, xend = m + s, y = y, yend = y),
+               arrow = arrow(ends = "both", length = unit(0.08, "inches")),
+               color = "darkorange", linewidth = 1, inherit.aes = FALSE) +
+  geom_text(data = sdf, aes(x = m, y = y, label = label),
+            vjust = 1.6, color = "darkorange",
+            family = "HiraKakuPro-W3", inherit.aes = FALSE) +
+  geom_text(data = lab, aes(label = label),
+            x = -Inf, y = Inf, hjust = -0.1, vjust = 1.3,
+            family = "HiraKakuPro-W3", inherit.aes = FALSE) +
+  facet_wrap(~ unit, scales = "free_x") +
+  scale_y_continuous(expand = expansion(mult = c(0.2, 0.05))) +
+  labs(title = "身長の単位を変えると、ばらつき(標準偏差)も共分散も 1/100 になる",
+       x = "身長", y = "体重 (kg)") +
+  theme_minimal() +
+  theme(text = element_text(family = "HiraKakuPro-W3"),
+        axis.text.x = element_text(face = "bold", size = 12))
+```
+
+　そこで、共分散から単位を消したい。共分散は、$x$と$y$の偏差をかけたものであるので、単位は、($x$の単位)$\times$ ($y$の単位)である。そのため、$x$の標準偏差と$y$の標準偏差で割ってあげれば、単位が消える。また、標準偏差の積で割ることによって、相関係数の値は、-1から1の間に収まるようになる。
+
+　Rで相関係数を求めるには、**cor()**関数を使用する。以下では、労働時間と年収の相関を検討してみる。
+
+```{r}
+# まずは、労働時間と年収の分布を再確認（それぞれの変数はすでに作成済み）
+data4 |> count(whours)
+data4 |> count(income)
+```
+
+　きちんと欠損値処理されている。
+
+```{r}
+# 次に、相関係数を計算
+cor(data4$whours, data4$income, method="pearson", use = "complete.obs")
+```
+
+　相関係数が計算できた。
+
+:::{.callout-note}
+#### グループ・ワーク
+**「u001」データのうち、（1）労働時間と生活全般の満足度、（2）年収と生活全般の満足度の相関係数を計算してみよう。ただし、生活全般の満足度は、1=不満である、5=満足しているという連続変数として扱うこと。**
+:::
+
+　計算した相関係数は大きいと言えるのだろうか？社会学や心理学では、「相関係数の大きさ」を評価する際に、以下の基準を使用することが多い。
+
+|相関係数|相関の強さ|
+|:---------------------:|:-----------------:|
+|$0 \leqq |r| \leqq 0.2$| ほとんど相関がない|
+|$0.2 < |r| \leqq 0.4$| 弱い相関がある|
+|$0.4 < |r| \leqq 0.7$| 中程度の相関がある|
+|$0.7 < |r| \leqq 1.0$| 強い相関がある|
+
+　相関係数を計算する際には、外れ値の影響を受けやすいことに注意する必要がある。分析の際には、相関係数を計算する前に、散布図を描き、大きく外れる外れ値がないかどうかを確認した上で、必要に応じて外れ値を除外して相関係数を計算するのが良い。

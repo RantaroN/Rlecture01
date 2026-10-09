@@ -3,4 +3,168 @@ title: "単回帰分析"
 editor: visual
 ---
 
-（準備中）
+```{r, include=FALSE}
+data4 <- read.csv("data4.csv")
+library(dplyr)
+library(ggplot2)
+```
+
+## 回帰分析とは
+
+　**回帰分析**とは、ある結果を予測・説明する原因を設定し、結果と原因との関連を検証するための分析方法である。回帰分析において、原因となる変数を**独立変数**（**説明変数**）、結果となる変数を**従属変数**（**被説明変数**）と呼ぶ。回帰分析においては、独立変数と従属変数の間に**線形関係**を想定し、独立変数の値から説明変数の値を予測する。
+
+　回帰分析には、**単回帰分析**と**重回帰分析**がある。単回期分析とは、独立変数が1つである回帰分析のことを指す。一方で、重回帰分析は、独立変数が2つ以上ある回帰分析のことを指す。以降では、単回期分析の考え方について説明する。
+
+## 単回帰分析のイメージ
+　これまでの授業で、量的変数間の関連を検討する際に、散布図を描くことを推奨してきた。まず、改めて散布図を眺めてみたいと思う。以下は、仮想的な散布図である。
+
+```{r, echo=FALSE}
+n <- 100
+x <- runif(n, min = 2, max = 20)              # 学習時間（時間/週）
+y <- 40 + 2.5 * x + rnorm(n, mean = 0, sd = 8) # 真のモデル：切片40、傾き2.5、誤差SD=8
+dat <- data.frame(x = x, y = y)
+dat |>
+  ggplot(aes(x=x,y=y)) +
+  geom_point() +
+  theme_classic()
+```
+
+　この散布図を眺めてみると、なんとなく、右肩上がりの関連、つまりはxとyの間の正の関連が見て取れないだろうか？
+
+　そこで、仮に以下のような赤線を引くことができたら、その赤線の傾きの大きさによって、独立変数が1増加（減少）した場合の従属変数の増加量を計算することができる。
+
+```{r, echo=FALSE, message=FALSE}
+dat |>
+  ggplot(aes(x=x,y=y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  theme_classic()
+```
+
+　このような赤線が引ければ、独立変数のとる値によって、従属変数の値を予測することができる。つまり、独立変数と従属変数の関連は一次関数の形式で表現される。
+
+$$
+y_i = b_0 + b_1x_i + e_i
+$$
+　ここで、$b_o$は切片であり、$x=0$の場合の$y$の値を意味する。$b_1$は傾きであり、独立変数が1変化した場合の従属変数の変化料を意味する。この$b_1$は，独立変数の係数であるため、**回帰係数**と呼ばれる。また、右辺の最後には、$e_i$という誤差が付けられている。これは、式の$b_0 + b_1x_i$だけでは、実際の観測値を完全に予測できず、誤差が存在するためである。
+
+　では、このような回帰直線は，どのように引けば良いのか？つまり、散布図上で、どのように**回帰直線**（赤線）を引けば良いのだろうか？
+
+## 最小二乗法
+　回帰直線を引くには、あるいは回帰係数を求めるためには、回期式中の$b_0$と$b_1$を求める必要がある。**最小二乗法**とは、このような切片と傾きを決定する方法である。最小二乗法では、回帰直線と、それぞれの観測値との誤差を最小にするような$b_0$と$b_1$の値を求める。図にすると以下のようなイメージである。
+
+```{r, echo=FALSE}
+# 最小二乗法の説明図：「どの直線が一番よいか」を比べる
+library(ggplot2)
+
+set.seed(123)
+
+# ---- 1. 仮想データ（残差が見やすいよう点は少なめ） -----------------
+n <- 20
+x <- runif(n, min = 2, max = 20)
+y <- 40 + 2.5 * x + rnorm(n, mean = 0, sd = 8)
+dat <- data.frame(x = x, y = y)
+
+# ---- 2. 最小二乗法で推定した直線 -----------------------------------
+fit <- lm(y ~ x, data = dat)
+b0_ols <- coef(fit)[1]
+b1_ols <- coef(fit)[2]
+
+# ---- 3. 比較する3本の直線（切片, 傾き） ----------------------------
+# A：傾きが小さすぎる線 / B：傾きが大きすぎる線 / C：最小二乗法の線
+# A・Bは、データの平均点を通るようにして「傾きだけ」を変える
+xbar <- mean(dat$x); ybar <- mean(dat$y)
+lines_df <- data.frame(
+  panel = c("A", "B", "C"),
+  b1    = c(0.5, 4.0, b1_ols)
+)
+lines_df$b0 <- ybar - lines_df$b1 * xbar
+
+# ---- 4. 各直線ごとに、予測値・残差・残差の二乗和を計算 -------------
+plot_df <- do.call(rbind, lapply(seq_len(nrow(lines_df)), function(i) {
+  d <- dat
+  d$panel <- lines_df$panel[i]
+  d$b0    <- lines_df$b0[i]
+  d$b1    <- lines_df$b1[i]
+  d$pred  <- d$b0 + d$b1 * d$x
+  d$resid <- d$y - d$pred
+  d
+}))
+
+ssr <- aggregate(resid ~ panel, data = plot_df, FUN = function(r) sum(r^2))
+names(ssr)[2] <- "ssr"
+lines_df <- merge(lines_df, ssr, by = "panel")
+
+# 見出し（facetのラベル）
+lab <- c(
+  A = "A：傾きが小さすぎる直線",
+  B = "B：傾きが大きすぎる直線",
+  C = "C：最小二乗法の直線"
+)
+lines_df$label <- sprintf("%s\n誤差の二乗和 = %.0f", lab[lines_df$panel], lines_df$ssr)
+plot_df <- merge(plot_df, lines_df[, c("panel", "label")], by = "panel")
+lines_df$is_ols <- lines_df$panel == "C"
+plot_df$is_ols  <- plot_df$panel == "C"
+
+# ---- 5. 作図 --------------------------------------------------------
+# 日本語フォント（環境に合わせて変更：Mac "HiraKakuProN-W3"、Windows "Meiryo"）
+jp_font <- switch(Sys.info()[["sysname"]],
+  "Darwin"  = "HiraKakuProN-W3",
+  "Windows" = "Meiryo",
+  "Noto Sans CJK JP"
+)
+
+ggplot(plot_df, aes(x = x, y = y)) +
+  # 誤差（観測値と直線の差）
+  geom_segment(aes(xend = x, yend = pred),
+               color = "firebrick", linetype = "dashed", alpha = 0.8) +
+  # 直線
+  geom_abline(data = lines_df,
+              aes(intercept = b0, slope = b1, color = is_ols),
+              linewidth = 1.2) +
+  # 観測値
+  geom_point(size = 2.2, color = "steelblue") +
+  scale_color_manual(values = c(`TRUE` = "firebrick", `FALSE` = "grey40"),
+                     guide = "none") +
+  facet_wrap(~ label, nrow = 1) +
+  coord_cartesian(ylim = c(28, 110)) +
+  labs(x = "独立変数 x", y = "従属変数 y",
+       caption = "赤の破線：観測値と直線との誤差（残差）") +
+  theme_classic(base_family = jp_font) +
+  theme(strip.background = element_blank(),
+        strip.text = element_text(face = "bold", size = 11))
+```
+
+　回期直線上にある予測値は、$\hat{y_i}=b_0+b_1x_i$により計算される。そのため、実際の観測値$y_i$と、予測値との誤差は、以下で示される。
+
+$$
+e_i = y_i-\hat{y_i} = y_i-(b_0+b_1x_i)
+$$
+
+　この誤差を二乗して、全て足し合わせたものは、以下の通り。
+
+$$
+\sum_{i=1}^n{e_i^2} = \sum_{i=1}^n{(y_i-\hat{y_i})^2} = \sum_{i=1}^n(y_i-(b_0+b_1x_i))^2
+$$
+
+　この、$\sum_{i=1}^n(y_i-(b_0+b_1x_i))^2$を最小化させる$b_0$と$b_1$を計算すれば良い。最小二乗法により、切片と傾きを求めると、それぞれ以下のように計算できることが明らかとなる。
+
+$$
+b_0 = \hat{y} - b_1\hat{x}
+$$
+
+$$
+b_1 = \frac{s_{xy}}{s_x^2}
+$$
+　つまり、傾き$b_1$は，$x$と$y$の共分散を、$x$の分散で割ったものである。
+
+　では、実際に単回期分析を実行してみる。Rでは、**lm()**によって、単回期分析を実行することができる。以下では、独立変数を教育年数（ZQ23Aから加工して作成）、従属変数を階層帰属意識（ZQ35）として分析してみる。
+
+```{r}
+lm()
+```
+
+## 決定係数
+
+
+
