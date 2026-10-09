@@ -91,10 +91,6 @@ mtcars |>
 ```{r}
 #| echo: false
 library(ggplot2)
-library(showtext)
-
-font_add_google("Noto Sans JP", "noto")
-showtext_auto()
 
 set.seed(123)
 n <- 100
@@ -124,8 +120,8 @@ ggplot(df, aes(x = x, y = y)) +
             x = -Inf, y = Inf, hjust = -0.1, vjust = 1.5,
             inherit.aes = FALSE) +
   facet_wrap(~ type) +
-  labs(title = "相関の種類と回帰直線", x = "x", y = "y") +
-  theme_minimal(base_family = "noto")
+  labs(title = "Correlation types and regression lines", x = "x", y = "y") +
+  theme_minimal()
 ```
 
 　この相関関係の強さは、散布図の各点が直線からどの程度離れているか、つまり散らばりの「程度」として捉えることができる。このような相関関係の強さを測るために、**相関係数**と呼ばれる指標がある。相関関係のうち最もよく使用されるものが、**ピアソンの相関係数**であり、**r**という記号で表されることが多い。ピアソンの相関係数は、以下の式によって計算される。
