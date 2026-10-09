@@ -1,0 +1,14 @@
+---
+title: "二項ロジットモデル"
+editor: visual
+---
+
+```{r, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(modelsummary)
+data4 <- read.csv("data4.csv")
+```
+
+## 二項ロジットモデルとは
+（作成中）

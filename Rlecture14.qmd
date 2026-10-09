@@ -1,0 +1,14 @@
+---
+title: "交互作用効果"
+editor: visual
+---
+
+```{r, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(modelsummary)
+data4 <- read.csv("data4.csv")
+```
+
+## 交互作用効果とは
+（作成中）
