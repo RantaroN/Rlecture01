@@ -17,6 +17,9 @@ book:
     - Rlecture10.qmd
     - Rlecture11.qmd
     - Rlecture12.qmd
+    - Rlecture13.qmd
+    - Rlecture14.qmd
+    - Rlecture15.qmd
 
 format:
   html:
