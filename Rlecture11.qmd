@@ -54,25 +54,26 @@ $$
 　回帰直線を引くには、あるいは回帰係数を求めるためには、回期式中の$b_0$と$b_1$を求める必要がある。**最小二乗法**とは、このような切片と傾きを決定する方法である。最小二乗法では、回帰直線と、それぞれの観測値との誤差を最小にするような$b_0$と$b_1$の値を求める。図にすると以下のようなイメージである。
 
 ```{r, echo=FALSE}
-# 最小二乗法の説明図：「どの直線が一番よいか」を比べる
+#| echo: false
+# Illustration of least squares: which line fits best?
 library(ggplot2)
 
 set.seed(123)
 
-# ---- 1. 仮想データ（残差が見やすいよう点は少なめ） -----------------
+# ---- 1. Simulated data (few points so residuals are easy to see) ----
 n <- 20
 x <- runif(n, min = 2, max = 20)
 y <- 40 + 2.5 * x + rnorm(n, mean = 0, sd = 8)
 dat <- data.frame(x = x, y = y)
 
-# ---- 2. 最小二乗法で推定した直線 -----------------------------------
+# ---- 2. Line estimated by least squares ----
 fit <- lm(y ~ x, data = dat)
 b0_ols <- coef(fit)[1]
 b1_ols <- coef(fit)[2]
 
-# ---- 3. 比較する3本の直線（切片, 傾き） ----------------------------
-# A：傾きが小さすぎる線 / B：傾きが大きすぎる線 / C：最小二乗法の線
-# A・Bは、データの平均点を通るようにして「傾きだけ」を変える
+# ---- 3. Three lines to compare (intercept, slope) ----
+# A: slope too small / B: slope too large / C: least squares line
+# A and B pass through the mean point; only the slope changes
 xbar <- mean(dat$x); ybar <- mean(dat$y)
 lines_df <- data.frame(
   panel = c("A", "B", "C"),
@@ -80,7 +81,7 @@ lines_df <- data.frame(
 )
 lines_df$b0 <- ybar - lines_df$b1 * xbar
 
-# ---- 4. 各直線ごとに、予測値・残差・残差の二乗和を計算 -------------
+# ---- 4. Predictions, residuals, and sum of squared residuals per line ----
 plot_df <- do.call(rbind, lapply(seq_len(nrow(lines_df)), function(i) {
   d <- dat
   d$panel <- lines_df$panel[i]
@@ -95,42 +96,36 @@ ssr <- aggregate(resid ~ panel, data = plot_df, FUN = function(r) sum(r^2))
 names(ssr)[2] <- "ssr"
 lines_df <- merge(lines_df, ssr, by = "panel")
 
-# 見出し（facetのラベル）
+# Panel headings (facet labels)
 lab <- c(
-  A = "A：傾きが小さすぎる直線",
-  B = "B：傾きが大きすぎる直線",
-  C = "C：最小二乗法の直線"
+  A = "A: Slope too small",
+  B = "B: Slope too large",
+  C = "C: Least squares line"
 )
-lines_df$label <- sprintf("%s\n誤差の二乗和 = %.0f", lab[lines_df$panel], lines_df$ssr)
+lines_df$label <- sprintf("%s\nSum of squared errors = %.0f",
+                          lab[lines_df$panel], lines_df$ssr)
 plot_df <- merge(plot_df, lines_df[, c("panel", "label")], by = "panel")
 lines_df$is_ols <- lines_df$panel == "C"
 plot_df$is_ols  <- plot_df$panel == "C"
 
-# ---- 5. 作図 --------------------------------------------------------
-# 日本語フォント（環境に合わせて変更：Mac "HiraKakuProN-W3"、Windows "Meiryo"）
-jp_font <- switch(Sys.info()[["sysname"]],
-  "Darwin"  = "HiraKakuProN-W3",
-  "Windows" = "Meiryo",
-  "Noto Sans CJK JP"
-)
-
+# ---- 5. Plot ----
 ggplot(plot_df, aes(x = x, y = y)) +
-  # 誤差（観測値と直線の差）
+  # Errors (difference between observation and line)
   geom_segment(aes(xend = x, yend = pred),
                color = "firebrick", linetype = "dashed", alpha = 0.8) +
-  # 直線
+  # Lines
   geom_abline(data = lines_df,
               aes(intercept = b0, slope = b1, color = is_ols),
               linewidth = 1.2) +
-  # 観測値
+  # Observations
   geom_point(size = 2.2, color = "steelblue") +
   scale_color_manual(values = c(`TRUE` = "firebrick", `FALSE` = "grey40"),
                      guide = "none") +
   facet_wrap(~ label, nrow = 1) +
   coord_cartesian(ylim = c(28, 110)) +
-  labs(x = "独立変数 x", y = "従属変数 y",
-       caption = "赤の破線：観測値と直線との誤差（残差）") +
-  theme_classic(base_family = jp_font) +
+  labs(x = "Independent variable x", y = "Dependent variable y",
+       caption = "Red dashed lines: errors (residuals) between observations and the line") +
+  theme_classic() +
   theme(strip.background = element_blank(),
         strip.text = element_text(face = "bold", size = 11))
 ```
@@ -160,9 +155,7 @@ $$
 
 　では、実際に単回期分析を実行してみる。Rでは、**lm()**によって、単回期分析を実行することができる。以下では、独立変数を教育年数（ZQ23Aから加工して作成）、従属変数を階層帰属意識（ZQ35）として分析してみる。
 
-```{r}
-lm()
-```
+（作成中）
 
 ## 決定係数
 
