@@ -177,7 +177,7 @@ ggplot(d, aes(x = x, y = y)) +
   labs(title = "偏差の積 = 長方形の面積",
        x = "x", y = "y", fill = "偏差の積") +
   theme_minimal() +
-  theme(text = element_text(family = "HiraKakuPro-W3"))
+  theme(text = element_text(family = "Hiragino Sans"))
 ```
 
 　この図からわかるように、$x$と$y$についての偏差の積は、グラフの第1象限と第3象限では正に、第2象限と第4象限では負になる。そのため、これらをたしあわせた$\sum_{i=1}^n{(x_i-\bar{x})(y_i-\bar{y})}$は、「右上や左下に多く点が存在している場合」には正の値を、「左上や右下に多くの点が存在している場合」には負の値をとる。もし、4象限に満遍なく散らばっている場合には、打ち消しあって0に近い値を取ることになる。そのため、共分散は、正の関連があるか、負の関連があるかを示す指標となる。しかし、$n$が多いと、点が多いので面積が大きくなるため、$\frac{1}{n}$をかける。
@@ -238,7 +238,7 @@ ggplot(df, aes(x = height, y = weight)) +
   labs(title = "身長の単位を変えると、ばらつき(標準偏差)も共分散も 1/100 になる",
        x = "身長", y = "体重 (kg)") +
   theme_minimal() +
-  theme(text = element_text(family = "HiraKakuPro-W3"),
+  theme(text = element_text(family = "Hiragino Sans"),
         axis.text.x = element_text(face = "bold", size = 12))
 ```
 
