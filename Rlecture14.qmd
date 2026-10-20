@@ -11,4 +11,308 @@ data4 <- read.csv("data4.csv")
 ```
 
 ## 交互作用効果とは
-（作成中）
+
+　学習時間（$x$）が、成績（$y$）に対して与える影響について考えてみよう。この場合、学習時間が独立変数$x$であり、成績が従属変数$y$である。ここでは、学習時間の増加が成績をどの程度上昇させるのかを考えてみたい。この$x$と$y$の関連を図示すると以下のようになる。
+
+![](pictures/pictures25.png)
+
+　しかし、学習時間は、「効果的な学習方法」を取り入れた場合に、より効果を持つかもしれない。つまり、「効果的な学習方法」を実行する個人では、そうでない個人よりも、長時間の学習によって得る効果は大きいかもしれない。これを図示すると以下のようになる。
+
+```{r, echo=FALSE}
+library(ggplot2)
+
+x <- 0:10
+figure1_data <- data.frame(
+  x       = x,
+  without = 5 * x + 5,     # Without the effective learning method (intercept = 5)
+  with    = 10 * x + 20    # With the effective learning method (intercept = 20)
+)
+
+figure1_data |>
+  ggplot(aes(x = x)) +
+  # Shade the gap between the two lines (= effect of the learning method)
+  geom_ribbon(aes(ymin = without, ymax = with),
+              fill = "steelblue", alpha = 0.2) +
+  geom_line(aes(y = without), color = "gray50",    linewidth = 1) +
+  geom_line(aes(y = with),    color = "steelblue", linewidth = 1) +
+  # Intercepts
+  annotate("point", x = 0, y = 5,  color = "gray50",    size = 2.5) +
+  annotate("point", x = 0, y = 20, color = "steelblue", size = 2.5) +
+  # Line labels
+  annotate("text", x = 10.2, y = 120, label = "With effective\nlearning method",
+           hjust = 0, color = "steelblue") +
+  annotate("text", x = 10.2, y = 55,  label = "Without effective\nlearning method",
+           hjust = 0, color = "gray40") +
+  # Gap arrow: short study time (small)
+  annotate("segment", x = 1, xend = 1, y = 10, yend = 30,
+           arrow = arrow(ends = "both", length = unit(0.12, "cm"))) +
+  annotate("text", x = 1.2, y = 20, label = "Small difference", hjust = 0, size = 3.5) +
+  # Gap arrow: long study time (large)
+  annotate("segment", x = 8, xend = 8, y = 45, yend = 100,
+           arrow = arrow(ends = "both", length = unit(0.12, "cm"))) +
+  annotate("text", x = 8.2, y = 72.5, label = "Large difference", hjust = 0, size = 3.5) +
+  scale_x_continuous(breaks = seq(0, 10, 2), expand = expansion(mult = c(0, 0.35))) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+  labs(x = "Study time", y = "Effect obtained") +
+  theme_classic()
+```
+
+　これは、独立変数$x$（学習時間）が、従属変数$y$（成績）に対する影響が、**調整変数**$z$（学習方法）によって異なることを意味する。このように、独立変数$x$が持つ従属変数$y$に対して与える効果を変化させる変数を、**調整変数**と呼ぶ。このような、調整変数による効果を**交互作用効果（interaction effect）**と呼ぶ。図に示すと以下のようになる。
+
+![](pictures/pictures26.png)
+
+::: callout-note
+#### グループ・ワーク
+
+**「u001」のうち、暮らしむき（ZQ12）を独立変数、生活全般満足度（ZQ30D）を従属変数としたとき、独立変数の効果を調整するとみられる、調整変数を考えてみよう。**
+:::
+
+## 交互作用効果の推定
+
+　では実際に、交互作用効果はどのように推定すれば良いのだろうか。交互作用効果は、以下のような式によって推定される。
+
+$$y_i = b_0 + b_1x_i + b_2z_i + b_3x_iz_i + e_i$$
+
+　ここで、$x_i$は独立変数を、$y_i$は従属変数を示している。$z_i$が調整変数であり、$b_3x_iz_i$の箇所が交互作用効果である。
+
+　上式を少し変形させたものが以下の式である。
+
+$$y_i = b_0 + (b_1 + b_3z_i)x_i + b_2z_i + e_i$$
+
+　先ほどの例だと、この式のうち$z_i$は「効果的な学習方法」を指す。では、$z_i$が、「効果的な学習方法」を実行している場合に1を、実行していない場合に0をとるダミー変数であると仮定しよう。すると、独立変数$x_i$（学習時間）が持つ効果は、この式のうち、どの部分になるだろうか。
+
+　$z_i=0$の場合（つまり「効果的な学習方法」を実行していない場合）の、$x_i$の効果量は、$z_i=0$を代入した場合の$x_i$の係数（$=b_1$）である。一方で、$x_i=1$の場合（つまり「効果的な学習方法」を実行している場合）の$x_i$の効果量は、$z_i=1$を代入した場合の$x_i$の係数（$=b_1+b_3$）である。つまり、調整変数の値によって、$x_i$の効果量は、$b_3$だけ異なることになる。調整変数$z$が$0$である場合の、独立変数の効果のことを、**主効果**と呼ぶ。
+
+## 交互作用効果の種類
+
+　交互作用効果にはいくつかの種類がある。以下では、先ほど示した、学習時間（$x$）が成績（$y$）に与える影響における、学習方法（$z$）の調整効果について着目し、いくつかの相互作用の種類を説明する。
+
+### 交互作用効果がない場合
+　調整変数（$z$）による調整効果がない状況とは、独立変数（$x$）が、従属変数（$y$）に対して与える効果が、調整変数（$z$）のとる値によって異ならないことを意味する。
+
+　例えば、学習時間$x$が成績$y$に与える効果に対して、ある学習方法$z$による調整効果がない状況を考えてみる。このとき、学習方法を実践している場合（$z=1$）と、学習方法を実践していない場合（$z=0$）とで、学習時間$x$の傾きが異ならない。図にすると以下の通りである。
+
+```{r, echo=FALSE}
+# No moderation: slopes of x are equal for z = 0 and z = 1 (parallel lines)
+x <- seq(0, 10, length.out = 100)
+
+b0 <- 40   # intercept
+b1 <- 4    # slope of study time x (shared across groups)
+b2 <- 10   # main effect of study method z (intercept shift only)
+
+y_z0 <- b0 + b1 * x         # z = 0 (not practicing the method)
+y_z1 <- b0 + b2 + b1 * x    # z = 1 (practicing the method)
+
+plot(x, y_z0, type = "l", lwd = 2, col = "steelblue",
+     ylim = range(y_z0, y_z1),
+     xlab = "Study time (x)", ylab = "Grade (y)")
+lines(x, y_z1, lwd = 2, col = "tomato")
+legend("topleft",
+       legend = c("z = 0", "z = 1"),
+       col = c("steelblue", "tomato"), lwd = 2, bty = "n")
+```
+
+　ここでは、調整変数$z$の主効果は正となっている。つまり、ある学習方法を実践すること（$z=1$）は，実施しない場合と比較すると、平均的に（=切片は）高いが、学習時間$x$が成績$y$に与える影響は変化させない、ということである。
+
+### 同じ方向の交互作用効果がある場合
+　調整変数$z$が調整効果を持つ場合、つまり、独立変数$x$と調整変数$z$の交互作用効果が存在する場合、調整変数$z$のとる値によって、独立変数$x$が従属変数$y$に対して与える条件付き効果が異なる。
+
+　例えば、ある学習方法$z$を実践すると（$z=1$）、学習がより効率的になるため、学習時間（$x$）の増加によって上昇する成績（$y$）の増加幅が大きくなるかもしれない。これを図に示すと以下のようになる。
+
+```{r, echo=FALSE}
+# Same-direction interaction: slopes differ, but both are positive
+x <- seq(0, 10, length.out = 100)
+
+b0 <- 40   # intercept
+b1 <- 2    # slope of x when z = 0
+b2 <- 10   # main effect of z (intercept shift)
+b3 <- 3    # interaction (x * z): extra slope when z = 1
+
+y_z0 <- b0 + b1 * x                         # z = 0: slope = 2
+y_z1 <- b0 + b2 + (b1 + b3) * x             # z = 1: slope = 5
+
+plot(x, y_z0, type = "l", lwd = 2, col = "steelblue",
+     ylim = range(y_z0, y_z1),
+     xlab = "Study time (x)", ylab = "Grade (y)")
+lines(x, y_z1, lwd = 2, col = "tomato")
+legend("topleft",
+       legend = c("z = 0", "z = 1"),
+       col = c("steelblue", "tomato"), lwd = 2, bty = "n")
+```
+
+　この図が示しているように、効率的な学習方法を実践している場合（$z=1$）、そうでない場合（$z=0$）と比べ、学習時間$x$の増加によって、成績$y$がより上昇している（傾きが急）であることがわかる。
+
+　上に示した図は、調整変数$z$のとる値によって、独立変数$x$が従属変数$y$に対して与える条件付き効果の向きが変化しない場合の交互作用効果である。
+
+### 逆の方向の交互作用効果がある場合
+　一方で、調整変数$z$によって、独立変数$x$の効果が正になったり負になったりする場合もある。例えば、ある学習方法$z$は，「悪い」学習方法であり、その学習方法を実践すると、学習時間$x$の増加に伴ってむしろ成績$y$が低下するような状況を想像してみよう。この場合を図に示すと、以下のようになる。
+
+```{r, echo=FALSE}
+# Opposite-direction interaction: slope of x is positive for z = 0, negative for z = 1
+x <- seq(0, 10, length.out = 100)
+
+b0 <- 40   # intercept
+b1 <- 4    # slope of x when z = 0 (positive)
+b2 <- 10   # main effect of z (intercept shift)
+b3 <- -7   # interaction (x * z): slope when z = 1 is b1 + b3 = -3
+
+y_z0 <- b0 + b1 * x                  # z = 0: slope = +4
+y_z1 <- b0 + b2 + (b1 + b3) * x      # z = 1: slope = -3
+
+plot(x, y_z0, type = "l", lwd = 2, col = "steelblue",
+     ylim = range(y_z0, y_z1),
+     xlab = "Study time (x)", ylab = "Grade (y)")
+lines(x, y_z1, lwd = 2, col = "tomato")
+legend("topleft",
+       legend = c("z = 0", "z = 1"),
+       col = c("steelblue", "tomato"), lwd = 2, bty = "n")
+```
+
+　これは、逆の方向の交互作用効果がある例である。
+
+## 交互作用効果の推定の例
+　では実際に、交互作用効果を推定してみよう。以下では、暮らしむき（ZQ12）を独立変数、生活全般満足度（ZQ30D）を従属変数、大卒以上ダミー（ZQ23A）を調整変数とした場合の推定の例である。
+
+```{r}
+# 暮らしむき変数は、良いほど大きい値で、9=NAに置き換え
+data4 |> count(ZQ12)
+data14 <- data4 |>
+  mutate(living = ifelse(ZQ12==9, NA, 6-ZQ12))
+data14 |> count(living)
+# 生活全般満足度変数は、満足しているほど大きい値で、9=NAに置き換え
+data4 |> count(ZQ30D)
+data14 <- data14 |>
+  mutate(satisfaction = ifelse(ZQ30D==9, NA, 6-ZQ30D))
+# 大卒以上ダミーは，ZQ23Aから作成
+data4 |> count(ZQ23A)
+data14 <- data14 |>
+  mutate(bachelor = case_when(ZQ23A <= 4 ~ 0,
+                              ZQ23A <= 6 ~ 1,
+                              TRUE ~ NA))
+```
+
+　交互作用効果を推定するためには、通常の回帰分析のコマンド（**lm()**）を使用すれば良い。推定結果は、わかりやすく**msummary()**でまとめる。
+
+```{r}
+lm(satisfaction ~ living + bachelor + living*bachelor, data = data14) |> msummary(stars = TRUE)
+```
+
+　推定結果を確認すると、大卒以上（bachelor）の主効果は5%水準で統計的に非有意である。つまり、「大卒以上とそれ以外とでは、従属変数（生活全般満足度）に違いがない」。また、暮らしむき（living）の主効果は，5%水準で統計的に正に有意である。つまり、「暮らしむきが高いほど、従属変数（生活全般満足度）は高い」といえる。
+
+　それでは、これらの交互作用効果を確認しよう。暮らしむきと大卒以上ダミーとの交互作用効果は、統計的に有意な負の効果を持っている。つまり、「大卒以上では、暮らしむきが生活全般満足度に対して与える正の効果は、それ以外の学歴を持つ場合よりも弱くなる」といえる。
+
+::: callout-note
+#### グループ・ワーク
+
+**「u001」のうち、皆さんの関心に従って、独立変数・従属変数・調整変数を設定し、実際に交互作用効果を推定してみよう。**
+:::
+
+## 交互作用効果の可視化
+　調整変数$z$が、実際に独立変数$x$と従属変数$y$の関連をどのように調整するのかは，交互作用効果の結果からではしばしばわかりにくい場合がある。そのような場合、交互作用効果を持つ変数間の関連を可視化することで、より深い理解を得ることができる。
+
+### 予測値
+　まず、回期分析の結果から、独立変数$x$の取りうる値によって、従属変数$y$がどのような値を取りうるかという、**予測値**を計算することができる。Rでは、`marginaleffects`パッケージの`predictions()`を使用して、以下のようにして計算できる。
+
+```{r}
+# まず、回帰分析の結果を、何らかのオブジェクトに格納
+result1 <- lm(satisfaction ~ living + bachelor + living*bachelor, data = data14)
+
+# marginaleffectsパッケージをインストールしてlibraryする
+#installed.packages("marginaleffects")
+library(marginaleffects)
+
+# predictions()を使用して、予測値を計算
+prediction1 <- predictions(result1,
+                           newdata = datagrid(living = c(1:5), 
+                                              bachelor = (0:1)))
+
+prediction1
+```
+
+　`predictions()`の第1引数には`lm()`の推定結果を格納する。第2引数として、`newdata = datagrid()`と指定されているが、これは`datagrid()`の中に、説明変数と調整変数のとる値を指定している。ここで指定された値の範囲で、予測値が計算される。
+
+　`predictions()`の結果を確認してみよう。「prediction1」の中身を確認してみると、"living"が1~5まで、bachelorが0,1を取る場合の、従属変数の予測値が、"Estimate"に格納されている。これが、独立変数・調整変数がとるそれぞれの値における、従属変数の予測値である。また、"Std. Error"は標準誤差を意味する。当然、これだけでは視覚的にわかりにくいので、続いてここからグラフを作成してみる。
+
+　グラフの作成には、`ggplot2`パッケージの`ggplot()`関数を使用する。
+
+```{r}
+# まず、prediction1をデータフレームにする
+prediction1_df <- data.frame(prediction1)
+prediction1_df
+
+# データフレームにしたprediction1_dfに対して、ggplotでグラフを作成
+prediction1_df |>
+  mutate(bachelor = factor(bachelor)) |> # 先に、bachelorを質的変数に指定
+  ggplot(aes(x = living, y = estimate,
+             color = bachelor, fill = bachelor, group = bachelor)) + # 縦・横軸・グループを指定
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high),
+              alpha = 0.2, color = NA) + # 95％信頼区間を色付け
+  geom_line() + # 横線で結ぶ
+  geom_point() + # 点を打つ
+  labs(x = "Standard of living", y = "Overall life satisfaction",
+       fill = "", color = "") # 軸のラベルを付与
+```
+
+　作成されたグラフは、$x$軸が暮らしむき（独立変数）、$y$軸が生活全般満足度（従属変数）を意味する。さらに重要な点は、赤と青の2つの実線が引かれていることである。凡例を確認すると、赤が$z=0$、青が$z=1$を意味していることがわかる。つまり、赤線は、大卒以上の集団における予測値、青線は大卒以上の集団における予測値を意味している。上で推定した交互作用効果は、5%水準で統計的に有意な負の効果を持っていた。つまり、「大卒以上の集団では、暮らしむきが生活全般満足度に与える正の影響が弱い」ということがいえ、これはグラフからも読み取れるだろう。
+
+### 量的変数どうしの交互作用効果
+　調整変数$z$に、量的変数を投入することも可能である。たとえば、先ほどの例で使用した、暮らしむき（独立変数）が、生活全般満足度（従属変数）に与える影響に対して、年齢が与える調整効果を考えてみよう。
+
+```{r}
+# 年齢変数の元になる、ybirth（出生年）を確認
+data14 |> count(ybirth)
+
+# まずは、ybirth（出生年）から年齢変数（gae）を算出する
+# 現在は2026年なので、2026-ybirthで、おおよその年齢を算出する
+data14 <- data14 |>
+  mutate(age = 2026 - ybirth)
+data14 |> count(ybirth, age)
+
+# とりあえず、このage変数をそのまま調整変数として投入してみる
+lm(satisfaction ~ living + age + living*age, data = data14) |> msummary(stars = TRUE)
+```
+
+　これで、ひとまずは推定ができた。暮らしむき、年齢の主効果、暮らしむき×年齢の交互作用効果はすべて統計的に有意である。しかし、よく見てみると、暮らしむきの主効果は負に有意である。上で推定した分析結果と異なる結果であるし、「暮らしむきがよくなるほど、生活全般満足度が悪くなる」というのは、あまり常識的な結果ではない。なぜ、このような結果になってしまうのだろう。
+
+　これを考えるために、交互作用効果を含む回帰式を再度確認してみよう。
+
+$$y_i = b_0 + b_1x_i + b_2z_i + b_3x_iz_i + e_i$$
+　ここで、$x$の主効果$b_1$は、調整変数$z=0$である場合の、独立変数$x$の効果を意味する。さて、先ほどの例では、調整変数$z$は年齢を意味していた。調査のサンプル上では、$40 \leq z \leq 54$であったが、先ほどのモデルにおける$x$の主効果は、この年齢$z$が0の場合、つまり年齢が0歳の時の$x$の効果量を意味している。0歳の場合の効果を推定することには特に意味はないはずなので、以下のように40歳を0歳として処理するか、多くの場合は**標準化**した上で回帰モデルに投入することが多い。
+
+```{r}
+data14 <- data14 |>
+  mutate(age2 = age - 40)
+data14 |> count(age, age2)
+
+lm(satisfaction ~ living + age2 + living*age2, data = data14) |> msummary(stars = TRUE)
+
+```
+
+　このモデルにおける独立変数$x$の主効果は、40歳の場合の効果を意味する。
+
+　では続いて、先ほどと同様に、予測値をプロットしてみよう。
+
+```{r}
+result2 <- lm(satisfaction ~ living + age2 + living*age2, data = data14)
+prediction2 <- predictions(result2,
+                           newdata = datagrid(living = c(1:5), 
+                                              age2 = c(40,45,50)))
+prediction2_df <- data.frame(prediction2)
+
+prediction2_df |>
+  mutate(age2 = factor(age2)) |>
+  ggplot(aes(x = living, y = estimate,
+             color = age2, fill = age2, group = age2)) +
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high),
+              alpha = 0.2, color = NA) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Standard of living", y = "Overall life satisfaction",
+       fill = "", color = "")
+```
+
+::: callout-note
+#### グループ・ワーク
+
+**「u001」のうち、皆さんの関心に従って、独立変数・従属変数・調整変数を設定し、実際に交互作用効果を推定し、その結果をプロットしてみよう。**
+:::
