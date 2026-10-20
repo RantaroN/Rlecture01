@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>14&nbsp; 交互作用効果 – Rによる社会調査データ分析（基礎の基礎）</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./Rlecture15.html" rel="next">
+<link href="./Rlecture13.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5ccb035bea26c1e21f80f44cf7c27909.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Rlecture14.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">交互作用効果</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Rによる社会調査データ分析（基礎の基礎）</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">はじめに</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rの準備</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">基礎的な操作と演算子</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">演習用データの準備</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">変数の種類</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">変数の要約</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture7.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">標準誤差と区間推定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture8.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">統計的仮説検定</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture9.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">変数間の関連と相関係数</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">クロス表と連関の指標</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">単回帰分析</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">重回帰分析と統計的統制</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">ダミー変数</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture14.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">交互作用効果</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">質的従属変数のモデル</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#交互作用効果とは" id="toc-交互作用効果とは" class="nav-link active" data-scroll-target="#交互作用効果とは"><span class="header-section-number">14.1</span> 交互作用効果とは</a></li>
+  <li><a href="#交互作用効果の推定" id="toc-交互作用効果の推定" class="nav-link" data-scroll-target="#交互作用効果の推定"><span class="header-section-number">14.2</span> 交互作用効果の推定</a></li>
+  <li><a href="#交互作用効果の種類" id="toc-交互作用効果の種類" class="nav-link" data-scroll-target="#交互作用効果の種類"><span class="header-section-number">14.3</span> 交互作用効果の種類</a>
+  <ul class="collapse">
+  <li><a href="#交互作用効果がない場合" id="toc-交互作用効果がない場合" class="nav-link" data-scroll-target="#交互作用効果がない場合"><span class="header-section-number">14.3.1</span> 交互作用効果がない場合</a></li>
+  <li><a href="#同じ方向の交互作用効果がある場合" id="toc-同じ方向の交互作用効果がある場合" class="nav-link" data-scroll-target="#同じ方向の交互作用効果がある場合"><span class="header-section-number">14.3.2</span> 同じ方向の交互作用効果がある場合</a></li>
+  <li><a href="#逆の方向の交互作用効果がある場合" id="toc-逆の方向の交互作用効果がある場合" class="nav-link" data-scroll-target="#逆の方向の交互作用効果がある場合"><span class="header-section-number">14.3.3</span> 逆の方向の交互作用効果がある場合</a></li>
+  </ul></li>
+  <li><a href="#交互作用効果の推定の例" id="toc-交互作用効果の推定の例" class="nav-link" data-scroll-target="#交互作用効果の推定の例"><span class="header-section-number">14.4</span> 交互作用効果の推定の例</a></li>
+  <li><a href="#交互作用効果の可視化" id="toc-交互作用効果の可視化" class="nav-link" data-scroll-target="#交互作用効果の可視化"><span class="header-section-number">14.5</span> 交互作用効果の可視化</a>
+  <ul class="collapse">
+  <li><a href="#予測値" id="toc-予測値" class="nav-link" data-scroll-target="#予測値"><span class="header-section-number">14.5.1</span> 予測値</a></li>
+  <li><a href="#量的変数どうしの交互作用効果" id="toc-量的変数どうしの交互作用効果" class="nav-link" data-scroll-target="#量的変数どうしの交互作用効果"><span class="header-section-number">14.5.2</span> 量的変数どうしの交互作用効果</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">交互作用効果</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="交互作用効果とは" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="交互作用効果とは"><span class="header-section-number">14.1</span> 交互作用効果とは</h2>
+<p>　学習時間（<span class="math inline">\(x\)</span>）が、成績（<span class="math inline">\(y\)</span>）に対して与える影響について考えてみよう。この場合、学習時間が独立変数<span class="math inline">\(x\)</span>であり、成績が従属変数<span class="math inline">\(y\)</span>である。ここでは、学習時間の増加が成績をどの程度上昇させるのかを考えてみたい。この<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>の関連を図示すると以下のようになる。</p>
+<p><img src="pictures/pictures25.png" class="img-fluid"></p>
+<p>　しかし、学習時間は、「効果的な学習方法」を取り入れた場合に、より効果を持つかもしれない。つまり、「効果的な学習方法」を実行する個人では、そうでない個人よりも、長時間の学習によって得る効果は大きいかもしれない。これを図示すると以下のようになる。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture14_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　これは、独立変数<span class="math inline">\(x\)</span>（学習時間）が、従属変数<span class="math inline">\(y\)</span>（成績）に対する影響が、<strong>調整変数</strong><span class="math inline">\(z\)</span>（学習方法）によって異なることを意味する。このように、独立変数<span class="math inline">\(x\)</span>が持つ従属変数<span class="math inline">\(y\)</span>に対して与える効果を変化させる変数を、<strong>調整変数</strong>と呼ぶ。このような、調整変数による効果を<strong>交互作用効果（interaction effect）</strong>と呼ぶ。図に示すと以下のようになる。</p>
+<p><img src="pictures/pictures26.png" class="img-fluid"></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>グループ・ワーク
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>「u001」のうち、暮らしむき（ZQ12）を独立変数、生活全般満足度（ZQ30D）を従属変数としたとき、独立変数の効果を調整するとみられる、調整変数を考えてみよう。</strong></p>
+</div>
+</div>
+</section>
+<section id="交互作用効果の推定" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="交互作用効果の推定"><span class="header-section-number">14.2</span> 交互作用効果の推定</h2>
+<p>　では実際に、交互作用効果はどのように推定すれば良いのだろうか。交互作用効果は、以下のような式によって推定される。</p>
+<p><span class="math display">\[y_i = b_0 + b_1x_i + b_2z_i + b_3x_iz_i + e_i\]</span></p>
+<p>　ここで、<span class="math inline">\(x_i\)</span>は独立変数を、<span class="math inline">\(y_i\)</span>は従属変数を示している。<span class="math inline">\(z_i\)</span>が調整変数であり、<span class="math inline">\(b_3x_iz_i\)</span>の箇所が交互作用効果である。</p>
+<p>　上式を少し変形させたものが以下の式である。</p>
+<p><span class="math display">\[y_i = b_0 + (b_1 + b_3z_i)x_i + b_2z_i + e_i\]</span></p>
+<p>　先ほどの例だと、この式のうち<span class="math inline">\(z_i\)</span>は「効果的な学習方法」を指す。では、<span class="math inline">\(z_i\)</span>が、「効果的な学習方法」を実行している場合に1を、実行していない場合に0をとるダミー変数であると仮定しよう。すると、独立変数<span class="math inline">\(x_i\)</span>（学習時間）が持つ効果は、この式のうち、どの部分になるだろうか。</p>
+<p>　<span class="math inline">\(z_i=0\)</span>の場合（つまり「効果的な学習方法」を実行していない場合）の、<span class="math inline">\(x_i\)</span>の効果量は、<span class="math inline">\(z_i=0\)</span>を代入した場合の<span class="math inline">\(x_i\)</span>の係数（<span class="math inline">\(=b_1\)</span>）である。一方で、<span class="math inline">\(x_i=1\)</span>の場合（つまり「効果的な学習方法」を実行している場合）の<span class="math inline">\(x_i\)</span>の効果量は、<span class="math inline">\(z_i=1\)</span>を代入した場合の<span class="math inline">\(x_i\)</span>の係数（<span class="math inline">\(=b_1+b_3\)</span>）である。つまり、調整変数の値によって、<span class="math inline">\(x_i\)</span>の効果量は、<span class="math inline">\(b_3\)</span>だけ異なることになる。調整変数<span class="math inline">\(z\)</span>が<span class="math inline">\(0\)</span>である場合の、独立変数の効果のことを、<strong>主効果</strong>と呼ぶ。</p>
+</section>
+<section id="交互作用効果の種類" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="交互作用効果の種類"><span class="header-section-number">14.3</span> 交互作用効果の種類</h2>
+<p>　交互作用効果にはいくつかの種類がある。以下では、先ほど示した、学習時間（<span class="math inline">\(x\)</span>）が成績（<span class="math inline">\(y\)</span>）に与える影響における、学習方法（<span class="math inline">\(z\)</span>）の調整効果について着目し、いくつかの相互作用の種類を説明する。</p>
+<section id="交互作用効果がない場合" class="level3" data-number="14.3.1">
+<h3 data-number="14.3.1" class="anchored" data-anchor-id="交互作用効果がない場合"><span class="header-section-number">14.3.1</span> 交互作用効果がない場合</h3>
+<p>　調整変数（<span class="math inline">\(z\)</span>）による調整効果がない状況とは、独立変数（<span class="math inline">\(x\)</span>）が、従属変数（<span class="math inline">\(y\)</span>）に対して与える効果が、調整変数（<span class="math inline">\(z\)</span>）のとる値によって異ならないことを意味する。</p>
+<p>　例えば、学習時間<span class="math inline">\(x\)</span>が成績<span class="math inline">\(y\)</span>に与える効果に対して、ある学習方法<span class="math inline">\(z\)</span>による調整効果がない状況を考えてみる。このとき、学習方法を実践している場合（<span class="math inline">\(z=1\)</span>）と、学習方法を実践していない場合（<span class="math inline">\(z=0\)</span>）とで、学習時間<span class="math inline">\(x\)</span>の傾きが異ならない。図にすると以下の通りである。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture14_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　ここでは、調整変数<span class="math inline">\(z\)</span>の主効果は正となっている。つまり、ある学習方法を実践すること（<span class="math inline">\(z=1\)</span>）は，実施しない場合と比較すると、平均的に（=切片は）高いが、学習時間<span class="math inline">\(x\)</span>が成績<span class="math inline">\(y\)</span>に与える影響は変化させない、ということである。</p>
+</section>
+<section id="同じ方向の交互作用効果がある場合" class="level3" data-number="14.3.2">
+<h3 data-number="14.3.2" class="anchored" data-anchor-id="同じ方向の交互作用効果がある場合"><span class="header-section-number">14.3.2</span> 同じ方向の交互作用効果がある場合</h3>
+<p>　調整変数<span class="math inline">\(z\)</span>が調整効果を持つ場合、つまり、独立変数<span class="math inline">\(x\)</span>と調整変数<span class="math inline">\(z\)</span>の交互作用効果が存在する場合、調整変数<span class="math inline">\(z\)</span>のとる値によって、独立変数<span class="math inline">\(x\)</span>が従属変数<span class="math inline">\(y\)</span>に対して与える条件付き効果が異なる。</p>
+<p>　例えば、ある学習方法<span class="math inline">\(z\)</span>を実践すると（<span class="math inline">\(z=1\)</span>）、学習がより効率的になるため、学習時間（<span class="math inline">\(x\)</span>）の増加によって上昇する成績（<span class="math inline">\(y\)</span>）の増加幅が大きくなるかもしれない。これを図に示すと以下のようになる。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture14_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　この図が示しているように、効率的な学習方法を実践している場合（<span class="math inline">\(z=1\)</span>）、そうでない場合（<span class="math inline">\(z=0\)</span>）と比べ、学習時間<span class="math inline">\(x\)</span>の増加によって、成績<span class="math inline">\(y\)</span>がより上昇している（傾きが急）であることがわかる。</p>
+<p>　上に示した図は、調整変数<span class="math inline">\(z\)</span>のとる値によって、独立変数<span class="math inline">\(x\)</span>が従属変数<span class="math inline">\(y\)</span>に対して与える条件付き効果の向きが変化しない場合の交互作用効果である。</p>
+</section>
+<section id="逆の方向の交互作用効果がある場合" class="level3" data-number="14.3.3">
+<h3 data-number="14.3.3" class="anchored" data-anchor-id="逆の方向の交互作用効果がある場合"><span class="header-section-number">14.3.3</span> 逆の方向の交互作用効果がある場合</h3>
+<p>　一方で、調整変数<span class="math inline">\(z\)</span>によって、独立変数<span class="math inline">\(x\)</span>の効果が正になったり負になったりする場合もある。例えば、ある学習方法<span class="math inline">\(z\)</span>は，「悪い」学習方法であり、その学習方法を実践すると、学習時間<span class="math inline">\(x\)</span>の増加に伴ってむしろ成績<span class="math inline">\(y\)</span>が低下するような状況を想像してみよう。この場合を図に示すと、以下のようになる。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture14_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　これは、逆の方向の交互作用効果がある例である。</p>
+</section>
+</section>
+<section id="交互作用効果の推定の例" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="交互作用効果の推定の例"><span class="header-section-number">14.4</span> 交互作用効果の推定の例</h2>
+<p>　では実際に、交互作用効果を推定してみよう。以下では、暮らしむき（ZQ12）を独立変数、生活全般満足度（ZQ30D）を従属変数、大卒以上ダミー（ZQ23A）を調整変数とした場合の推定の例である。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 暮らしむき変数は、良いほど大きい値で、9=NAに置き換え</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span> <span class="fu">count</span>(ZQ12)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ZQ12   n
+1    1  81
+2    2 143
+3    3 601
+4    4 131
+5    5  40
+6    9   4</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data14 <span class="ot">&lt;-</span> data4 <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">living =</span> <span class="fu">ifelse</span>(ZQ12<span class="sc">==</span><span class="dv">9</span>, <span class="cn">NA</span>, <span class="dv">6</span><span class="sc">-</span>ZQ12))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>data14 <span class="sc">|&gt;</span> <span class="fu">count</span>(living)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  living   n
+1      1  40
+2      2 131
+3      3 601
+4      4 143
+5      5  81
+6     NA   4</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 生活全般満足度変数は、満足しているほど大きい値で、9=NAに置き換え</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span> <span class="fu">count</span>(ZQ30D)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ZQ30D   n
+1     1 163
+2     2 431
+3     3 257
+4     4 103
+5     5  37
+6     9   9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data14 <span class="ot">&lt;-</span> data14 <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">satisfaction =</span> <span class="fu">ifelse</span>(ZQ30D<span class="sc">==</span><span class="dv">9</span>, <span class="cn">NA</span>, <span class="dv">6</span><span class="sc">-</span>ZQ30D))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 大卒以上ダミーは，ZQ23Aから作成</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span> <span class="fu">count</span>(ZQ23A)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ZQ23A   n
+1     1  14
+2     2 241
+3     3 191
+4     4 131
+5     5 368
+6     6  44
+7     7   2
+8     9   9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>data14 <span class="ot">&lt;-</span> data14 <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bachelor =</span> <span class="fu">case_when</span>(ZQ23A <span class="sc">&lt;=</span> <span class="dv">4</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                              ZQ23A <span class="sc">&lt;=</span> <span class="dv">6</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                              <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>　交互作用効果を推定するためには、通常の回帰分析のコマンド（<strong>lm()</strong>）を使用すれば良い。推定結果は、わかりやすく<strong>msummary()</strong>でまとめる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(satisfaction <span class="sc">~</span> living <span class="sc">+</span> bachelor <span class="sc">+</span> living<span class="sc">*</span>bachelor, <span class="at">data =</span> data14) <span class="sc">|&gt;</span> <span class="fu">msummary</span>(<span class="at">stars =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_aqxto3txrcryihyayy7l = TinyTable.createTableFunctions("tinytable_aqxto3txrcryihyayy7l");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '16', j: 2 } ], css_id: 'tinytable_css_u1r8akr8n7rc3blikeb2',}, 
+          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_521x9nduforkc901k3e7',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 } ], css_id: 'tinytable_css_xivelon5cwlz5smrll78',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_tkun4lwb3ewp9545rsux',}, 
+          { positions: [ { i: '16', j: 1 } ], css_id: 'tinytable_css_yh3c82ttqi3g8jrg3yvd',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_r17nkmf9tfk02ki4yjok',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 } ], css_id: 'tinytable_css_ltydk3w2vqrnp7m3mt5c',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_16rijlho8px2kv54e80x',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_aqxto3txrcryihyayy7l.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_aqxto3txrcryihyayy7l td.tinytable_css_u1r8akr8n7rc3blikeb2, #tinytable_aqxto3txrcryihyayy7l th.tinytable_css_u1r8akr8n7rc3blikeb2 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_aqxto3txrcryihyayy7l td.tinytable_css_521x9nduforkc901k3e7, #tinytable_aqxto3txrcryihyayy7l th.tinytable_css_521x9nduforkc901k3e7 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_aqxto3txrcryihyayy7l td.tinytable_css_xivelon5cwlz5smrll78, #tinytable_aqxto3txrcryihyayy7l th.tinytable_css_xivelon5cwlz5smrll78 { text-align: center }
+    #tinytable_aqxto3txrcryihyayy7l td.tinytable_css_tkun4lwb3ewp9545rsux, #tinytable_aqxto3txrcryihyayy7l th.tinytable_css_tkun4lwb3ewp9545rsux {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_aqxto3txrcryihyayy7l td.tinytable_css_yh3c82ttqi3g8jrg3yvd, #tinytable_aqxto3txrcryihyayy7l th.tinytable_css_yh3c82ttqi3g8jrg3yvd {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_aqxto3txrcryihyayy7l td.tinytable_css_r17nkmf9tfk02ki4yjok, #tinytable_aqxto3txrcryihyayy7l th.tinytable_css_r17nkmf9tfk02ki4yjok {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_aqxto3txrcryihyayy7l td.tinytable_css_ltydk3w2vqrnp7m3mt5c, #tinytable_aqxto3txrcryihyayy7l th.tinytable_css_ltydk3w2vqrnp7m3mt5c { text-align: left }
+    #tinytable_aqxto3txrcryihyayy7l td.tinytable_css_16rijlho8px2kv54e80x, #tinytable_aqxto3txrcryihyayy7l th.tinytable_css_16rijlho8px2kv54e80x {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_aqxto3txrcryihyayy7l" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">(1)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="2">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">2.103***</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.143)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">living</td>
+                  <td data-row="3" data-col="2">0.486***</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.046)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">bachelor</td>
+                  <td data-row="5" data-col="2">0.441+</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.229)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">living × bachelor</td>
+                  <td data-row="7" data-col="2">-0.151*</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2">(0.070)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">Num.Obs.</td>
+                  <td data-row="9" data-col="2">982</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">R2</td>
+                  <td data-row="10" data-col="2">0.135</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">R2 Adj.</td>
+                  <td data-row="11" data-col="2">0.133</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">AIC</td>
+                  <td data-row="12" data-col="2">2655.7</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">BIC</td>
+                  <td data-row="13" data-col="2">2680.1</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1">Log.Lik.</td>
+                  <td data-row="14" data-col="2">-1322.850</td>
+                </tr>
+                <tr>
+                  <td data-row="15" data-col="1">F</td>
+                  <td data-row="15" data-col="2">50.991</td>
+                </tr>
+                <tr>
+                  <td data-row="16" data-col="1">RMSE</td>
+                  <td data-row="16" data-col="2">0.93</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<p>　推定結果を確認すると、大卒以上（bachelor）の主効果は5%水準で統計的に非有意である。つまり、「大卒以上とそれ以外とでは、従属変数（生活全般満足度）に違いがない」。また、暮らしむき（living）の主効果は，5%水準で統計的に正に有意である。つまり、「暮らしむきが高いほど、従属変数（生活全般満足度）は高い」といえる。</p>
+<p>　それでは、これらの交互作用効果を確認しよう。暮らしむきと大卒以上ダミーとの交互作用効果は、統計的に有意な負の効果を持っている。つまり、「大卒以上では、暮らしむきが生活全般満足度に対して与える正の効果は、それ以外の学歴を持つ場合よりも弱くなる」といえる。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>グループ・ワーク
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>「u001」のうち、皆さんの関心に従って、独立変数・従属変数・調整変数を設定し、実際に交互作用効果を推定してみよう。</strong></p>
+</div>
+</div>
+</section>
+<section id="交互作用効果の可視化" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="交互作用効果の可視化"><span class="header-section-number">14.5</span> 交互作用効果の可視化</h2>
+<p>　調整変数<span class="math inline">\(z\)</span>が、実際に独立変数<span class="math inline">\(x\)</span>と従属変数<span class="math inline">\(y\)</span>の関連をどのように調整するのかは，交互作用効果の結果からではしばしばわかりにくい場合がある。そのような場合、交互作用効果を持つ変数間の関連を可視化することで、より深い理解を得ることができる。</p>
+<section id="予測値" class="level3" data-number="14.5.1">
+<h3 data-number="14.5.1" class="anchored" data-anchor-id="予測値"><span class="header-section-number">14.5.1</span> 予測値</h3>
+<p>　まず、回期分析の結果から、独立変数<span class="math inline">\(x\)</span>の取りうる値によって、従属変数<span class="math inline">\(y\)</span>がどのような値を取りうるかという、<strong>予測値</strong>を計算することができる。Rでは、<code>marginaleffects</code>パッケージの<code>predictions()</code>を使用して、以下のようにして計算できる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># まず、回帰分析の結果を、何らかのオブジェクトに格納</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>result1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(satisfaction <span class="sc">~</span> living <span class="sc">+</span> bachelor <span class="sc">+</span> living<span class="sc">*</span>bachelor, <span class="at">data =</span> data14)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># marginaleffectsパッケージをインストールしてlibraryする</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#installed.packages("marginaleffects")</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># predictions()を使用して、予測値を計算</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>prediction1 <span class="ot">&lt;-</span> <span class="fu">predictions</span>(result1,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                           <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">living =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), </span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">bachelor =</span> (<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>)))</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>prediction1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ living bachelor Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+      1        0     2.59     0.0995 26.0   &lt;0.001 493.3  2.39   2.78
+      1        1     2.88     0.1285 22.4   &lt;0.001 367.1  2.63   3.13
+      2        0     3.08     0.0600 51.3   &lt;0.001   Inf  2.96   3.19
+      2        1     3.21     0.0812 39.6   &lt;0.001   Inf  3.06   3.37
+      3        0     3.56     0.0389 91.5   &lt;0.001   Inf  3.49   3.64
+      3        1     3.55     0.0481 73.8   &lt;0.001   Inf  3.46   3.64
+      4        0     4.05     0.0606 66.8   &lt;0.001   Inf  3.93   4.17
+      4        1     3.88     0.0608 63.8   &lt;0.001   Inf  3.77   4.00
+      5        0     4.53     0.1003 45.2   &lt;0.001   Inf  4.34   4.73
+      5        1     4.22     0.1037 40.7   &lt;0.001   Inf  4.02   4.42
+
+Type: response</code></pre>
+</div>
+</div>
+<p>　<code>predictions()</code>の第1引数には<code>lm()</code>の推定結果を格納する。第2引数として、<code>newdata = datagrid()</code>と指定されているが、これは<code>datagrid()</code>の中に、説明変数と調整変数のとる値を指定している。ここで指定された値の範囲で、予測値が計算される。</p>
+<p>　<code>predictions()</code>の結果を確認してみよう。「prediction1」の中身を確認してみると、“living”が1~5まで、bachelorが0,1を取る場合の、従属変数の予測値が、“Estimate”に格納されている。これが、独立変数・調整変数がとるそれぞれの値における、従属変数の予測値である。また、“Std. Error”は標準誤差を意味する。当然、これだけでは視覚的にわかりにくいので、続いてここからグラフを作成してみる。</p>
+<p>　グラフの作成には、<code>ggplot2</code>パッケージの<code>ggplot()</code>関数を使用する。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># まず、prediction1をデータフレームにする</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>prediction1_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(prediction1)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>prediction1_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   rowid estimate  std.error statistic       p.value  s.value conf.low
+1      1 2.589421 0.09953281  26.01576 3.285255e-149 493.2513 2.394341
+2      2 2.879623 0.12850246  22.40909 3.209303e-111 367.0518 2.627763
+3      3 3.075574 0.05995629  51.29693  0.000000e+00      Inf 2.958062
+4      4 3.214529 0.08115259  39.61093  0.000000e+00      Inf 3.055473
+5      5 3.561726 0.03892722  91.49707  0.000000e+00      Inf 3.485430
+6      6 3.549436 0.04811869  73.76417  0.000000e+00      Inf 3.455125
+7      7 4.047878 0.06056810  66.83185  0.000000e+00      Inf 3.929167
+8      8 3.884342 0.06084308  63.84197  0.000000e+00      Inf 3.765092
+9      9 4.534031 0.10027092  45.21780  0.000000e+00      Inf 4.337503
+10    10 4.219248 0.10365884  40.70321  0.000000e+00      Inf 4.016081
+   conf.high satisfaction living bachelor  df
+1   2.784502            4      1        0 Inf
+2   3.131483            4      1        1 Inf
+3   3.193086            4      2        0 Inf
+4   3.373586            4      2        1 Inf
+5   3.638022            4      3        0 Inf
+6   3.643747            4      3        1 Inf
+7   4.166590            4      4        0 Inf
+8   4.003592            4      4        1 Inf
+9   4.730558            4      5        0 Inf
+10  4.422416            4      5        1 Inf</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># データフレームにしたprediction1_dfに対して、ggplotでグラフを作成</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>prediction1_df <span class="sc">|&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bachelor =</span> <span class="fu">factor</span>(bachelor)) <span class="sc">|&gt;</span> <span class="co"># 先に、bachelorを質的変数に指定</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> living, <span class="at">y =</span> estimate,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> bachelor, <span class="at">fill =</span> bachelor, <span class="at">group =</span> bachelor)) <span class="sc">+</span> <span class="co"># 縦・横軸・グループを指定</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high),</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span> <span class="co"># 95％信頼区間を色付け</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> <span class="co"># 横線で結ぶ</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="co"># 点を打つ</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Standard of living"</span>, <span class="at">y =</span> <span class="st">"Overall life satisfaction"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>, <span class="at">color =</span> <span class="st">""</span>) <span class="co"># 軸のラベルを付与</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture14_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　作成されたグラフは、<span class="math inline">\(x\)</span>軸が暮らしむき（独立変数）、<span class="math inline">\(y\)</span>軸が生活全般満足度（従属変数）を意味する。さらに重要な点は、赤と青の2つの実線が引かれていることである。凡例を確認すると、赤が<span class="math inline">\(z=0\)</span>、青が<span class="math inline">\(z=1\)</span>を意味していることがわかる。つまり、赤線は、大卒以上の集団における予測値、青線は大卒以上の集団における予測値を意味している。上で推定した交互作用効果は、5%水準で統計的に有意な負の効果を持っていた。つまり、「大卒以上の集団では、暮らしむきが生活全般満足度に与える正の影響が弱い」ということがいえ、これはグラフからも読み取れるだろう。</p>
+</section>
+<section id="量的変数どうしの交互作用効果" class="level3" data-number="14.5.2">
+<h3 data-number="14.5.2" class="anchored" data-anchor-id="量的変数どうしの交互作用効果"><span class="header-section-number">14.5.2</span> 量的変数どうしの交互作用効果</h3>
+<p>　調整変数<span class="math inline">\(z\)</span>に、量的変数を投入することも可能である。たとえば、先ほどの例で使用した、暮らしむき（独立変数）が、生活全般満足度（従属変数）に与える影響に対して、年齢が与える調整効果を考えてみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 年齢変数の元になる、ybirth（出生年）を確認</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>data14 <span class="sc">|&gt;</span> <span class="fu">count</span>(ybirth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ybirth  n
+1    1972 70
+2    1973 81
+3    1974 82
+4    1975 70
+5    1976 76
+6    1977 84
+7    1978 53
+8    1979 54
+9    1980 48
+10   1981 70
+11   1982 44
+12   1983 67
+13   1984 67
+14   1985 64
+15   1986 70</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># まずは、ybirth（出生年）から年齢変数（gae）を算出する</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 現在は2026年なので、2026-ybirthで、おおよその年齢を算出する</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>data14 <span class="ot">&lt;-</span> data14 <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> <span class="dv">2026</span> <span class="sc">-</span> ybirth)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>data14 <span class="sc">|&gt;</span> <span class="fu">count</span>(ybirth, age)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ybirth age  n
+1    1972  54 70
+2    1973  53 81
+3    1974  52 82
+4    1975  51 70
+5    1976  50 76
+6    1977  49 84
+7    1978  48 53
+8    1979  47 54
+9    1980  46 48
+10   1981  45 70
+11   1982  44 44
+12   1983  43 67
+13   1984  42 67
+14   1985  41 64
+15   1986  40 70</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># とりあえず、このage変数をそのまま調整変数として投入してみる</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(satisfaction <span class="sc">~</span> living <span class="sc">+</span> age <span class="sc">+</span> living<span class="sc">*</span>age, <span class="at">data =</span> data14) <span class="sc">|&gt;</span> <span class="fu">msummary</span>(<span class="at">stars =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_auj5tcg46g4b947m4x1e = TinyTable.createTableFunctions("tinytable_auj5tcg46g4b947m4x1e");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '16', j: 2 } ], css_id: 'tinytable_css_3r5v0quomwyw7y2sexdu',}, 
+          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_99mtw8acm1krzrw0h97r',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 } ], css_id: 'tinytable_css_8wjs5ttm59kaevysvcb0',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_gi6qcm4u2q7iomzf2hfk',}, 
+          { positions: [ { i: '16', j: 1 } ], css_id: 'tinytable_css_od1ingly8ehl2mcpvjxj',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_m1og2g5kyesud9zxtq2v',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 } ], css_id: 'tinytable_css_y95vgjvpjf7hx0vnqbee',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_zwjqht7i8po5xo2pdjfw',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_auj5tcg46g4b947m4x1e.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_auj5tcg46g4b947m4x1e td.tinytable_css_3r5v0quomwyw7y2sexdu, #tinytable_auj5tcg46g4b947m4x1e th.tinytable_css_3r5v0quomwyw7y2sexdu {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_auj5tcg46g4b947m4x1e td.tinytable_css_99mtw8acm1krzrw0h97r, #tinytable_auj5tcg46g4b947m4x1e th.tinytable_css_99mtw8acm1krzrw0h97r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_auj5tcg46g4b947m4x1e td.tinytable_css_8wjs5ttm59kaevysvcb0, #tinytable_auj5tcg46g4b947m4x1e th.tinytable_css_8wjs5ttm59kaevysvcb0 { text-align: center }
+    #tinytable_auj5tcg46g4b947m4x1e td.tinytable_css_gi6qcm4u2q7iomzf2hfk, #tinytable_auj5tcg46g4b947m4x1e th.tinytable_css_gi6qcm4u2q7iomzf2hfk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_auj5tcg46g4b947m4x1e td.tinytable_css_od1ingly8ehl2mcpvjxj, #tinytable_auj5tcg46g4b947m4x1e th.tinytable_css_od1ingly8ehl2mcpvjxj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_auj5tcg46g4b947m4x1e td.tinytable_css_m1og2g5kyesud9zxtq2v, #tinytable_auj5tcg46g4b947m4x1e th.tinytable_css_m1og2g5kyesud9zxtq2v {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_auj5tcg46g4b947m4x1e td.tinytable_css_y95vgjvpjf7hx0vnqbee, #tinytable_auj5tcg46g4b947m4x1e th.tinytable_css_y95vgjvpjf7hx0vnqbee { text-align: left }
+    #tinytable_auj5tcg46g4b947m4x1e td.tinytable_css_zwjqht7i8po5xo2pdjfw, #tinytable_auj5tcg46g4b947m4x1e th.tinytable_css_zwjqht7i8po5xo2pdjfw {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_auj5tcg46g4b947m4x1e" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">(1)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="2">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">6.378***</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(1.171)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">living</td>
+                  <td data-row="3" data-col="2">-1.035**</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.363)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">age</td>
+                  <td data-row="5" data-col="2">-0.088***</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.025)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">living × age</td>
+                  <td data-row="7" data-col="2">0.031***</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2">(0.008)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">Num.Obs.</td>
+                  <td data-row="9" data-col="2">988</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">R2</td>
+                  <td data-row="10" data-col="2">0.149</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">R2 Adj.</td>
+                  <td data-row="11" data-col="2">0.146</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">AIC</td>
+                  <td data-row="12" data-col="2">2658.3</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">BIC</td>
+                  <td data-row="13" data-col="2">2682.8</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1">Log.Lik.</td>
+                  <td data-row="14" data-col="2">-1324.162</td>
+                </tr>
+                <tr>
+                  <td data-row="15" data-col="1">F</td>
+                  <td data-row="15" data-col="2">57.407</td>
+                </tr>
+                <tr>
+                  <td data-row="16" data-col="1">RMSE</td>
+                  <td data-row="16" data-col="2">0.92</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<p>　これで、ひとまずは推定ができた。暮らしむき、年齢の主効果、暮らしむき×年齢の交互作用効果はすべて統計的に有意である。しかし、よく見てみると、暮らしむきの主効果は負に有意である。上で推定した分析結果と異なる結果であるし、「暮らしむきがよくなるほど、生活全般満足度が悪くなる」というのは、あまり常識的な結果ではない。なぜ、このような結果になってしまうのだろう。</p>
+<p>　これを考えるために、交互作用効果を含む回帰式を再度確認してみよう。</p>
+<p><span class="math display">\[y_i = b_0 + b_1x_i + b_2z_i + b_3x_iz_i + e_i\]</span> 　ここで、<span class="math inline">\(x\)</span>の主効果<span class="math inline">\(b_1\)</span>は、調整変数<span class="math inline">\(z=0\)</span>である場合の、独立変数<span class="math inline">\(x\)</span>の効果を意味する。さて、先ほどの例では、調整変数<span class="math inline">\(z\)</span>は年齢を意味していた。調査のサンプル上では、<span class="math inline">\(40 \leq z \leq 54\)</span>であったが、先ほどのモデルにおける<span class="math inline">\(x\)</span>の主効果は、この年齢<span class="math inline">\(z\)</span>が0の場合、つまり年齢が0歳の時の<span class="math inline">\(x\)</span>の効果量を意味している。0歳の場合の効果を推定することには特に意味はないはずなので、以下のように40歳を0歳として処理するか、多くの場合は<strong>標準化</strong>した上で回帰モデルに投入することが多い。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>data14 <span class="ot">&lt;-</span> data14 <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age2 =</span> age <span class="sc">-</span> <span class="dv">40</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>data14 <span class="sc">|&gt;</span> <span class="fu">count</span>(age, age2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   age age2  n
+1   40    0 70
+2   41    1 64
+3   42    2 67
+4   43    3 67
+5   44    4 44
+6   45    5 70
+7   46    6 48
+8   47    7 54
+9   48    8 53
+10  49    9 84
+11  50   10 76
+12  51   11 70
+13  52   12 82
+14  53   13 81
+15  54   14 70</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(satisfaction <span class="sc">~</span> living <span class="sc">+</span> age2 <span class="sc">+</span> living<span class="sc">*</span>age2, <span class="at">data =</span> data14) <span class="sc">|&gt;</span> <span class="fu">msummary</span>(<span class="at">stars =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_2w1334nt5qrb6abb8ggx = TinyTable.createTableFunctions("tinytable_2w1334nt5qrb6abb8ggx");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '16', j: 2 } ], css_id: 'tinytable_css_88hp2ypmbeyvltahl4yq',}, 
+          { positions: [ { i: '8', j: 2 } ], css_id: 'tinytable_css_bvnr82ic0x993vr3wqu4',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 } ], css_id: 'tinytable_css_5nfkdmry2csf3l394d1v',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_302acv5pdygdvi5pg7jx',}, 
+          { positions: [ { i: '16', j: 1 } ], css_id: 'tinytable_css_qrsglz3nzfxnrebfpdiy',}, 
+          { positions: [ { i: '8', j: 1 } ], css_id: 'tinytable_css_e7kawv05vcfqm5jogi94',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 } ], css_id: 'tinytable_css_makg46unft1j88n6te9k',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_byw1nlx0pw9skz0pp8az',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_2w1334nt5qrb6abb8ggx.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_2w1334nt5qrb6abb8ggx td.tinytable_css_88hp2ypmbeyvltahl4yq, #tinytable_2w1334nt5qrb6abb8ggx th.tinytable_css_88hp2ypmbeyvltahl4yq {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_2w1334nt5qrb6abb8ggx td.tinytable_css_bvnr82ic0x993vr3wqu4, #tinytable_2w1334nt5qrb6abb8ggx th.tinytable_css_bvnr82ic0x993vr3wqu4 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_2w1334nt5qrb6abb8ggx td.tinytable_css_5nfkdmry2csf3l394d1v, #tinytable_2w1334nt5qrb6abb8ggx th.tinytable_css_5nfkdmry2csf3l394d1v { text-align: center }
+    #tinytable_2w1334nt5qrb6abb8ggx td.tinytable_css_302acv5pdygdvi5pg7jx, #tinytable_2w1334nt5qrb6abb8ggx th.tinytable_css_302acv5pdygdvi5pg7jx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_2w1334nt5qrb6abb8ggx td.tinytable_css_qrsglz3nzfxnrebfpdiy, #tinytable_2w1334nt5qrb6abb8ggx th.tinytable_css_qrsglz3nzfxnrebfpdiy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_2w1334nt5qrb6abb8ggx td.tinytable_css_e7kawv05vcfqm5jogi94, #tinytable_2w1334nt5qrb6abb8ggx th.tinytable_css_e7kawv05vcfqm5jogi94 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_2w1334nt5qrb6abb8ggx td.tinytable_css_makg46unft1j88n6te9k, #tinytable_2w1334nt5qrb6abb8ggx th.tinytable_css_makg46unft1j88n6te9k { text-align: left }
+    #tinytable_2w1334nt5qrb6abb8ggx td.tinytable_css_byw1nlx0pw9skz0pp8az, #tinytable_2w1334nt5qrb6abb8ggx th.tinytable_css_byw1nlx0pw9skz0pp8az {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_2w1334nt5qrb6abb8ggx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">(1)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="2">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">2.854***</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.207)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">living</td>
+                  <td data-row="3" data-col="2">0.220***</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.062)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">age2</td>
+                  <td data-row="5" data-col="2">-0.088***</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.025)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">living × age2</td>
+                  <td data-row="7" data-col="2">0.031***</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2">(0.008)</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">Num.Obs.</td>
+                  <td data-row="9" data-col="2">988</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">R2</td>
+                  <td data-row="10" data-col="2">0.149</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">R2 Adj.</td>
+                  <td data-row="11" data-col="2">0.146</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">AIC</td>
+                  <td data-row="12" data-col="2">2658.3</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">BIC</td>
+                  <td data-row="13" data-col="2">2682.8</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1">Log.Lik.</td>
+                  <td data-row="14" data-col="2">-1324.162</td>
+                </tr>
+                <tr>
+                  <td data-row="15" data-col="1">F</td>
+                  <td data-row="15" data-col="2">57.407</td>
+                </tr>
+                <tr>
+                  <td data-row="16" data-col="1">RMSE</td>
+                  <td data-row="16" data-col="2">0.92</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<p>　このモデルにおける独立変数<span class="math inline">\(x\)</span>の主効果は、40歳の場合の効果を意味する。</p>
+<p>　では続いて、先ほどと同様に、予測値をプロットしてみよう。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>result2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(satisfaction <span class="sc">~</span> living <span class="sc">+</span> age2 <span class="sc">+</span> living<span class="sc">*</span>age2, <span class="at">data =</span> data14)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>prediction2 <span class="ot">&lt;-</span> <span class="fu">predictions</span>(result2,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">living =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">age2 =</span> <span class="fu">c</span>(<span class="dv">40</span>,<span class="dv">45</span>,<span class="dv">50</span>)))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>prediction2_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(prediction2)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>prediction2_df <span class="sc">|&gt;</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age2 =</span> <span class="fu">factor</span>(age2)) <span class="sc">|&gt;</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> living, <span class="at">y =</span> estimate,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> age2, <span class="at">fill =</span> age2, <span class="at">group =</span> age2)) <span class="sc">+</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> conf.low, <span class="at">ymax =</span> conf.high),</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Standard of living"</span>, <span class="at">y =</span> <span class="st">"Overall life satisfaction"</span>,</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">""</span>, <span class="at">color =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture14_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>グループ・ワーク
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>「u001」のうち、皆さんの関心に従って、独立変数・従属変数・調整変数を設定し、実際に交互作用効果を推定し、その結果をプロットしてみよう。</strong></p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./Rlecture13.html" class="pagination-link" aria-label="ダミー変数">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">ダミー変数</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./Rlecture15.html" class="pagination-link" aria-label="質的従属変数のモデル">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">質的従属変数のモデル</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

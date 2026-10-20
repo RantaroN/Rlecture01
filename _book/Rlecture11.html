@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -73,6 +108,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -161,7 +225,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Rlecture9.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">相関係数</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">変数間の関連と相関係数</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -182,13 +246,40 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">重回帰分析と統計的統制</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">ダミー変数</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">交互作用効果</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">質的従属変数のモデル</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#回帰分析とは" id="toc-回帰分析とは" class="nav-link active" data-scroll-target="#回帰分析とは"><span class="header-section-number">11.1</span> 回帰分析とは</a></li>
+  <li><a href="#単回帰分析のイメージ" id="toc-単回帰分析のイメージ" class="nav-link" data-scroll-target="#単回帰分析のイメージ"><span class="header-section-number">11.2</span> 単回帰分析のイメージ</a></li>
+  <li><a href="#最小二乗法" id="toc-最小二乗法" class="nav-link" data-scroll-target="#最小二乗法"><span class="header-section-number">11.3</span> 最小二乗法</a></li>
+  <li><a href="#決定係数" id="toc-決定係数" class="nav-link" data-scroll-target="#決定係数"><span class="header-section-number">11.4</span> 決定係数</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -212,9 +303,638 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>（準備中）</p>
+<section id="回帰分析とは" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="回帰分析とは"><span class="header-section-number">11.1</span> 回帰分析とは</h2>
+<p>　<strong>回帰分析</strong>とは、ある結果を予測・説明する原因を設定し、結果と原因との関連を検証するための分析方法である。回帰分析において、原因となる変数を<strong>独立変数</strong>（<strong>説明変数</strong>）、結果となる変数を<strong>従属変数</strong>（<strong>被説明変数</strong>）と呼ぶ。回帰分析においては、独立変数と従属変数の間に<strong>線形関係</strong>を想定し、独立変数の値から説明変数の値を予測する。</p>
+<p>　回帰分析には、<strong>単回帰分析</strong>と<strong>重回帰分析</strong>がある。単回期分析とは、独立変数が1つである回帰分析のことを指す。一方で、重回帰分析は、独立変数が2つ以上ある回帰分析のことを指す。以降では、単回期分析の考え方について説明する。</p>
+</section>
+<section id="単回帰分析のイメージ" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="単回帰分析のイメージ"><span class="header-section-number">11.2</span> 単回帰分析のイメージ</h2>
+<p>　これまでの授業で、量的変数間の関連を検討する際に、散布図を描くことを推奨してきた。まず、改めて散布図を眺めてみたいと思う。以下は、仮想的な散布図である。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture11_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　この散布図を眺めてみると、なんとなく、右肩上がりの関連、つまりはxとyの間の正の関連が見て取れないだろうか？</p>
+<p>　そこで、仮に以下のような赤線を引くことができたら、その赤線の傾きの大きさによって、独立変数が1増加（減少）した場合の従属変数の増加量を計算することができる。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture11_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　このような赤線が引ければ、独立変数のとる値によって、従属変数の値を予測することができる。つまり、独立変数と従属変数の関連は一次関数の形式で表現される。</p>
+<p><span class="math display">\[
+y_i = b_0 + b_1x_i + e_i
+\]</span> 　ここで、<span class="math inline">\(b_o\)</span>は切片であり、<span class="math inline">\(x=0\)</span>の場合の<span class="math inline">\(y\)</span>の値を意味する。<span class="math inline">\(b_1\)</span>は傾きであり、独立変数が1変化した場合の従属変数の変化料を意味する。この<span class="math inline">\(b_1\)</span>は，独立変数の係数であるため、<strong>回帰係数</strong>と呼ばれる。また、右辺の最後には、<span class="math inline">\(e_i\)</span>という誤差が付けられている。これは、式の<span class="math inline">\(b_0 + b_1x_i\)</span>だけでは、実際の観測値を完全に予測できず、誤差が存在するためである。</p>
+<p>　では、このような回帰直線は，どのように引けば良いのか？つまり、散布図上で、どのように<strong>回帰直線</strong>（赤線）を引けば良いのだろうか？</p>
+</section>
+<section id="最小二乗法" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="最小二乗法"><span class="header-section-number">11.3</span> 最小二乗法</h2>
+<p>　回帰直線を引くには、あるいは回帰係数を求めるためには、回期式中の<span class="math inline">\(b_0\)</span>と<span class="math inline">\(b_1\)</span>を求める必要がある。<strong>最小二乗法</strong>とは、このような切片と傾きを決定する方法である。最小二乗法では、回帰直線と、それぞれの観測値との誤差を最小にするような<span class="math inline">\(b_0\)</span>と<span class="math inline">\(b_1\)</span>の値を求める。図にすると以下のようなイメージである。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture11_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　回期直線上にある予測値は、<span class="math inline">\(\hat{y_i}=b_0+b_1x_i\)</span>により計算される。そのため、実際の観測値<span class="math inline">\(y_i\)</span>と、予測値との誤差は、以下で示される。</p>
+<p><span class="math display">\[
+e_i = y_i-\hat{y_i} = y_i-(b_0+b_1x_i)
+\]</span></p>
+<p>　この誤差を二乗して、全て足し合わせたものは、以下の通り。</p>
+<p><span class="math display">\[
+\sum_{i=1}^n{e_i^2} = \sum_{i=1}^n{(y_i-\hat{y_i})^2} = \sum_{i=1}^n(y_i-(b_0+b_1x_i))^2
+\]</span></p>
+<p>　この、<span class="math inline">\(\sum_{i=1}^n(y_i-(b_0+b_1x_i))^2\)</span>を最小化させる<span class="math inline">\(b_0\)</span>と<span class="math inline">\(b_1\)</span>を計算すれば良い。最小二乗法により、切片と傾きを求めると、それぞれ以下のように計算できることが明らかとなる。</p>
+<p><span class="math display">\[
+b_0 = \hat{y} - b_1\hat{x}
+\]</span></p>
+<p><span class="math display">\[
+b_1 = \frac{s_{xy}}{s_x^2}
+\]</span> 　つまり、傾き<span class="math inline">\(b_1\)</span>は，<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>の共分散を、<span class="math inline">\(x\)</span>の分散で割ったものである。</p>
+<p>　では、実際に単回期分析を実行してみる。Rでは、<strong>lm()</strong>によって、単回期分析を実行することができる。以下では、独立変数を教育年数（ZQ23Aから加工して作成）、従属変数を階層帰属意識（ZQ35）として分析してみる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># まず、ZQ23Aから教育年数に関する連続変数を作成</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span> <span class="fu">count</span>(ZQ23A)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ZQ23A   n
+1     1  14
+2     2 241
+3     3 191
+4     4 131
+5     5 368
+6     6  44
+7     7   2
+8     9   9</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">&lt;-</span> data4 <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">eduy =</span> <span class="fu">case_when</span>(ZQ23A<span class="sc">==</span><span class="dv">1</span> <span class="sc">~</span> <span class="dv">9</span>, <span class="co"># 中学=9年</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                          ZQ23A<span class="sc">==</span><span class="dv">2</span> <span class="sc">~</span> <span class="dv">12</span>, <span class="co"># 高校=12年</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                          ZQ23A<span class="sc">&lt;=</span><span class="dv">4</span> <span class="sc">~</span> <span class="dv">14</span>, <span class="co"># 専門・短大等=14年</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                          ZQ23A<span class="sc">==</span><span class="dv">5</span> <span class="sc">~</span> <span class="dv">16</span>, <span class="co"># 大学=16年</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                          ZQ23A<span class="sc">==</span><span class="dv">6</span> <span class="sc">~</span> <span class="dv">18</span>, <span class="co"># 大学院=18年</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                          <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA</span>))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span> <span class="fu">count</span>(eduy)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  eduy   n
+1    9  14
+2   12 241
+3   14 322
+4   16 368
+5   18  44
+6   NA  11</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 次に、回想帰属意識の処理</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span> <span class="fu">count</span>(ZQ35)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ZQ35   n
+1     1   3
+2     2  13
+3     3  45
+4     4 115
+5     5 265
+6     6 166
+7     7 174
+8     8 121
+9     9  48
+10   10  30
+11   99  20</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">&lt;-</span> data4 <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sss =</span> <span class="fu">case_when</span>(ZQ35<span class="sc">&lt;=</span><span class="dv">10</span> <span class="sc">~</span> <span class="dv">11</span><span class="sc">-</span>ZQ35,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                         <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 次に、単回期分析を行ってみる</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(sss <span class="sc">~</span> eduy, <span class="at">data =</span> data4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = sss ~ eduy, data = data4)
+
+Coefficients:
+(Intercept)         eduy  
+     1.6151       0.2371  </code></pre>
+</div>
+</div>
+<p>　lm()では、最初に(従属変数 ~ 独立変数)と設定する。その後、“data=”で使用するデータを指定する。結果と見てみると、“Call:”の箇所で、実行内容が表示されている。さらに、“Coefficients:”の箇所で、分析結果が示されている。</p>
+<p>　分析結果のうち、“(Intercept)”は切片を、“eduy”は独立変数の回帰係数を示している。この結果からは、教育年数が1年増えると、階層帰属意識は0.24程度上昇することがわかる。</p>
+<p>　これでは結果が見にくいので、分析結果をより見やすく出力する。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(sss <span class="sc">~</span> eduy, <span class="at">data =</span> data4) <span class="sc">|&gt;</span> <span class="fu">msummary</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+
+      function styleCell_2mek79x9lbjgytenm6se(i, j, css_id) {
+          var table = document.getElementById("tinytable_2mek79x9lbjgytenm6se");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_2mek79x9lbjgytenm6se');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_2mek79x9lbjgytenm6se(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_2mek79x9lbjgytenm6se");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 12, j: 1 },  ], css_id: 'tinytable_css_8tut8zxlrswibxkgbtyt',}, 
+          { positions: [ { i: 4, j: 1 },  ], css_id: 'tinytable_css_cn2h1bc5fyzqqym2u1m2',}, 
+          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 8, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 7, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 },  ], css_id: 'tinytable_css_w4o7okhu56gr6jhsgw11',}, 
+          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_gspqk6pj5tusgjyow139',}, 
+          { positions: [ { i: 12, j: 0 },  ], css_id: 'tinytable_css_s9caop6ompvjn8md5q0p',}, 
+          { positions: [ { i: 4, j: 0 },  ], css_id: 'tinytable_css_57vzdfmw9o7h8669nmpw',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 8, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 },  ], css_id: 'tinytable_css_i30ttofnaj2szlja7k1c',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_mpv6q45fnvkaziop86xc',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_2mek79x9lbjgytenm6se(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_8tut8zxlrswibxkgbtyt, .table th.tinytable_css_8tut8zxlrswibxkgbtyt { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_cn2h1bc5fyzqqym2u1m2, .table th.tinytable_css_cn2h1bc5fyzqqym2u1m2 { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_w4o7okhu56gr6jhsgw11, .table th.tinytable_css_w4o7okhu56gr6jhsgw11 { text-align: center; }
+      .table td.tinytable_css_gspqk6pj5tusgjyow139, .table th.tinytable_css_gspqk6pj5tusgjyow139 { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_s9caop6ompvjn8md5q0p, .table th.tinytable_css_s9caop6ompvjn8md5q0p { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_57vzdfmw9o7h8669nmpw, .table th.tinytable_css_57vzdfmw9o7h8669nmpw { text-align: left; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_i30ttofnaj2szlja7k1c, .table th.tinytable_css_i30ttofnaj2szlja7k1c { text-align: left; }
+      .table td.tinytable_css_mpv6q45fnvkaziop86xc, .table th.tinytable_css_mpv6q45fnvkaziop86xc { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_2mek79x9lbjgytenm6se" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col"> </th>
+                <th scope="col">(1)</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>(Intercept)</td>
+                  <td>1.615</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.424)</td>
+                </tr>
+                <tr>
+                  <td>eduy</td>
+                  <td>0.237</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.029)</td>
+                </tr>
+                <tr>
+                  <td>Num.Obs.</td>
+                  <td>972</td>
+                </tr>
+                <tr>
+                  <td>R2</td>
+                  <td>0.063</td>
+                </tr>
+                <tr>
+                  <td>R2 Adj.</td>
+                  <td>0.062</td>
+                </tr>
+                <tr>
+                  <td>AIC</td>
+                  <td>3773.4</td>
+                </tr>
+                <tr>
+                  <td>BIC</td>
+                  <td>3788.0</td>
+                </tr>
+                <tr>
+                  <td>Log.Lik.</td>
+                  <td>-1883.675</td>
+                </tr>
+                <tr>
+                  <td>F</td>
+                  <td>65.417</td>
+                </tr>
+                <tr>
+                  <td>RMSE</td>
+                  <td>1.68</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<p>　<strong>modelsummary</strong>というパッケージの、msummary()関数は、このように結果を見やすくまとめてくれる。先ほどの結果に加え、括弧内には標準誤差が示されている。また、“Num.Obs.”にはサンプル数が表示されている。</p>
+<p>　さらに、回帰係数の検定結果も表示させるには、以下のようにstars=を指定する。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(sss <span class="sc">~</span> eduy, <span class="at">data =</span> data4) <span class="sc">|&gt;</span> <span class="fu">msummary</span>(<span class="at">stars =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+
+      function styleCell_i2wwaz9nrhgj8a74s59p(i, j, css_id) {
+          var table = document.getElementById("tinytable_i2wwaz9nrhgj8a74s59p");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_i2wwaz9nrhgj8a74s59p');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_i2wwaz9nrhgj8a74s59p(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_i2wwaz9nrhgj8a74s59p");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 12, j: 1 },  ], css_id: 'tinytable_css_b76eimy5639g72dr58wi',}, 
+          { positions: [ { i: 4, j: 1 },  ], css_id: 'tinytable_css_w21086csjdf6zboqcj9t',}, 
+          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 8, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 7, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 },  ], css_id: 'tinytable_css_ez2wprpgm970f1dbp778',}, 
+          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_6yulflswu7ntmvgpmpz7',}, 
+          { positions: [ { i: 12, j: 0 },  ], css_id: 'tinytable_css_196zmxn3smaw2wtx1jdo',}, 
+          { positions: [ { i: 4, j: 0 },  ], css_id: 'tinytable_css_17ak6m79g55rvyrj04aj',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 8, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 },  ], css_id: 'tinytable_css_o3elnefi7uf8at9xjd5h',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_8a5vbiqvqt3nr25zt9oz',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_i2wwaz9nrhgj8a74s59p(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_b76eimy5639g72dr58wi, .table th.tinytable_css_b76eimy5639g72dr58wi { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_w21086csjdf6zboqcj9t, .table th.tinytable_css_w21086csjdf6zboqcj9t { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_ez2wprpgm970f1dbp778, .table th.tinytable_css_ez2wprpgm970f1dbp778 { text-align: center; }
+      .table td.tinytable_css_6yulflswu7ntmvgpmpz7, .table th.tinytable_css_6yulflswu7ntmvgpmpz7 { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_196zmxn3smaw2wtx1jdo, .table th.tinytable_css_196zmxn3smaw2wtx1jdo { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_17ak6m79g55rvyrj04aj, .table th.tinytable_css_17ak6m79g55rvyrj04aj { text-align: left; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_o3elnefi7uf8at9xjd5h, .table th.tinytable_css_o3elnefi7uf8at9xjd5h { text-align: left; }
+      .table td.tinytable_css_8a5vbiqvqt3nr25zt9oz, .table th.tinytable_css_8a5vbiqvqt3nr25zt9oz { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_i2wwaz9nrhgj8a74s59p" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col"> </th>
+                <th scope="col">(1)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="2">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td>(Intercept)</td>
+                  <td>1.615***</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.424)</td>
+                </tr>
+                <tr>
+                  <td>eduy</td>
+                  <td>0.237***</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.029)</td>
+                </tr>
+                <tr>
+                  <td>Num.Obs.</td>
+                  <td>972</td>
+                </tr>
+                <tr>
+                  <td>R2</td>
+                  <td>0.063</td>
+                </tr>
+                <tr>
+                  <td>R2 Adj.</td>
+                  <td>0.062</td>
+                </tr>
+                <tr>
+                  <td>AIC</td>
+                  <td>3773.4</td>
+                </tr>
+                <tr>
+                  <td>BIC</td>
+                  <td>3788.0</td>
+                </tr>
+                <tr>
+                  <td>Log.Lik.</td>
+                  <td>-1883.675</td>
+                </tr>
+                <tr>
+                  <td>F</td>
+                  <td>65.417</td>
+                </tr>
+                <tr>
+                  <td>RMSE</td>
+                  <td>1.68</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<p>　回帰係数の統計的検定の結果、独立変数である教育年数には”***“と表示されている。つまり、回帰係数0.237は，0.1%の水準で統計的に有意であり、母集団においても独立変数は従属変数に影響を与える可能性が示唆されている。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>グループ・ワーク
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>「u001」データのうち、教育年数（eduy）を独立変数、政治関心（ZQ43）を従属変数とした単回帰分析を実行してみよう。その際、政治関心は、高いほど大きな値を取るような連続変数として作成してください。さらに、単回期分析の結果を解釈してみましょう。</strong></p>
+</div>
+</div>
+</section>
+<section id="決定係数" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="決定係数"><span class="header-section-number">11.4</span> 決定係数</h2>
+<p>　このような回帰分析の結果は、実際のデータに対してどの程度当てはまっているのだろうか。それを知るためには、<strong>決定係数（R-squared）</strong>を計算するのが良い。</p>
+<p>　従属変数の観測値<span class="math inline">\(y_i\)</span>の平均値<span class="math inline">\(\bar{y}\)</span>からの差（<span class="math inline">\(y_i-\hat{y}\)</span>）は、観測値と予測値の差（<span class="math inline">\(y_i-\hat{y_i}\)</span>）と、予測値と平均値の差（<span class="math inline">\(\hat{y_i}-\bar{y_i}\)</span>）に分解することができる。そのため、これらの平方和をとると、以下のようになる。</p>
+<p><span class="math display">\[
+\sum_{i=1}^n{(y_i-\hat{y})^2} = \sum_{i=1}^n{(y_i-\hat{y_i})^2} + \sum_{i=1}^n{(\hat{y_i}-\bar{y_i})^2}
+\]</span></p>
+<p>　右辺の第1項は、<strong>誤差平方和</strong>であり、回帰分析によって説明されなかった部分を意味する。右辺の第2項は、<strong>回帰平方和</strong>であり、回帰分析によって説明される部分を意味する。回帰係数によって、実際の観測値がどの程度説明されるのかを示したい場合には、全体の<span class="math inline">\(y\)</span>の散らばりのうち、回帰分析によって説明される部分（回期平方和）がどの程度を占めるかを計算すれば良いので、以下の値を計算すれば良い。これが決定係数である。</p>
+<p><span class="math display">\[
+R^2 = \frac{\sum_{i=1}^n{(\hat{y_i}-\bar{y_i})^2}}{\sum_{i=1}^n{(y_i-\hat{y})^2}}
+\]</span></p>
+<p>　決定係数は、<span class="math inline">\(0 \leqq R^2 \leqq 1\)</span>の範囲に収まるという特性を持つ。また、決定係数が1に近づくほど、回帰分析のデータへの当てはまりが良いことを意味する。<span class="math inline">\(R^2=1\)</span>の場合、回帰直線上に全てのデータがあることになる。</p>
+<p>　とはいえ、実際の分析では手計算で決定係数を求めることはしない。先ほどの、“msummary()”の結果には、実は決定係数が表示されている。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(sss <span class="sc">~</span> eduy, <span class="at">data =</span> data4) <span class="sc">|&gt;</span> <span class="fu">msummary</span>(<span class="at">stars =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+
+      function styleCell_sm4nvoa9eu9ny97v6gjw(i, j, css_id) {
+          var table = document.getElementById("tinytable_sm4nvoa9eu9ny97v6gjw");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_sm4nvoa9eu9ny97v6gjw');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_sm4nvoa9eu9ny97v6gjw(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_sm4nvoa9eu9ny97v6gjw");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 12, j: 1 },  ], css_id: 'tinytable_css_t7j9lg8ykfpyypczorsc',}, 
+          { positions: [ { i: 4, j: 1 },  ], css_id: 'tinytable_css_ws5opnv7fv0to2lgjydn',}, 
+          { positions: [ { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 8, j: 1 }, { i: 5, j: 1 }, { i: 6, j: 1 }, { i: 7, j: 1 }, { i: 9, j: 1 }, { i: 10, j: 1 }, { i: 11, j: 1 },  ], css_id: 'tinytable_css_08yo1a3jahd2r2rsmemn',}, 
+          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_4kuzqm2e6xuhhy8eg6t7',}, 
+          { positions: [ { i: 12, j: 0 },  ], css_id: 'tinytable_css_kszjm41hbch98ysli7w1',}, 
+          { positions: [ { i: 4, j: 0 },  ], css_id: 'tinytable_css_7ag6iedpqgwhjq98uihr',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 8, j: 0 }, { i: 5, j: 0 }, { i: 6, j: 0 }, { i: 7, j: 0 }, { i: 9, j: 0 }, { i: 10, j: 0 }, { i: 11, j: 0 },  ], css_id: 'tinytable_css_6awak92yxrc715mgvd6c',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_991emy158moel7sk8xa3',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_sm4nvoa9eu9ny97v6gjw(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_t7j9lg8ykfpyypczorsc, .table th.tinytable_css_t7j9lg8ykfpyypczorsc { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_ws5opnv7fv0to2lgjydn, .table th.tinytable_css_ws5opnv7fv0to2lgjydn { text-align: center; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_08yo1a3jahd2r2rsmemn, .table th.tinytable_css_08yo1a3jahd2r2rsmemn { text-align: center; }
+      .table td.tinytable_css_4kuzqm2e6xuhhy8eg6t7, .table th.tinytable_css_4kuzqm2e6xuhhy8eg6t7 { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_kszjm41hbch98ysli7w1, .table th.tinytable_css_kszjm41hbch98ysli7w1 { text-align: left; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_7ag6iedpqgwhjq98uihr, .table th.tinytable_css_7ag6iedpqgwhjq98uihr { text-align: left; border-bottom: solid black 0.05em; }
+      .table td.tinytable_css_6awak92yxrc715mgvd6c, .table th.tinytable_css_6awak92yxrc715mgvd6c { text-align: left; }
+      .table td.tinytable_css_991emy158moel7sk8xa3, .table th.tinytable_css_991emy158moel7sk8xa3 { text-align: left; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_sm4nvoa9eu9ny97v6gjw" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col"> </th>
+                <th scope="col">(1)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="2">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td>(Intercept)</td>
+                  <td>1.615***</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.424)</td>
+                </tr>
+                <tr>
+                  <td>eduy</td>
+                  <td>0.237***</td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>(0.029)</td>
+                </tr>
+                <tr>
+                  <td>Num.Obs.</td>
+                  <td>972</td>
+                </tr>
+                <tr>
+                  <td>R2</td>
+                  <td>0.063</td>
+                </tr>
+                <tr>
+                  <td>R2 Adj.</td>
+                  <td>0.062</td>
+                </tr>
+                <tr>
+                  <td>AIC</td>
+                  <td>3773.4</td>
+                </tr>
+                <tr>
+                  <td>BIC</td>
+                  <td>3788.0</td>
+                </tr>
+                <tr>
+                  <td>Log.Lik.</td>
+                  <td>-1883.675</td>
+                </tr>
+                <tr>
+                  <td>F</td>
+                  <td>65.417</td>
+                </tr>
+                <tr>
+                  <td>RMSE</td>
+                  <td>1.68</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<p>　この結果のうち、“R2”という箇所が、決定係数を意味する。この分析例の場合、全体の散らばりのうち、0.063=6.3%は、回期分析によって説明されることになる。なお、“R2 Adj.”というのは、<strong>自由度調整ずみ決定係数</strong>を意味する。これついては、重回帰分析の箇所で説明する。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>グループ・ワーク
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>先ほど、「u001」データのうち、教育年数（eduy）を独立変数、政治関心（ZQ43）を従属変数とした単回帰分析を実行してみました。その分析結果から、決定係数を読み取り、その数値の意味を解釈してみましょう。</strong></p>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

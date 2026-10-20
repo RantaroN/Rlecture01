@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -73,6 +108,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -161,7 +225,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Rlecture9.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">相関係数</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">変数間の関連と相関係数</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -182,13 +246,40 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">重回帰分析と統計的統制</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">ダミー変数</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">交互作用効果</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">質的従属変数のモデル</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#標本統計量と母数" id="toc-標本統計量と母数" class="nav-link active" data-scroll-target="#標本統計量と母数"><span class="header-section-number">7.1</span> 標本統計量と母数</a></li>
+  <li><a href="#標本抽出分布" id="toc-標本抽出分布" class="nav-link" data-scroll-target="#標本抽出分布"><span class="header-section-number">7.2</span> 標本抽出分布</a></li>
+  <li><a href="#標準誤差" id="toc-標準誤差" class="nav-link" data-scroll-target="#標準誤差"><span class="header-section-number">7.3</span> 標準誤差</a></li>
+  <li><a href="#母平均の区間推定" id="toc-母平均の区間推定" class="nav-link" data-scroll-target="#母平均の区間推定"><span class="header-section-number">7.4</span> 母平均の区間推定</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -212,9 +303,106 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>（準備中）</p>
+<section id="標本統計量と母数" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="標本統計量と母数"><span class="header-section-number">7.1</span> 標本統計量と母数</h2>
+<p>　社会調査において、無作為抽出（ランダムサンプリング）がすぐれているとされる所以は、無作為抽出によって得られた標本である場合に、真の値からの”ズレ”を、確率論によって評価することができるためである。真の値と、標本から得られた統計量とのズレを評価することを、<strong>統計的推測</strong>と呼ぶ。統計的推測には、推定と検定のふたつがあり，推定には、<strong>点推定</strong>と<strong>区間推定</strong>がある。本章では特に、区間推定について扱いたい。</p>
+<p>　例えば、ある母集団の平均年収を知りたいとする。このとき、実際の標本調査で知ることができるものは、調査対象者たちの平均年収である。しかし、実際に私たちが知りたい統計量は、調査対象者の平均年収ではなく、母集団の平均年収である。このとき、調査対象者の平均年収など、標本から得られる統計量を、<strong>標本統計量</strong>と呼ぶ。特に、標本から得られる平均を、<strong>標本平均</strong>と呼ぶ。一方で、母集団における、私たちが本当に知りたい統計量のことを、<strong>母数</strong>、母集団の平均のことを、<strong>母平均</strong>と呼ぶ。つまり、私たちが平均年収を調査した場合、実際に調査からわかるのは、標本平均であるが、本当に知りたい値は、母平均であるといえよう。</p>
+</section>
+<section id="標本抽出分布" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="標本抽出分布"><span class="header-section-number">7.2</span> 標本抽出分布</h2>
+<p>　社会調査を複数回行えば、自ずと得られる標本統計量は異なってくる。例えば、何回も社会調査を実施して平均年収を調べると、それらの調査から得られる標本平均には、ばらつきが生じる。</p>
+<p>　調査によって標本統計量が異なることは、よく起こる。たとえば、内閣支持率に関する調査は、調査によって一致することなどほぼない。もちろん、内閣支持率の調査を行なっている新聞社・メディアなどの調査方法による違いも含まれる。しかし、仮に同一の調査方法であったとしても、調査によって得られる標本統計量は基本一致しない。</p>
+<p>　仮に、ある母集団に対する標本調査を何回も繰り返し行うとする。そのような繰り返し実施される各調査において標本統計量をその都度計算すると、標本統計量は、下図のような<strong>正規分布</strong>のように分布することがわかっている。この標本統計量の分布は、十分なサンプルサイズであれば、母平均を単峰とする正規分布となる。そのため、母平均と標本平均との間の誤差は、期待値0の正規分布となり、このことを<strong>中心極限定理</strong>とよぶ。このように、ある母集団から無作為に抽出した場合に、標本から計算される標本統計量が従う分布のことを、<strong>標本分布</strong>と呼ぶ。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture7_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　このとき、標本分布の最も高い箇所（中央）は、母数（母平均や母比率など）に一致することが知られている。さらに、この標本分布のちらばりを示す標準偏差を、<strong>標準誤差</strong>（<strong>standard error (se)</strong>）と呼ぶ。このグラフのうち、<span class="math inline">\(\mu-se\)</span>から<span class="math inline">\(\mu+se\)</span>までで、全体のおよそ70%を、<span class="math inline">\(\mu-2se\)</span>から<span class="math inline">\(\mu+2se\)</span>までで、全体のおよそ95%を占める。ふつうは、社会調査は1度しか実施しない。そのため、標本統計量は1つしか計算されない。しかし、以上の標本分布の特徴を踏まえれば、母数は95%程度の確率で、標本統計量から<span class="math inline">\(\pm2se\)</span>の範囲に含まれることはわかる。つまり、標本統計量<span class="math inline">\(\pm2se\)</span>程度の誤差を考えておけば、おおよそ母数を外すことなく”見積もる”ことができる。</p>
+</section>
+<section id="標準誤差" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="標準誤差"><span class="header-section-number">7.3</span> 標準誤差</h2>
+<p>　標準誤差は，具体的には以下のようにして求めることができる。ここで、<span class="math inline">\(n\)</span>は標本の大きさ、<span class="math inline">\(\sigma\)</span>は母集団における標準偏差を意味する。</p>
+<p><span class="math display">\[se = \frac{\sigma}{\sqrt{n}}\]</span></p>
+<p>　この式を見てみると、分子の母標準偏差<span class="math inline">\(\sigma\)</span>が大きい場合に、標準誤差<span class="math inline">\(se\)</span>も大きくなる一方で、標本の大きさ（数）が大きくなれば、標準誤差<span class="math inline">\(se\)</span>も小さくなる。つまり、標本のサイズを大きくすれば、標準誤差は小さくすることができることから、簡単に言えば精度の高い推定ができるわけである。</p>
+<p>　先ほど、母平均から<span class="math inline">\(\pm2se\)</span>（具体的には、<span class="math inline">\(\pm1.96se\)</span>）の範囲に、標本平均が含まれる確率がおよそ95%になると示した。つまり、以下の範囲に、標本平均<span class="math inline">\(m\)</span>は95%の確率で含まれるはずである。</p>
+<p><span class="math display">\[\mu - 1.96 \frac{\sigma}{\sqrt{n}} &lt; m &lt; \mu + 1.96 \frac{\sigma}{\sqrt{n}}\]</span></p>
+<p>　この式を、簡単に式変形させると、</p>
+<p><span class="math display">\[m - 1.96 \frac{\sigma}{\sqrt{n}} &lt; \mu &lt; m + 1.96 \frac{\sigma}{\sqrt{n}}\]</span> 　上式では、母標準偏差を使用しているが、母集団の標準偏差は知りようがないため、標本標準偏差から推測する。Rで標準誤差を計算する場合には、以下のように実行すれば良い。以下は、例えば年収の標準誤差の計算方法である。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fu">sd</span>(data4<span class="sc">$</span>income, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="co"># まず、標本標準偏差を計算し、sdに格納</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>sd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 188.5712</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(data4<span class="sc">$</span>income))  <span class="co"># サンプルサイズを、nに格納</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 812</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> sd<span class="sc">/</span><span class="fu">sqrt</span>(n) <span class="co"># 標準誤差を計算</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>se</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6.617552</code></pre>
+</div>
+</div>
+</section>
+<section id="母平均の区間推定" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="母平均の区間推定"><span class="header-section-number">7.4</span> 母平均の区間推定</h2>
+<p>　母分散が未知の場合でも、標本から計算される標本不偏分散<span class="math inline">\(\hat{\sigma^2}\)</span>を計算すれば、標準誤差の推定値を得ることができる。つまり、先ほどの式は、以下のように書き換えられる。</p>
+<p><span class="math display">\[m - 1.96 \frac{\hat{\sigma}}{\sqrt{n}} &lt; \mu &lt; m + 1.96 \frac{\hat{\sigma}}{\sqrt{n}}\]</span></p>
+<p>　標本から計算される不偏分散を使用する場合、これまでに示してきた正規分布ではなく、<strong>t分布</strong>を用いる必要がある。t分布は、標準正規分布（平均が0、分散が1の正規分布）によく似た形をしており、少しだけ頂点が低くて裾が厚い。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture7_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　標準誤差の計算において、未知の母分散を不偏分散から推定した場合には、標準化した変数がt分布に従うことを利用する。とはいえ、分析ケースが大きい場合には、標準正規分布を使用するかt分布を使用するかは、そこまで問題にならない場合が多い。</p>
+<p>　これまでに示したように、標本統計量の確からしさは，標準誤差の計算によって明らかにすることができる。このような標本統計量の特徴を利用することで、「100回調査をやったら、p回は母平均がその範囲に含まれる」というような区間を計算することができる。このような区間を、<strong>信頼区間</strong>と呼ぶ。多くの場合、90%信頼区間、95%信頼区間、99%信頼区間などが使用される。このような90%、95%、99%といった確率は、<strong>信頼水準</strong>と呼ばれる。</p>
+<p>　なお、母比率の区間推定は、以下の式から計算される。なお、<span class="math inline">\(\pi\)</span>は母比率を、<span class="math inline">\(p\)</span>は標本比率を意味する。</p>
+<p><span class="math display">\[p - 1.96 \sqrt{\frac{p(1-p)}{n}} &lt; \pi &lt; p + 1.96 \sqrt{\frac{p(1-p)}{n}}\]</span></p>
+<p>　Rでは、以下のようにして信頼区間を計算することができる。例えば、平均年収の信頼区間を知りたい場合。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(data4<span class="sc">$</span>income)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  data4$income
+t = 38.962, df = 811, p-value &lt; 2.2e-16
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ 244.8460 270.8251
+sample estimates:
+mean of x 
+ 257.8356 </code></pre>
+</div>
+</div>
+<p>　これは、後ほど説明する、統計的仮説検定（t検定）を実行するコマンドである。信頼区間については、「95 percent confidence interval」の箇所に結果が出力されている。ちなみに、「mean of x」が標本平均である。母平均は、244.8460〜270.8251の間に、95%の確率で含まれるわけである。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>グループ・ワーク
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>階層帰属意識の母平均の区間推定を行い、その結果を解釈してみよう。</strong></p>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

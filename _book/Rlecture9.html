@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; 相関係数 – Rによる社会調査データ分析（基礎の基礎）</title>
+<title>9&nbsp; 変数間の関連と相関係数 – Rによる社会調査データ分析（基礎の基礎）</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -22,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -73,6 +108,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -85,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Rlecture9.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">相関係数</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./Rlecture9.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">変数間の関連と相関係数</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -161,7 +225,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Rlecture9.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">相関係数</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">変数間の関連と相関係数</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -182,20 +246,52 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">重回帰分析と統計的統制</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">ダミー変数</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">交互作用効果</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">二項ロジットモデル</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#変数間の関連" id="toc-変数間の関連" class="nav-link active" data-scroll-target="#変数間の関連"><span class="header-section-number">9.1</span> 変数間の関連</a></li>
+  <li><a href="#変数の種類と分析の方法" id="toc-変数の種類と分析の方法" class="nav-link" data-scroll-target="#変数の種類と分析の方法"><span class="header-section-number">9.2</span> 変数の種類と分析の方法</a></li>
+  <li><a href="#量的変数量的変数の相関" id="toc-量的変数量的変数の相関" class="nav-link" data-scroll-target="#量的変数量的変数の相関"><span class="header-section-number">9.3</span> 量的変数×量的変数の相関</a>
+  <ul class="collapse">
+  <li><a href="#散布図の作成" id="toc-散布図の作成" class="nav-link" data-scroll-target="#散布図の作成"><span class="header-section-number">9.3.1</span> 散布図の作成</a></li>
+  <li><a href="#相関係数とは何か" id="toc-相関係数とは何か" class="nav-link" data-scroll-target="#相関係数とは何か"><span class="header-section-number">9.3.2</span> 相関係数とは何か</a></li>
+  <li><a href="#共分散について" id="toc-共分散について" class="nav-link" data-scroll-target="#共分散について"><span class="header-section-number">9.3.3</span> 共分散について</a></li>
+  </ul></li>
+  <li><a href="#相関係数の計算" id="toc-相関係数の計算" class="nav-link" data-scroll-target="#相関係数の計算"><span class="header-section-number">9.4</span> 相関係数の計算</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">相関係数</span></h1>
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">変数間の関連と相関係数</span></h1>
 </div>
 
 
@@ -212,9 +308,323 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>（準備中）</p>
+<section id="変数間の関連" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="変数間の関連"><span class="header-section-number">9.1</span> 変数間の関連</h2>
+<p>　社会調査で明らかにしたいことの多くは、「変数Xと変数Yの関連は、（母集団では）こうなっているのではないか」というような、変数間の<strong>関連性</strong>についてことである。関連性とは、「<strong>変数Xの値が異なれば、変数Yの値も異なる</strong>」というようなことを指す。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>変数間の関連性の例
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>「未婚者よりも既婚者の方が健康である」（婚姻状態Xが、健康状態Yと関連する）</li>
+<li>「高学歴者の方が外国人に寛容である」（学歴Xが、外国人への寛容さYと関連する）</li>
+</ul>
+</div>
+</div>
+<p>　このような変数間の関連性を明らかにするためには、変数Xと変数Yを個別に集計するだけでは不十分である。二変数の関連性を明らかにするためには、変数Xと変数を同時に分析する必要がある。この章では、二変数の関連性を明らかにするための分析手法を紹介する。すでに学んだように、二変数の関連を示すだけでは、因果関係を示すことはできない。因果関係に（少しでも）迫るための方法についても、のちの章で紹介する。</p>
+</section>
+<section id="変数の種類と分析の方法" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="変数の種類と分析の方法"><span class="header-section-number">9.2</span> 変数の種類と分析の方法</h2>
+<p>　二変数の関連性を明らかにするためには，いくつかの分析方法がある。それらの分析方法のうち、どの方法を用いるかは、変数の種類によって決まる。一般的には、量的変数同士の関連性を<strong>相関</strong>、質的変数同士の関連性を<strong>連関</strong>（もしくは<strong>関連</strong>）と呼ぶことが多い。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>変数の種類と分析の方法
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">独立変数</th>
+<th style="text-align: center;">従属変数</th>
+<th style="text-align: left;">分析方法</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">量的</td>
+<td style="text-align: center;">量的</td>
+<td style="text-align: left;">相関分析、回帰分析</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">質的</td>
+<td style="text-align: center;">量的</td>
+<td style="text-align: left;">分散分析</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">量的</td>
+<td style="text-align: center;">質的</td>
+<td style="text-align: left;">ロジスティック回帰分析</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">質的</td>
+<td style="text-align: center;">質的</td>
+<td style="text-align: left;">クロス表分析</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="量的変数量的変数の相関" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="量的変数量的変数の相関"><span class="header-section-number">9.3</span> 量的変数×量的変数の相関</h2>
+<section id="散布図の作成" class="level3" data-number="9.3.1">
+<h3 data-number="9.3.1" class="anchored" data-anchor-id="散布図の作成"><span class="header-section-number">9.3.1</span> 散布図の作成</h3>
+<p>　ふたつの量的変数間の関連性を視覚的に知ることができるものとして、<strong>散布図</strong>が挙げられる。<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>という変数が<span class="math inline">\(n\)</span>個観測されているとき、<span class="math inline">\(x\)</span>を横軸、<span class="math inline">\(y\)</span>を縦軸として、<span class="math inline">\(i\)</span>個の観測値を追うロットすることができる。以下では、実際に散布図を作成してみる。</p>
+<p>　Rでは、ggplot2というパッケージを使用して、散布図を作成することができる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (1)使用するパッケージをlibraryする</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (2)今回は、2つの量的変数として、出生年と労働時間を使用してみる</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># (2-1)まず、出生年(ybirth)と、労働時間(JC_41: 以前作成したもの)を確認</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span> <span class="fu">count</span>(ybirth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ybirth  n
+1    1972 70
+2    1973 81
+3    1974 82
+4    1975 70
+5    1976 76
+6    1977 84
+7    1978 53
+8    1979 54
+9    1980 48
+10   1981 70
+11   1982 44
+12   1983 67
+13   1984 67
+14   1985 64
+15   1986 70</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span> <span class="fu">count</span>(JC_41)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   JC_41   n
+1      1   3
+2      2   9
+3      3  18
+4      4  23
+5      5  37
+6      6  41
+7      7  50
+8      8 250
+9      9 106
+10    10 138
+11    11  50
+12    12  49
+13    13  15
+14    14  10
+15    15   5
+16    16   1
+17    17   1
+18    18   1
+19    21   1
+20    88 174
+21    99  18</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (2-2)労働時間JC_41には、非該当88と無回答99が含まれるので、これを欠損値にする</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">&lt;-</span> data4 <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">whours =</span> <span class="fu">ifelse</span>(JC_41<span class="sc">&gt;=</span><span class="dv">88</span>,<span class="cn">NA</span>,JC_41))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (3)散布図を作成</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ybirth, <span class="at">y =</span> whours)) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture9_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　社会調査データでは、あまり量的変数が豊富にないので、R言語に付属しているサンプルデータを使ってみる。例えば、「mtcars」は、R言語にデフォルトで入っているサンプルデータで、1974年に測定された32台の自動車の燃費・設計・性能の10の側面を測定したデータである。R上で、「?mtcars」とコマンドを入力して実行すると、サンプルデータの詳細が確認できる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>?mtcars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>　このmtcarsデータから、車の重さ（wt）と、燃費（mpg）の散布図を作成してみる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> wt, <span class="at">y =</span> mpg)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture9_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　車が重いほど、燃費が悪いことがわかる。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>グループ・ワーク
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Rには、デフォルトで、ペンギンに関するデータ（penguins）が提供されています。このpenguinsデータのうち、くちばしの長さ（bill_len）と翼の長さ（flipper_len）の散布図を作成してみよう。</strong></p>
+</div>
+</div>
+</section>
+<section id="相関係数とは何か" class="level3" data-number="9.3.2">
+<h3 data-number="9.3.2" class="anchored" data-anchor-id="相関係数とは何か"><span class="header-section-number">9.3.2</span> 相関係数とは何か</h3>
+<p>　変数間の関連には、曲線など、さまざまな関連がありうる。散布図からは、「xが大きいほどyも大きい」というような、直線的関係を読み取ることができる場合がある。このようなxとyの間の関係を、<strong>相関関係</strong>と呼ぶ。xが増加するときにyも増加する関係のことを、「<strong>正の相関関係</strong>」、xが増加するとyが減少する関係のことを、「<strong>負の相関関係</strong>」と呼ぶ。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture9_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　この相関関係の強さは、散布図の各点が直線からどの程度離れているか、つまり散らばりの「程度」として捉えることができる。このような相関関係の強さを測るために、<strong>相関係数</strong>と呼ばれる指標がある。相関関係のうち最もよく使用されるものが、<strong>ピアソンの相関係数</strong>であり、<strong>r</strong>という記号で表されることが多い。ピアソンの相関係数は、以下の式によって計算される。</p>
+<p><span class="math display">\[r_{xy} = \frac{s_{xy}}{s_xs_y}\]</span></p>
+<p>　ここで、<span class="math inline">\(s_{xy}\)</span>は、<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>の共分散であり、以下の式によって定義される。</p>
+<p><span class="math display">\[s_{xy} = \frac{1}{n}\sum_{i=1}^n{(x_i-\bar{x})(y_i-\bar{y})}\]</span> 　つまり、ピアソンの相関係数は、<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>の共分散を、<span class="math inline">\(x\)</span>、<span class="math inline">\(y\)</span>それぞれの標準偏差の積で割ったものである。この相関係数が、どのような意味を持つのか考えてみる。</p>
+</section>
+<section id="共分散について" class="level3" data-number="9.3.3">
+<h3 data-number="9.3.3" class="anchored" data-anchor-id="共分散について"><span class="header-section-number">9.3.3</span> 共分散について</h3>
+<p>　まず、共分散について考えてみる。共分散の式を再度眺めてみよう。</p>
+<p><span class="math display">\[s_{xy} = \frac{1}{n}\sum_{i=1}^n{(x_i-\bar{x})(y_i-\bar{y})}\]</span> 　まず、シグマ（<span class="math inline">\(\sum\)</span>）の中身を考えてみる。<span class="math inline">\((x_i-\bar{x})\)</span>は、xの各観測値<span class="math inline">\(x_i\)</span>から、<span class="math inline">\(x\)</span>の平均値（<span class="math inline">\(\bar{x}\)</span>）を引き算したものである。同様に、<span class="math inline">\((y_i-\bar{y})\)</span>は、xの各観測値<span class="math inline">\(y_i\)</span>から、<span class="math inline">\(y\)</span>の平均値（<span class="math inline">\(\bar{y}\)</span>）を引き算したものである。つまり、シグマ（<span class="math inline">\(\sum\)</span>）の中身は、<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>の偏差（平均からの差）を掛け算したものである。図で示すと以下のようになる。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture9_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　この図からわかるように、<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>についての偏差の積は、グラフの第1象限と第3象限では正に、第2象限と第4象限では負になる。そのため、これらをたしあわせた<span class="math inline">\(\sum_{i=1}^n{(x_i-\bar{x})(y_i-\bar{y})}\)</span>は、「右上や左下に多く点が存在している場合」には正の値を、「左上や右下に多くの点が存在している場合」には負の値をとる。もし、4象限に満遍なく散らばっている場合には、打ち消しあって0に近い値を取ることになる。そのため、共分散は、正の関連があるか、負の関連があるかを示す指標となる。しかし、<span class="math inline">\(n\)</span>が多いと、点が多いので面積が大きくなるため、<span class="math inline">\(\frac{1}{n}\)</span>をかける。</p>
+<p>　このようにして計算される共分散が、相関係数の分子ににくることになる。</p>
+</section>
+</section>
+<section id="相関係数の計算" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="相関係数の計算"><span class="header-section-number">9.4</span> 相関係数の計算</h2>
+<p>　相関係数の分母は、<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>の標準偏差の積である。共分散も、<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>の関連を示すものであるが、共分散は<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>の単位や尺度に左右されてしまう。例えば、身長と体重の関連を考えるとき、身長の単位をcmからmに変えるだけで、共分散は<span class="math inline">\(\frac{1}{100}\)</span>になってしまう。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Rlecture9_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>　そこで、共分散から単位を消したい。共分散は、<span class="math inline">\(x\)</span>と<span class="math inline">\(y\)</span>の偏差をかけたものであるので、単位は、(<span class="math inline">\(x\)</span>の単位)<span class="math inline">\(\times\)</span> (<span class="math inline">\(y\)</span>の単位)である。そのため、<span class="math inline">\(x\)</span>の標準偏差と<span class="math inline">\(y\)</span>の標準偏差で割ってあげれば、単位が消える。また、標準偏差の積で割ることによって、相関係数の値は、-1から1の間に収まるようになる。</p>
+<p>　Rで相関係数を求めるには、<strong>cor()</strong>関数を使用する。以下では、労働時間と年収の相関を検討してみる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># まずは、労働時間と年収の分布を再確認（それぞれの変数はすでに作成済み）</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span> <span class="fu">count</span>(whours)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   whours   n
+1       1   3
+2       2   9
+3       3  18
+4       4  23
+5       5  37
+6       6  41
+7       7  50
+8       8 250
+9       9 106
+10     10 138
+11     11  50
+12     12  49
+13     13  15
+14     14  10
+15     15   5
+16     16   1
+17     17   1
+18     18   1
+19     21   1
+20     NA 192</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="sc">|&gt;</span> <span class="fu">count</span>(income)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   income   n
+1    12.5  61
+2    50.0  60
+3   100.0 133
+4   200.0 163
+5   300.0 176
+6   400.0 118
+7   500.0  76
+8   700.0  16
+9  1000.0   7
+10 1500.0   1
+11 2000.0   1
+12     NA 188</code></pre>
+</div>
+</div>
+<p>　きちんと欠損値処理されている。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 次に、相関係数を計算</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(data4<span class="sc">$</span>whours, data4<span class="sc">$</span>income, <span class="at">method=</span><span class="st">"pearson"</span>, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4900261</code></pre>
+</div>
+</div>
+<p>　相関係数が計算できた。</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>グループ・ワーク
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>「u001」データのうち、（1）労働時間と生活全般の満足度、（2）年収と生活全般の満足度の相関係数を計算してみよう。ただし、生活全般の満足度は、1=不満である、5=満足しているという連続変数として扱うこと。</strong></p>
+</div>
+</div>
+<p>　計算した相関係数は大きいと言えるのだろうか？社会学や心理学では、「相関係数の大きさ」を評価する際に、以下の基準を使用することが多い。</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">相関係数</th>
+<th style="text-align: center;">相関の強さ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(0 \leqq |r| \leqq 0.2\)</span></td>
+<td style="text-align: center;">ほとんど相関がない</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(0.2 &lt; |r| \leqq 0.4\)</span></td>
+<td style="text-align: center;">弱い相関がある</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(0.4 &lt; |r| \leqq 0.7\)</span></td>
+<td style="text-align: center;">中程度の相関がある</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(0.7 &lt; |r| \leqq 1.0\)</span></td>
+<td style="text-align: center;">強い相関がある</td>
+</tr>
+</tbody>
+</table>
+<p>　相関係数を計算する際には、外れ値の影響を受けやすいことに注意する必要がある。分析の際には、相関係数を計算する前に、散布図を描き、大きく外れる外れ値がないかどうかを確認した上で、必要に応じて外れ値を除外して相関係数を計算するのが良い。</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

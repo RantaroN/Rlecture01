@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -33,6 +68,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./Rlecture13.html" rel="next">
 <link href="./Rlecture11.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -72,6 +108,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -160,7 +225,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./Rlecture9.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">相関係数</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">変数間の関連と相関係数</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -181,13 +246,40 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">重回帰分析と統計的統制</span></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">ダミー変数</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture14.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">交互作用効果</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Rlecture15.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">質的従属変数のモデル</span></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#重回帰分析とは" id="toc-重回帰分析とは" class="nav-link active" data-scroll-target="#重回帰分析とは"><span class="header-section-number">12.1</span> 重回帰分析とは</a></li>
+  <li><a href="#標準化偏回帰係数" id="toc-標準化偏回帰係数" class="nav-link" data-scroll-target="#標準化偏回帰係数"><span class="header-section-number">12.2</span> 標準化偏回帰係数</a></li>
+  <li><a href="#多重共線性" id="toc-多重共線性" class="nav-link" data-scroll-target="#多重共線性"><span class="header-section-number">12.3</span> 多重共線性</a></li>
+  <li><a href="#階層的重回帰分析" id="toc-階層的重回帰分析" class="nav-link" data-scroll-target="#階層的重回帰分析"><span class="header-section-number">12.4</span> 階層的重回帰分析</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -211,9 +303,368 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>（準備中）</p>
+<section id="重回帰分析とは" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="重回帰分析とは"><span class="header-section-number">12.1</span> 重回帰分析とは</h2>
+<p>　単回帰分析の授業では、教育年数が階層帰属意識に与える影響について、教育年数を独立変数、階層帰属意識を従属変数とした分析の例を取り上げた。しかし、もし「教育年数が階層帰属意識に与える影響」を知りたい場合、教育年数と関連する収入も統制する必要があるかもしれない。つまり、<strong>収入は、教育年数と階層帰属意識の両方に影響を与えるので、教育年数が階層帰属意識に与える影響は、（少なくともその一部は）収入が高いことによる影響</strong>かもしれない。</p>
+<p>　このように、他の要因を統制した上で、独立変数が従属変数に与える影響を知りたい場合、<strong>重回帰分析</strong>が役に立つ。重回帰分析とは、独立変数が複数ある回帰分析のことであり、ほとんどの回帰分析では、単回期分析ではなく重回帰分析が使用される。式で表すと以下の通り。</p>
+<p><span class="math display">\[y_i = b_0 + b_1x_{1i} + b_2x_{2i} + ... + b_mx_{mi} + e_i\]</span></p>
+<p>　この式では、<span class="math inline">\(m\)</span>個の独立変数が投入されている。<span class="math inline">\(b_1\)</span>は、他の独立変数の影響を全て一定にした場合の、<span class="math inline">\(x_1\)</span>という独立変数が従属変数に与える影響を意味している。ここで、<span class="math inline">\(b\)</span>を、<strong>偏回帰係数</strong>と呼ぶ。</p>
+<p>　重回帰分析をRで行う方法は極めて簡単である。以下では、独立変数に教育年数（eduy）と収入（income）を、従属変数に階層帰属意識（sss）を使った重回帰分析の方法を示す。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(sss <span class="sc">~</span> eduy <span class="sc">+</span> income, <span class="at">data =</span> data4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = sss ~ eduy + income, data = data4)
+
+Coefficients:
+(Intercept)         eduy       income  
+   1.676588     0.202887     0.001722  </code></pre>
+</div>
+</div>
+<p>　lm()内で重回帰分析を行う際には、複数の独立変数を、“~”に続けて”+“で結んで記述すれば良い。結果の見方は、単回期分析の際と同様である。この例では、教育年数の偏回帰係数は0.202887、収入の偏回帰係数は0.001722となっている。単回期分析と同様に、msummary()を使用すれば、見やすい結果を得ることができる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(sss <span class="sc">~</span> eduy <span class="sc">+</span> income, <span class="at">data =</span> data4) <span class="sc">|&gt;</span> <span class="fu">msummary</span>(<span class="at">stars =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_yh5ga8lbz8rx5rsvvm80 = TinyTable.createTableFunctions("tinytable_yh5ga8lbz8rx5rsvvm80");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '13', j: 2 } ], css_id: 'tinytable_css_vbj4vqy9krlpgvvlktmb',}, 
+          { positions: [ { i: '6', j: 2 } ], css_id: 'tinytable_css_pj0qhoihjpghcs2sqpr5',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 } ], css_id: 'tinytable_css_ws2hby0w9sejje1hnrmy',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_d7svoistddlfrydf7qfk',}, 
+          { positions: [ { i: '13', j: 1 } ], css_id: 'tinytable_css_j9qla69x5v88gl5yw3nj',}, 
+          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_q2so9hqmjkuocx17jipn',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 } ], css_id: 'tinytable_css_zrg3k2dsux9ud2ch2aad',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_n30hpysidg1dgcbag8pj',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_yh5ga8lbz8rx5rsvvm80.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_yh5ga8lbz8rx5rsvvm80 td.tinytable_css_vbj4vqy9krlpgvvlktmb, #tinytable_yh5ga8lbz8rx5rsvvm80 th.tinytable_css_vbj4vqy9krlpgvvlktmb {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_yh5ga8lbz8rx5rsvvm80 td.tinytable_css_pj0qhoihjpghcs2sqpr5, #tinytable_yh5ga8lbz8rx5rsvvm80 th.tinytable_css_pj0qhoihjpghcs2sqpr5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_yh5ga8lbz8rx5rsvvm80 td.tinytable_css_ws2hby0w9sejje1hnrmy, #tinytable_yh5ga8lbz8rx5rsvvm80 th.tinytable_css_ws2hby0w9sejje1hnrmy { text-align: center }
+    #tinytable_yh5ga8lbz8rx5rsvvm80 td.tinytable_css_d7svoistddlfrydf7qfk, #tinytable_yh5ga8lbz8rx5rsvvm80 th.tinytable_css_d7svoistddlfrydf7qfk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_yh5ga8lbz8rx5rsvvm80 td.tinytable_css_j9qla69x5v88gl5yw3nj, #tinytable_yh5ga8lbz8rx5rsvvm80 th.tinytable_css_j9qla69x5v88gl5yw3nj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_yh5ga8lbz8rx5rsvvm80 td.tinytable_css_q2so9hqmjkuocx17jipn, #tinytable_yh5ga8lbz8rx5rsvvm80 th.tinytable_css_q2so9hqmjkuocx17jipn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_yh5ga8lbz8rx5rsvvm80 td.tinytable_css_zrg3k2dsux9ud2ch2aad, #tinytable_yh5ga8lbz8rx5rsvvm80 th.tinytable_css_zrg3k2dsux9ud2ch2aad { text-align: left }
+    #tinytable_yh5ga8lbz8rx5rsvvm80 td.tinytable_css_n30hpysidg1dgcbag8pj, #tinytable_yh5ga8lbz8rx5rsvvm80 th.tinytable_css_n30hpysidg1dgcbag8pj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_yh5ga8lbz8rx5rsvvm80" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">(1)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="2">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">1.677***</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.464)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">eduy</td>
+                  <td data-row="3" data-col="2">0.203***</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.032)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">income</td>
+                  <td data-row="5" data-col="2">0.002***</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.000)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">Num.Obs.</td>
+                  <td data-row="7" data-col="2">792</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1">R2</td>
+                  <td data-row="8" data-col="2">0.089</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">R2 Adj.</td>
+                  <td data-row="9" data-col="2">0.087</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">AIC</td>
+                  <td data-row="10" data-col="2">3042.9</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">BIC</td>
+                  <td data-row="11" data-col="2">3061.6</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">Log.Lik.</td>
+                  <td data-row="12" data-col="2">-1517.459</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">RMSE</td>
+                  <td data-row="13" data-col="2">1.64</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<p>　教育年数と収入は、ともに階層帰属意識に対して正の影響を与えることがわかる。</p>
+</section>
+<section id="標準化偏回帰係数" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="標準化偏回帰係数"><span class="header-section-number">12.2</span> 標準化偏回帰係数</h2>
+<p>　さて、先ほど出力した重回帰分析の結果を眺めてみよう。教育年数と所得の偏回帰係数を比べてみると、教育年数の方が大きい。このことから、「教育年数の方が収入よりも、階層帰属意識を強く規定する」と言えるのだろうか。</p>
+<p>　重回帰分析ではこのように、独立変数間の影響の強さを比較したい状況がある。この際に、偏回帰係数では、適切に比較できない。なぜなら、独立変数の単位が異なるからである。教育年数1年分の上昇と、収入1円の上昇を、フェアに比較することはできないだろう。そこで使用されるのが、<strong>標準化偏回帰係数</strong>である。</p>
+<p>　標準化偏回帰係数を求めるには、全ての変数を標準化すれば良い。標準化とは、平均=0、分散=1に変数を調整する方法である。Rでは、<strong>scale()</strong>関数を使うことで、変数を標準化することができる。以下ではまず、教育年数と収入の変数を標準化してみる。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data4 <span class="ot">&lt;-</span> data4 <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">eduy_scale =</span> <span class="fu">scale</span>(eduy),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">income_scale =</span> <span class="fu">scale</span>(income),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">sss_scale =</span> <span class="fu">scale</span>(sss))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 標準化できているか確認する</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data4<span class="sc">$</span>eduy_scale)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       V1         
+ Min.   :-2.9091  
+ 1st Qu.:-1.2821  
+ Median :-0.1974  
+ Mean   : 0.0000  
+ 3rd Qu.: 0.8873  
+ Max.   : 1.9720  
+ NA's   :11       </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data4<span class="sc">$</span>income_scale)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       V1         
+ Min.   :-1.3010  
+ 1st Qu.:-0.8370  
+ Median :-0.3067  
+ Mean   : 0.0000  
+ 3rd Qu.: 0.7539  
+ Max.   : 9.2388  
+ NA's   :188      </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(data4<span class="sc">$</span>sss_scale)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       V1           
+ Min.   :-2.301577  
+ 1st Qu.:-0.582848  
+ Median :-0.009938  
+ Mean   : 0.000000  
+ 3rd Qu.: 0.562971  
+ Max.   : 2.854610  
+ NA's   :20         </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(data4<span class="sc">$</span>eduy_scale, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(data4<span class="sc">$</span>income_scale, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(data4<span class="sc">$</span>sss_scale, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>　平均が0、分散（標準偏差）が1になっているため，きちんと標準化できている。</p>
+<p>　あとは、標準化された独立変数を使用して、これまで通り重回帰分析を行えば良い。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(sss_scale <span class="sc">~</span> eduy_scale <span class="sc">+</span> income_scale, <span class="at">data =</span> data4) <span class="sc">|&gt;</span> <span class="fu">msummary</span>(<span class="at">stars =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_fdnhe88zmismxk1xye46 = TinyTable.createTableFunctions("tinytable_fdnhe88zmismxk1xye46");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '13', j: 2 } ], css_id: 'tinytable_css_rqovbxampw5fsqiby66q',}, 
+          { positions: [ { i: '6', j: 2 } ], css_id: 'tinytable_css_x2tnjnuas1q01k8b7kgk',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '10', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 } ], css_id: 'tinytable_css_w819ts3aa4040pep3uam',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_lwyria2o0yfk3pnxf86g',}, 
+          { positions: [ { i: '13', j: 1 } ], css_id: 'tinytable_css_ce141fyh4dnlerbcqdb5',}, 
+          { positions: [ { i: '6', j: 1 } ], css_id: 'tinytable_css_dfnlzs071j3tskezdv1r',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '10', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 } ], css_id: 'tinytable_css_ma8arvr96ej7cdbjoqv0',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_3vmxl3sqz7y8rik6x9pa',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_fdnhe88zmismxk1xye46.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_fdnhe88zmismxk1xye46 td.tinytable_css_rqovbxampw5fsqiby66q, #tinytable_fdnhe88zmismxk1xye46 th.tinytable_css_rqovbxampw5fsqiby66q {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_fdnhe88zmismxk1xye46 td.tinytable_css_x2tnjnuas1q01k8b7kgk, #tinytable_fdnhe88zmismxk1xye46 th.tinytable_css_x2tnjnuas1q01k8b7kgk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_fdnhe88zmismxk1xye46 td.tinytable_css_w819ts3aa4040pep3uam, #tinytable_fdnhe88zmismxk1xye46 th.tinytable_css_w819ts3aa4040pep3uam { text-align: center }
+    #tinytable_fdnhe88zmismxk1xye46 td.tinytable_css_lwyria2o0yfk3pnxf86g, #tinytable_fdnhe88zmismxk1xye46 th.tinytable_css_lwyria2o0yfk3pnxf86g {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_fdnhe88zmismxk1xye46 td.tinytable_css_ce141fyh4dnlerbcqdb5, #tinytable_fdnhe88zmismxk1xye46 th.tinytable_css_ce141fyh4dnlerbcqdb5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_fdnhe88zmismxk1xye46 td.tinytable_css_dfnlzs071j3tskezdv1r, #tinytable_fdnhe88zmismxk1xye46 th.tinytable_css_dfnlzs071j3tskezdv1r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_fdnhe88zmismxk1xye46 td.tinytable_css_ma8arvr96ej7cdbjoqv0, #tinytable_fdnhe88zmismxk1xye46 th.tinytable_css_ma8arvr96ej7cdbjoqv0 { text-align: left }
+    #tinytable_fdnhe88zmismxk1xye46 td.tinytable_css_3vmxl3sqz7y8rik6x9pa, #tinytable_fdnhe88zmismxk1xye46 th.tinytable_css_3vmxl3sqz7y8rik6x9pa {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --line-type-bottom: solid; --line-type-left: solid; --line-type-right: solid; --line-type-top: solid; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_fdnhe88zmismxk1xye46" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1"> </th>
+                <th scope="col" data-row="0" data-col="2">(1)</th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan="2">+ p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">(Intercept)</td>
+                  <td data-row="1" data-col="2">0.010</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2">(0.034)</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">eduy_scale</td>
+                  <td data-row="3" data-col="2">0.214***</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2">(0.034)</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">income_scale</td>
+                  <td data-row="5" data-col="2">0.186***</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2">(0.034)</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">Num.Obs.</td>
+                  <td data-row="7" data-col="2">792</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1">R2</td>
+                  <td data-row="8" data-col="2">0.089</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">R2 Adj.</td>
+                  <td data-row="9" data-col="2">0.087</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">AIC</td>
+                  <td data-row="10" data-col="2">2160.6</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">BIC</td>
+                  <td data-row="11" data-col="2">2179.3</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">Log.Lik.</td>
+                  <td data-row="12" data-col="2">-1076.293</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">RMSE</td>
+                  <td data-row="13" data-col="2">0.94</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>グループ・ワーク
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>「u001」データのうち、教育年数（eduy）、収入（income）を独立変数、政治関心（ZQ43）を従属変数とした重回帰分析を実行してみましょう。結果の意味を解釈してみましょう。</strong></p>
+</div>
+</div>
+</section>
+<section id="多重共線性" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="多重共線性"><span class="header-section-number">12.3</span> 多重共線性</h2>
+<p>　重回帰分析を実施する際には、<strong>多重共線性</strong>に気をつける必要がある。多重共線性とは、独立変数間の相関が高い時に、回帰分析の結果が不安定になり、誤った結果を導き出してしまうものである。数学的には、重回帰分析では、独立変数同士の相関がないことを仮定しているが、実際の分析では独立変数間の相関は通用存在する。多少の相関では問題ないが、相関が強すぎると、結果に影響を及ぼす。多重共線性の深刻さを測る指標として、<strong>分散拡大要因（VIF）</strong>という指標がある。</p>
+<p>　Rでは、VIFは以下のようにして計算する。carパッケージの<strong>vif()</strong>という関数を使用する。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(sss_scale <span class="sc">~</span> eduy_scale <span class="sc">+</span> income_scale, <span class="at">data =</span> data4) <span class="sc">|&gt;</span> <span class="fu">vif</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  eduy_scale income_scale 
+    1.007643     1.007643 </code></pre>
+</div>
+</div>
+<p>　今回の分析結果では、VIFは1程度である。多重共線性の目安は、以下を参考にすると良い。多重共線性の問題が生じる可能性がある場合には、いずれかの独立変数をモデルから除外することが望ましい。</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(VIF\)</span>の値</th>
+<th style="text-align: center;">多重共線性の問題</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(VIF=1\)</span></td>
+<td style="text-align: center;">全く問題はない</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(1&lt;VIF&lt;5\)</span></td>
+<td style="text-align: center;">許容範囲</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(VIF&gt;10\)</span></td>
+<td style="text-align: center;">多重共線性の問題あり</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="階層的重回帰分析" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="階層的重回帰分析"><span class="header-section-number">12.4</span> 階層的重回帰分析</h2>
+<p>（作成中）</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -623,6 +1074,9 @@ ul.task-list li input[type="checkbox"] {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./Rlecture13.html" class="pagination-link" aria-label="ダミー変数">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">ダミー変数</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
