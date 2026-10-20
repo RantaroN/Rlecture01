@@ -275,3 +275,7 @@ cor(data4$whours, data4$income, method="pearson", use = "complete.obs")
 |  $0.7 < |r| \leqq 1.0$  |   強い相関がある   |
 
 　相関係数を計算する際には、外れ値の影響を受けやすいことに注意する必要がある。分析の際には、相関係数を計算する前に、散布図を描き、大きく外れる外れ値がないかどうかを確認した上で、必要に応じて外れ値を除外して相関係数を計算するのが良い。
+
+```{r, include=FALSE}
+write.csv(data4,"data4.csv")
+```
