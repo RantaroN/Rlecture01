@@ -74,7 +74,7 @@ data8 |> count(ZQ25)
 
 # 健康変数を成形
 # まず、9はNAにする
-data8 <- data4 |>
+data8 <- data8 |>
         mutate(health = ifelse(ZQ25==9,NA,ZQ25))
 data8 |> count(health)
 
@@ -84,7 +84,7 @@ data8 <- data8 |>
 data8 |> count(health2)
 
 # t検定を実行する
-t.test(data8$health2[data4$sex==1],data8$health2[data4$sex==2])
+t.test(data8$health2[data8$sex==1],data8$health2[data8$sex==2])
 ```
 
 　出力された結果を確認してみる。"mean of x"と"mean of y"は、男性・女性それぞれの平均値を意味する。次に、"t = -0.46659"と出力されていると思うが、これがt値である。そのt値の後に、"df = 992.32"都出力されているが、これが自由度である。自由度が十分に大きいため、有意水準$\alpha=0.05$の両側検定の場合、棄却域は$\pm1.960$であるから、t値はこの棄却域に含まれない。したがって、帰無仮説は棄却できない。このことは、"p-value = 0.6409"という出力からもわかる。p値は0.64程度であり、有意水準5%で統計的に有意ではない。したがって、男女間での健康状態の差は母集団では差がないと推測される。
