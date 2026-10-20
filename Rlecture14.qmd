@@ -218,7 +218,7 @@ lm(satisfaction ~ living + bachelor + living*bachelor, data = data14) |> msummar
 result1 <- lm(satisfaction ~ living + bachelor + living*bachelor, data = data14)
 
 # marginaleffectsパッケージをインストールしてlibraryする
-#installed.packages("marginaleffects")
+installed.packages("marginaleffects")
 library(marginaleffects)
 
 # predictions()を使用して、予測値を計算
