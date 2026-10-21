@@ -9,6 +9,11 @@
     "content_category": null,
     "has_parameters": false
   },
+  "environment": {
+    "r": {
+      "requires": "~=4.5.0"
+    }
+  },
   "quarto": {
     "version": "1.9.37",
     "engines": ["markdown", "knitr"]
@@ -1731,6 +1736,43 @@
         "Archs": "magrittr.so.dSYM"
       }
     },
+    "marginaleffects": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "marginaleffects",
+        "Title": "Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis\nTests",
+        "Version": "0.32.0",
+        "Authors@R": "\n    c(person(given = \"Vincent\",\n             family = \"Arel-Bundock\",\n             role = c(\"aut\", \"cre\", \"cph\"),\n             email = \"vincent.arel-bundock@umontreal.ca\",\n             comment = c(ORCID = \"0000-0003-2042-7063\")),\n      person(given = \"Noah\",\n             family = \"Greifer\",\n             role = \"ctb\",\n             email = \"noah.greifer@gmail.com\",\n             comment = c(ORCID = \"0000-0003-3067-7154\")),\n      person(\"Etienne\", \"Bacher\",\n             email = \"etienne.bacher@protonmail.com\",\n             role = \"ctb\",\n             comment = c(ORCID = \"0000-0002-9271-5075\")),\n      person(given = \"Grant\",\n             family = \"McDermott\",\n             role = c(\"ctb\"),\n             comment = c(ORCID = \"0000-0001-7883-8573\")),\n      person(given = \"Andrew\",\n             family = \"Heiss\",\n             role = c(\"ctb\"),\n             comment = c(ORCID = \"0000-0002-3948-3914\"))\n             )",
+        "Description": "Compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, etc.) for over 100 classes of statistical and machine learning models in R. Conduct linear and non-linear hypothesis tests, or equivalence tests. Calculate uncertainty estimates using the delta method, bootstrapping, or simulation-based inference. Details can be found in Arel-Bundock, Greifer, and Heiss (2024) <doi:10.18637/jss.v111.i09>.",
+        "License": "GPL (>= 3)",
+        "Copyright": "inst/COPYRIGHTS",
+        "Encoding": "UTF-8",
+        "URL": "https://marginaleffects.com/",
+        "BugReports": "https://github.com/vincentarelbundock/marginaleffects/issues",
+        "RoxygenNote": "7.3.3",
+        "Depends": "R (>= 3.6.0)",
+        "Imports": "backports, checkmate, data.table (>= 1.16.4), generics,\nFormula, insight (>= 1.3.0), methods, rlang",
+        "Suggests": "AER, Amelia, afex, aod, arrow, bayestestR, bench, betareg,\nBH, bife, biglm, blme, boot, brglm2, brms, brmsmargins, broom,\ncar, carData, causaldata, clarify, cjoint, cobalt, collapse,\nconflicted, countrycode, covr, crch, DALEXtra, DCchoice,\ndbarts, DirichletReg, distributional, dfidx, dplyr, emmeans,\nequivalence, estimatr, fixest, flexsurv, fmeffects, fontquiver,\nfuture, future.apply, fwb, gam, gamlss, gamlss.dist, geepack,\nggdist, ggokabeito, ggplot2, ggrepel, glmmTMB, glmtoolbox,\nglmx, haven, here, itsadug, ivreg, kableExtra, lme4, lmerTest,\nlogistf, magrittr, margins, MatchIt, MASS, mclogit, MCMCglmm,\nmhurdle, missRanger, mgcv, mice, miceadds, mlogit, mlr3verse,\nmodelbased, modelsummary, multcomp, mvgam, mvtnorm,\nnanoparquet, nlme, nnet, numDeriv, nycflights13, optmatch,\nordbetareg, ordinal, parameters, parsnip, partykit, patchwork,\npkgdown, phylolm, pbapply, plm, polspline, posterior, probably,\npscl, purrr, quantreg, quantregForest, Rchoice, REndo,\nrcmdcheck, Rdatasets, remotes, reticulate, rmarkdown, rms,\nrobust, robustbase, robustlmm, rsample, rstanarm, rstantools,\nrstpm2, rstudioapi, rsvg, sampleSelection, sandwich, scam,\nspelling, speedglm, splines, survey, survival, svglite,\nsystemfit, systemfonts, tibble, tictoc, tidymodels, tidyr,\ntidyverse, tinysnapshot (>= 0.0.7), tinytable (>= 0.6.1),\ntinytest, titanic, truncreg, tsModel, withr, workflows, yaml,\nxgboost, altdoc, knitr, quarto",
+        "Collate": "'add_hypothesis.R' 'add_rowid.R' 'attributes.R' 'autodiff.R'\n'backtransform.R' 'broom.R' 'by.R' 'class.R' 'comparisons.R'\n'components.R' 'construct_call.R' 'datagrid.R' 'equivalence.R'\n'get_ci.R' 'get_coef.R' 'get_comparisons.R'\n'get_comparisons_data.R' 'get_comparisons_data_character.R'\n'get_comparisons_data_factor.R'\n'get_comparisons_data_logical.R'\n'get_comparisons_data_numeric.R' 'get_dataset.R'\n'get_degrees_of_freedom.R' 'get_draws.R' 'get_group_names.R'\n'get_hypotheses.R' 'get_jacobian.R' 'get_labels.R'\n'get_model_matrix.R' 'get_modeldata.R' 'get_predict.R'\n'get_predictions.R' 'get_se_delta.R' 'get_vcov.R'\n'github_issue.R' 'hush.R' 'hypotheses.R' 'hypotheses_joint.R'\n'hypothesis.R' 'hypothesis_formula.R' 'hypothesis_function.R'\n'hypothesis_matrix.R' 'hypothesis_string.R' 'imputation.R'\n'inferences.R' 'inferences_boot.R' 'inferences_conformal.R'\n'inferences_conformal_cv.R' 'inferences_conformal_full.R'\n'inferences_conformal_quantile.R'\n'inferences_conformal_split.R' 'inferences_fwb.R'\n'inferences_rsample.R' 'inferences_simulation.R'\n'matrix_apply.R' 'mean_or_mode.R' 'methods.R' 'set_coef.R'\n'methods_AER.R' 'sanity_model.R' 'methods_DirichletReg.R'\n'methods_MASS.R' 'methods_MCMCglmm.R' 'methods_Rchoice.R'\n'methods_WeightIt.R' 'methods_aaa.R' 'methods_afex.R'\n'methods_aod.R' 'methods_betareg.R' 'methods_bife.R'\n'methods_biglm.R' 'methods_nnet.R' 'methods_brglm2.R'\n'methods_brms.R' 'methods_crch.R' 'methods_dataframe.R'\n'methods_dbarts.R' 'methods_fixest.R' 'methods_flexsurv.R'\n'methods_gamlss.R' 'methods_glmmTMB.R' 'methods_glmtoolbox.R'\n'methods_glmx.R' 'methods_ivreg.R' 'methods_lme4.R'\n'methods_mclogit.R' 'methods_mgcv.R' 'methods_mhurdle.R'\n'methods_mice.R' 'methods_mlm.R' 'methods_mlogit.R'\n'methods_mlr3.R' 'methods_nlme.R' 'methods_ordinal.R'\n'methods_plm.R' 'methods_pscl.R' 'methods_quantreg.R'\n'methods_rms.R' 'methods_robustlmm.R' 'methods_rstanarm.R'\n'methods_rstpm2.R' 'methods_sampleSelection.R' 'methods_scam.R'\n'methods_survey.R' 'methods_survival.R' 'methods_systemfit.R'\n'methods_tidymodels.R' 'methods_tobit1.R' 'modelarchive.R'\n'multcomp.R' 'myTryCatch.R' 'package.R' 'pad.R' 'plot.R'\n'plot_build.R' 'plot_comparisons.R' 'plot_predictions.R'\n'plot_slopes.R' 'predictions.R' 'print.R' 'prune.R' 'refit.R'\n'sanitize_comparison.R' 'sanitize_condition.R'\n'sanitize_conf_level.R' 'sanitize_hypothesis_formula.R'\n'sanitize_interaction.R' 'sanitize_newdata.R'\n'sanitize_numderiv.R' 'sanitize_reserved.R' 'sanitize_type.R'\n'sanitize_variables.R' 'sanitize_vcov.R' 'sanity.R'\n'sanity_by.R' 'sanity_dots.R' 'sanity_inferences.R'\n'sanity_multcomp.R' 'settings.R' 'slopes.R' 'sort.R'\n'tinytest.R' 'type_dictionary.R' 'unpack_matrix_cols.R'\n'utils.R' 'zzz.R'",
+        "Language": "en-US",
+        "VignetteBuilder": "knitr, quarto",
+        "NeedsCompilation": "no",
+        "Packaged": "2026-02-14 02:05:39 UTC; vincent",
+        "Author": "Vincent Arel-Bundock [aut, cre, cph] (ORCID:\n    <https://orcid.org/0000-0003-2042-7063>),\n  Noah Greifer [ctb] (ORCID: <https://orcid.org/0000-0003-3067-7154>),\n  Etienne Bacher [ctb] (ORCID: <https://orcid.org/0000-0002-9271-5075>),\n  Grant McDermott [ctb] (ORCID: <https://orcid.org/0000-0001-7883-8573>),\n  Andrew Heiss [ctb] (ORCID: <https://orcid.org/0000-0002-3948-3914>)",
+        "Maintainer": "Vincent Arel-Bundock <vincent.arel-bundock@umontreal.ca>",
+        "Repository": "CRAN",
+        "Date/Publication": "2026-02-14 06:40:08 UTC",
+        "Built": "R 4.5.2; ; 2026-02-14 09:02:40 UTC; unix",
+        "RemoteType": "standard",
+        "RemoteRef": "marginaleffects",
+        "RemotePkgRef": "marginaleffects",
+        "RemoteRepos": "https://cran.rstudio.com",
+        "RemoteReposName": "CRAN",
+        "RemotePkgPlatform": "aarch64-apple-darwin20",
+        "RemoteSha": "0.32.0"
+      }
+    },
     "memoise": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -2403,6 +2445,42 @@
         "Built": "R 4.5.0; ; 2025-04-30 22:37:28 UTC; unix"
       }
     },
+    "renv": {
+      "Source": "CRAN",
+      "Repository": "https://cran.rstudio.com",
+      "description": {
+        "Package": "renv",
+        "Type": "Package",
+        "Title": "Project Environments",
+        "Version": "1.2.2",
+        "Authors@R": "c(\n    person(\"Kevin\", \"Ushey\", role = c(\"aut\", \"cre\"), email = \"kevin@rstudio.com\",\n           comment = c(ORCID = \"0000-0003-2880-7407\")),\n    person(\"Hadley\", \"Wickham\", role = c(\"aut\"), email = \"hadley@rstudio.com\",\n           comment = c(ORCID = \"0000-0003-4757-117X\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n    )",
+        "Description": "A dependency management toolkit for R. Using 'renv', you can create\n    and manage project-local R libraries, save the state of these libraries to\n    a 'lockfile', and later restore your library as required. Together, these\n    tools can help make your projects more isolated, portable, and reproducible.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://rstudio.github.io/renv/, https://github.com/rstudio/renv",
+        "BugReports": "https://github.com/rstudio/renv/issues",
+        "Imports": "utils",
+        "Suggests": "BiocManager, cli, compiler, covr, cpp11, curl, devtools,\ngenerics, gitcreds, jsonlite, jsonvalidate, knitr, miniUI,\nmodules, packrat, pak, R6, remotes, reticulate, rmarkdown,\nrstudioapi, shiny, testthat, uuid, waldo, yaml, webfakes",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.3",
+        "VignetteBuilder": "knitr",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Config/testthat/parallel": "true",
+        "Config/testthat/start-first": "bioconductor,python,install,restore,snapshot,retrieve,remotes",
+        "NeedsCompilation": "no",
+        "Packaged": "2026-04-15 23:36:36 UTC; kevin",
+        "Author": "Kevin Ushey [aut, cre] (ORCID: <https://orcid.org/0000-0003-2880-7407>),\n  Hadley Wickham [aut] (ORCID: <https://orcid.org/0000-0003-4757-117X>),\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Kevin Ushey <kevin@rstudio.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2026-04-16 07:20:03 UTC",
+        "Built": "R 4.5.2; ; 2026-04-20 23:20:29 UTC; unix",
+        "RemoteType": "standard",
+        "RemotePkgRef": "renv",
+        "RemoteRef": "renv",
+        "RemoteRepos": "https://cran.rstudio.com",
+        "RemoteSha": "1.2.2"
+      }
+    },
     "rlang": {
       "Source": "CRAN",
       "Repository": "https://cran.rstudio.com",
@@ -3037,7 +3115,7 @@
   },
   "files": {
     "_book/index.html": {
-      "checksum": "8afce5d2ebb05fa7a08db4f5c91eb143"
+      "checksum": "c181f394c1ec9ce9a41f73e22fa521d9"
     },
     "_book/pictures/pictures1.png": {
       "checksum": "49f21284c9c75a9635e6e7324213d35d"
@@ -3090,6 +3168,12 @@
     "_book/pictures/pictures24.png": {
       "checksum": "5242bbe39b01c9ed6d6f898c1b933f2b"
     },
+    "_book/pictures/pictures25.png": {
+      "checksum": "1ca6fe5aeb18d0bf2dbe9ca46faf49cc"
+    },
+    "_book/pictures/pictures26.png": {
+      "checksum": "bc92d2668c751b16627830685dc9096b"
+    },
     "_book/pictures/pictures3.png": {
       "checksum": "ebe426fe8c7e551bded3fea771aaf17f"
     },
@@ -3127,19 +3211,37 @@
       "checksum": "72445503a9ae682e4bf0bb1400e54f3a"
     },
     "_book/Rlecture11.html": {
-      "checksum": "f5abc9f13e7dcf4d9a1ef19c2d97a6de"
+      "checksum": "f8f543de604a789d262ca5f24d5fcc7d"
     },
     "_book/Rlecture12.html": {
-      "checksum": "ea384f7e873c2f303f02fdd40e636531"
+      "checksum": "587fc24314fc009086143c880a427a23"
     },
     "_book/Rlecture13.html": {
-      "checksum": "6ca6d5c13aded65dd8a6e0c7d319636a"
+      "checksum": "39207db7e39f5a46f709e70f52b4b939"
+    },
+    "_book/Rlecture14_files/figure-html/unnamed-chunk-12-1.png": {
+      "checksum": "6df999768c69817d80e07c6f462ec26f"
+    },
+    "_book/Rlecture14_files/figure-html/unnamed-chunk-2-1.png": {
+      "checksum": "ac10d01d858a4a13e4306557b329e17e"
+    },
+    "_book/Rlecture14_files/figure-html/unnamed-chunk-3-1.png": {
+      "checksum": "b8f2cb71d5778e3e04203b73f850ccab"
+    },
+    "_book/Rlecture14_files/figure-html/unnamed-chunk-4-1.png": {
+      "checksum": "6db34e432f8d19e1cb06e5c55b0bd89d"
+    },
+    "_book/Rlecture14_files/figure-html/unnamed-chunk-5-1.png": {
+      "checksum": "0789ba97ea401267140748ded1d6525d"
+    },
+    "_book/Rlecture14_files/figure-html/unnamed-chunk-9-1.png": {
+      "checksum": "eade8a8a26b28559cdb105e0aa15aee0"
     },
     "_book/Rlecture14.html": {
-      "checksum": "a276705cd7cd0701b140f6b69c94c7f8"
+      "checksum": "055498a19c29f50ef87bd43afa62e8aa"
     },
     "_book/Rlecture15.html": {
-      "checksum": "3de78f8f5295ecb0b2f25f992f152f9d"
+      "checksum": "b2484b90cb018b96202869e02d45ad66"
     },
     "_book/Rlecture2.html": {
       "checksum": "c09beae1ac8d8bf0c3eeb45a93f58b5d"
@@ -3187,7 +3289,7 @@
       "checksum": "8cd6a6d405fcb23ead3e4471a597a5ab"
     },
     "_book/Rlecture5.html": {
-      "checksum": "24298beaa9bb660cfec797758f2c8354"
+      "checksum": "70bea762c2f0b547945294aac3ec4dff"
     },
     "_book/Rlecture6_files/figure-html/echo-false-1.png": {
       "checksum": "69bb92c222e1e0674daa6756ca58b6c7"
@@ -3198,53 +3300,11 @@
     "_book/Rlecture6_files/figure-html/unnamed-chunk-21-1.png": {
       "checksum": "b050b8afd842c58848efdc1fab711a1c"
     },
-    "_book/Rlecture6_files/figure-html/unnamed-chunk-22-1.png": {
-      "checksum": "1fc71d236a349a783e2326a2f7a7913e"
-    },
     "_book/Rlecture6_files/figure-html/unnamed-chunk-7-1.png": {
       "checksum": "e96ea713fca480602cf3f4f87fb214d3"
     },
-    "_book/Rlecture6_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css": {
-      "checksum": "138a6193a3bd40baf1e627da441a4734"
-    },
-    "_book/Rlecture6_files/libs/bootstrap/bootstrap-icons.css": {
-      "checksum": "886da841d7421705f715f600c5ff11bb"
-    },
-    "_book/Rlecture6_files/libs/bootstrap/bootstrap-icons.woff": {
-      "checksum": "efe54401ef52214fd3b701e23ff88c5f"
-    },
-    "_book/Rlecture6_files/libs/bootstrap/bootstrap.min.js": {
-      "checksum": "e2b09c06f0e714b6144a6788a28e3950"
-    },
-    "_book/Rlecture6_files/libs/clipboard/clipboard.min.js": {
-      "checksum": "15f52a1ee547f2bdd46e56747332ca2d"
-    },
-    "_book/Rlecture6_files/libs/quarto-html/anchor.min.js": {
-      "checksum": "91bcf6cd1fd88fec3f109811e5fc3546"
-    },
-    "_book/Rlecture6_files/libs/quarto-html/popper.min.js": {
-      "checksum": "3a4a291ccf3f1ea0f82b641542fd3827"
-    },
-    "_book/Rlecture6_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css": {
-      "checksum": "7f8f88aac4f3542376d5c11b86a4c14d"
-    },
-    "_book/Rlecture6_files/libs/quarto-html/quarto.js": {
-      "checksum": "6f4245742deb3cc92337dbe2701ccfe1"
-    },
-    "_book/Rlecture6_files/libs/quarto-html/tabsets/tabsets.js": {
-      "checksum": "e8d6a8862b33ccc461f8fd532e05b365"
-    },
-    "_book/Rlecture6_files/libs/quarto-html/tippy.css": {
-      "checksum": "ebd6f8ce46a677e1a4f5f8a8317109a9"
-    },
-    "_book/Rlecture6_files/libs/quarto-html/tippy.umd.min.js": {
-      "checksum": "d828775275749701b48bd9d958814111"
-    },
     "_book/Rlecture6.html": {
-      "checksum": "73b22173c6c96bb849f697259ebbf7bc"
-    },
-    "_book/Rlecture7_files/figure-html/unnamed-chunk-1-1.png": {
-      "checksum": "33a2f4f711e9f93263299570758cde94"
+      "checksum": "d4ca6e2815a1a41c9bb9ef6ec0e34f85"
     },
     "_book/Rlecture7_files/figure-html/unnamed-chunk-2-1.png": {
       "checksum": "33a2f4f711e9f93263299570758cde94"
@@ -3253,10 +3313,10 @@
       "checksum": "d98ee060d9697dbcbd35b083e4bad51b"
     },
     "_book/Rlecture7.html": {
-      "checksum": "5554424172065b719ea1bb07c4fc382d"
+      "checksum": "217b7fd2e71d474c24e321ecf435ba7b"
     },
     "_book/Rlecture8.html": {
-      "checksum": "ca3cb1f622d3e79848c79047b4de7a38"
+      "checksum": "0f3bcadd436b7861c0214b4765aa79ad"
     },
     "_book/Rlecture9_files/figure-html/unnamed-chunk-2-1.png": {
       "checksum": "1020449ed063de2609daec72ce9f03a2"
@@ -3283,7 +3343,7 @@
       "checksum": "3b884707e6b9cdb01a87f49ab19b17dd"
     },
     "_book/search.json": {
-      "checksum": "372e0bb5504cb677fd0f9996ca4c9f9e"
+      "checksum": "a3e14e83defce4a8d853dd3387829e4e"
     },
     "_book/site_libs/bootstrap/bootstrap-5ccb035bea26c1e21f80f44cf7c27909.min.css": {
       "checksum": "5ccb035bea26c1e21f80f44cf7c27909"
@@ -3346,13 +3406,16 @@
       "checksum": "c6fa55cfefe8fa2b1d39e9241df38b7b"
     },
     ".RData": {
-      "checksum": "9c22539ab4c250024a30fdaa9348827f"
+      "checksum": "6e49c4b56f3a9880250165a3ac1fdac9"
     },
     "data4.csv": {
       "checksum": "4359a780c7ccc6075a6c8b2a0e02b566"
     },
+    "data6.csv": {
+      "checksum": "857e146437334229efcadd43f603c363"
+    },
     "index.qmd": {
-      "checksum": "8e1b68fb6de106c677626d5d69fd79c6"
+      "checksum": "462e8886fb883d48b2b42ff75de56e82"
     },
     "pictures/pictures_作成用.pptx": {
       "checksum": "a64e377b2b0a4547ec937638655d36a7"
@@ -3407,6 +3470,12 @@
     },
     "pictures/pictures24.png": {
       "checksum": "5242bbe39b01c9ed6d6f898c1b933f2b"
+    },
+    "pictures/pictures25.png": {
+      "checksum": "1ca6fe5aeb18d0bf2dbe9ca46faf49cc"
+    },
+    "pictures/pictures26.png": {
+      "checksum": "bc92d2668c751b16627830685dc9096b"
     },
     "pictures/pictures3.png": {
       "checksum": "ebe426fe8c7e551bded3fea771aaf17f"
@@ -3474,6 +3543,12 @@
     "README.md": {
       "checksum": "2d6ab77bb39184c0de05874e8c37b22a"
     },
+    "renv.lock": {
+      "checksum": "e3358c89dbed6895ef7e32b77c657c3a"
+    },
+    "Rlecture.pptx": {
+      "checksum": "90f62d1de782d0ef4cd290827a3596cd"
+    },
     "Rlecture10.qmd": {
       "checksum": "a3e98ffa3913599b951b0e483c5b3fc7"
     },
@@ -3481,16 +3556,19 @@
       "checksum": "1c31050b50739ba8a54a3375fc680907"
     },
     "Rlecture12.qmd": {
-      "checksum": "a7515e53161c0fef3f67d830ee47a3e5"
+      "checksum": "4ee0f903e658a1f414ab60cc70f72717"
     },
     "Rlecture13.qmd": {
-      "checksum": "1cb0ff0a1d3a2dd74b23d8eebb17a677"
+      "checksum": "714515c500b43bdc8f3eed0b0067945a"
+    },
+    "Rlecture14_kari.qmd": {
+      "checksum": "19747e1a4a4b191d4e5b7fa0d4b415b8"
     },
     "Rlecture14.qmd": {
-      "checksum": "09c46d0634ab3203a27d64d8e12de626"
+      "checksum": "10f922bf8bf7166ec6eb1877e5c72e08"
     },
     "Rlecture15.qmd": {
-      "checksum": "b3ca92a3acf779ab93f68784827fa8d8"
+      "checksum": "72ab49fde1a5cf34c0c006e4ff20380d"
     },
     "Rlecture2.qmd": {
       "checksum": "f18e1873504e8da77fb0b53fc5d5a338"
@@ -3505,16 +3583,16 @@
       "checksum": "333955a94af48cfb5adc7ffc89042801"
     },
     "Rlecture6.qmd": {
-      "checksum": "931e8c1c6f83e41a63ba58b34f951807"
+      "checksum": "922ca7dc2f80e26caf3fd1e0d759af4a"
     },
     "Rlecture7.qmd": {
-      "checksum": "ca3c8bfcab9d02d613f50396e8e4ba9f"
+      "checksum": "e84b035087888463d6e43916f5117262"
     },
     "Rlecture8.qmd": {
-      "checksum": "605aacc88e0f8dc0057e23075e2fc75f"
+      "checksum": "ca8c471c7f781b0dcb2fbfe7a9e2d922"
     },
     "Rlecture9.qmd": {
-      "checksum": "bc9caa804187a4e4a05da49996c169bc"
+      "checksum": "24fc02de1cc8500c15426847c7b326be"
     },
     "scatter_regression_residuals.png": {
       "checksum": "684a41cc07317fe2d784e594d5343daf"
