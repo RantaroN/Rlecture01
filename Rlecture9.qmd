@@ -4,7 +4,7 @@ editor: visual
 ---
 
 ```{r, include=FALSE}
-data4 <- read.csv("data8.csv")
+data <- read.csv("data.csv")
 library(dplyr)
 ```
 
@@ -51,15 +51,15 @@ library(dplyr)
 
 # (2)今回は、2つの量的変数として、出生年と労働時間を使用してみる
 # (2-1)まず、出生年(ybirth)と、労働時間(JC_41: 以前作成したもの)を確認
-data4 |> count(ybirth)
-data4 |> count(JC_41)
+data |> count(ybirth)
+data |> count(JC_41)
 
 # (2-2)労働時間JC_41には、非該当88と無回答99が含まれるので、これを欠損値にする
-data4 <- data4 |>
+data <- data |>
   mutate(whours = ifelse(JC_41>=88,NA,JC_41))
 
 # (3)散布図を作成
-data4 |>
+data |>
   ggplot(aes(x = ybirth, y = whours)) +
   geom_point()
 
@@ -246,15 +246,15 @@ ggplot(df, aes(x = height, y = weight)) +
 
 ```{r}
 # まずは、労働時間と年収の分布を再確認（それぞれの変数はすでに作成済み）
-data4 |> count(whours)
-data4 |> count(income)
+data |> count(whours)
+data |> count(income)
 ```
 
 　きちんと欠損値処理されている。
 
 ```{r}
 # 次に、相関係数を計算
-cor(data4$whours, data4$income, method="pearson", use = "complete.obs")
+cor(data$whours, data$income, method="pearson", use = "complete.obs")
 ```
 
 　相関係数が計算できた。
@@ -277,5 +277,5 @@ cor(data4$whours, data4$income, method="pearson", use = "complete.obs")
 　相関係数を計算する際には、外れ値の影響を受けやすいことに注意する必要がある。分析の際には、相関係数を計算する前に、散布図を描き、大きく外れる外れ値がないかどうかを確認した上で、必要に応じて外れ値を除外して相関係数を計算するのが良い。
 
 ```{r, include=FALSE}
-write.csv(data4,"data4.csv")
+write.csv(data,"data4.csv")
 ```
