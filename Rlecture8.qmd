@@ -4,7 +4,7 @@ editor: visual
 ---
 
 ```{r, include=FALSE}
-data8 <- read.csv("data7.csv")
+data <- read.csv("data.csv")
 library(dplyr)
 ```
 
@@ -67,24 +67,24 @@ $$C = \frac{\frac{s_1^2}{n_1}}{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}}$$
 
 ```{r}
 # 性別変数：sex
-data8 |> count(sex)
+data |> count(sex)
 
 # 健康状態変数：ZQ25
-data8 |> count(ZQ25)
+data |> count(ZQ25)
 
 # 健康変数を成形
 # まず、9はNAにする
-data8 <- data8 |>
+data <- data |>
         mutate(health = ifelse(ZQ25==9,NA,ZQ25))
-data8 |> count(health)
+data |> count(health)
 
 # 健康状態が良いほど高い数値を取るように変更する
-data8 <- data8 |>
+data <- data |>
         mutate(health2 = 6-health)
-data8 |> count(health2)
+data |> count(health2)
 
 # t検定を実行する
-t.test(data8$health2[data8$sex==1],data8$health2[data8$sex==2])
+t.test(data$health2[data$sex==1],data$health2[data$sex==2])
 ```
 
 　出力された結果を確認してみる。"mean of x"と"mean of y"は、男性・女性それぞれの平均値を意味する。次に、"t = -0.46659"と出力されていると思うが、これがt値である。そのt値の後に、"df = 992.32"都出力されているが、これが自由度である。自由度が十分に大きいため、有意水準$\alpha=0.05$の両側検定の場合、棄却域は$\pm1.960$であるから、t値はこの棄却域に含まれない。したがって、帰無仮説は棄却できない。このことは、"p-value = 0.6409"という出力からもわかる。p値は0.64程度であり、有意水準5%で統計的に有意ではない。したがって、男女間での健康状態の差は母集団では差がないと推測される。
@@ -94,6 +94,7 @@ t.test(data8$health2[data8$sex==1],data8$health2[data8$sex==2])
 
 **男女別の性別役割分業意識（ZQ39A）の平均値の差を、t検定によって検定してみましょう。その際、性別役割分業意識は、支持するほど大きい値（5）を取る変数に加工してください。欠損値は除外してください。**
 :::
+
 ```{r, include=FALSE}
-write.csv(data8,"data8.csv")
+write.csv(data,"data.csv")
 ```
