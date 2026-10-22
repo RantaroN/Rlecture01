@@ -7,17 +7,20 @@ editor: visual
 library(dplyr)
 library(ggplot2)
 library(modelsummary)
-data <- read.csv("data4.csv")
+data <- read.csv("data.csv")
 ```
 
 ## 本資料について
+
 　期末試験は，以下の対策課題と同様の形式で出題します。課題は、随時追加いたします。回答は、後日公開します。
 
 ## 第1回テスト対策課題
+
 ### 問題
 
 ::: callout-note
 #### 課題(1)
+
 **以下のRコードは、政治関心（問43）の平均値を、性別（sex）ごとに比較し、t検定によって平均値の差の検定を行ったものである。この結果を解釈し、論述してください。**
 :::
 
