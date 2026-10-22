@@ -4,7 +4,7 @@ editor: visual
 ---
 
 ```{r, include=FALSE}
-data4 <- read.csv("data4.csv")
+data <- read.csv("data.csv")
 library(dplyr)
 ```
 
@@ -30,23 +30,23 @@ library(dplyr)
 
 ```{r}
 # ZQ43=9はNAなので、欠損値処理する
-data4 <- data4 |>
+data <- data |>
   mutate(politics = ifelse(ZQ43==9,NA,ZQ43))
 
 # data4は、すでに作成済み
-table(data4$sex, data4$politics)
+table(data$sex, data$politics)
 ```
 
 　**table()**の1つ目の引数として行変数を、2つ目の引数として列変数を投入すれば、2変数のクロス表が作成される。仮に欠損値も集計に含めたい場合には、以下のようにする。
 
 ```{r}
-table(data4$sex, data4$politics, exclude = NULL)
+table(data$sex, data$politics, exclude = NULL)
 ```
 
 　周辺分布を表示させたい場合には、以下のようにする。
 
 ```{r}
-table(data4$sex, data4$politics) |> addmargins()
+table(data$sex, data$politics) |> addmargins()
 ```
 
 　このような、度数を示したクロス表のみでは、$x$と$y$の関連は読み取りにくい。実際の分析では、パーセント・割合などを示すことが多い。
@@ -63,13 +63,13 @@ table(data4$sex, data4$politics) |> addmargins()
 
 ```{r}
 # (1)総ケース数に対する各セル度数のパーセント
-table(data4$sex, data4$politics) |> proportions() |> addmargins()
+table(data$sex, data$politics) |> proportions() |> addmargins()
 
 # (2)行周辺度数に対する各セルのパーセント
-table(data4$sex, data4$politics) |> proportions(margin=1) |> addmargins()
+table(data$sex, data$politics) |> proportions(margin=1) |> addmargins()
 
 # (3)列周辺度数に対する各セルのパーセント
-table(data4$sex, data4$politics) |> proportions(margin=2) |> addmargins()
+table(data$sex, data$politics) |> proportions(margin=2) |> addmargins()
 
 ```
 
@@ -187,7 +187,7 @@ $$d.f. = (I-1)(J-1)$$
 　Rでカイ2乗検定を実行するためには、**chisq.test**を実行すれば良い。以下では、性別と政治関心の関連についてのカイ2乗検定を実行してみる。
 
 ```{r}
-chisq.test(data4$sex,data4$politics)
+chisq.test(data$sex,data$politics)
 ```
 
 　結果では、"X-squared = 64.697"と表示されているが、これが$\chi^2$値である。"df = 3"を表示されているものは、自由度を指す。"p-value = 5.822e-14"は、p値を指す。この場合、p値は事前に設定した有意水準$\alpha=0.05$を十分に下回っているっため、帰無仮説は棄却され、対立仮説が採択される。そのため、「2変数間には関連がないとはいえない」ということとなり、性別と政治関心の間には関連があることが示唆される。
@@ -197,3 +197,7 @@ chisq.test(data4$sex,data4$politics)
 
 **「u001」データのうち、学歴（ZQ23A）による性別役割分業意識（ZQ39A）の分布の違いを検定するためにカイ2乗検定を実行してみてください。**
 :::
+
+```{r, include=FALSE}
+write.csv(data,"data.csv")
+```

@@ -1,5 +1,5 @@
 ---
-title: "二項ロジットモデル"
+title: "質的従属変数のモデル"
 editor: visual
 ---
 
@@ -7,8 +7,20 @@ editor: visual
 library(dplyr)
 library(ggplot2)
 library(modelsummary)
-data4 <- read.csv("data4.csv")
+data <- read.csv("data.csv")
 ```
 
-## 二項ロジットモデルとは
+## 線形確率モデル
+
 （作成中）
+
+## 二項ロジットモデル
+
+## 多項ロジットモデル
+
+## 順序ロジットモデル
+
+
+```{r, include=FALSE}
+write.csv(data,"data.csv")
+```

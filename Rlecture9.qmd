@@ -277,5 +277,5 @@ cor(data$whours, data$income, method="pearson", use = "complete.obs")
 　相関係数を計算する際には、外れ値の影響を受けやすいことに注意する必要がある。分析の際には、相関係数を計算する前に、散布図を描き、大きく外れる外れ値がないかどうかを確認した上で、必要に応じて外れ値を除外して相関係数を計算するのが良い。
 
 ```{r, include=FALSE}
-write.csv(data,"data4.csv")
+write.csv(data,"data.csv")
 ```

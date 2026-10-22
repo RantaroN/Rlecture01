@@ -7,7 +7,7 @@ editor: visual
 library(dplyr)
 library(ggplot2)
 library(modelsummary)
-data4 <- read.csv("data4.csv")
+data <- read.csv("data.csv")
 ```
 
 ## 交互作用効果とは
@@ -179,17 +179,17 @@ legend("topleft",
 
 ```{r}
 # 暮らしむき変数は、良いほど大きい値で、9=NAに置き換え
-data4 |> count(ZQ12)
-data14 <- data4 |>
+data |> count(ZQ12)
+data <- data |>
   mutate(living = ifelse(ZQ12==9, NA, 6-ZQ12))
-data14 |> count(living)
+data |> count(living)
 # 生活全般満足度変数は、満足しているほど大きい値で、9=NAに置き換え
-data4 |> count(ZQ30D)
-data14 <- data14 |>
+data |> count(ZQ30D)
+data <- data |>
   mutate(satisfaction = ifelse(ZQ30D==9, NA, 6-ZQ30D))
 # 大卒以上ダミーは，ZQ23Aから作成
-data4 |> count(ZQ23A)
-data14 <- data14 |>
+data |> count(ZQ23A)
+data <- data |>
   mutate(bachelor = case_when(ZQ23A <= 4 ~ 0,
                               ZQ23A <= 6 ~ 1,
                               TRUE ~ NA))
@@ -198,7 +198,7 @@ data14 <- data14 |>
 　交互作用効果を推定するためには、通常の回帰分析のコマンド（**lm()**）を使用すれば良い。推定結果は、わかりやすく**msummary()**でまとめる。
 
 ```{r}
-lm(satisfaction ~ living + bachelor + living*bachelor, data = data14) |> msummary(stars = TRUE)
+lm(satisfaction ~ living + bachelor + living*bachelor, data = data) |> msummary(stars = TRUE)
 ```
 
 　推定結果を確認すると、大卒以上（bachelor）の主効果は5%水準で統計的に非有意である。つまり、「大卒以上とそれ以外とでは、従属変数（生活全般満足度）に違いがない」。また、暮らしむき（living）の主効果は，5%水準で統計的に正に有意である。つまり、「暮らしむきが高いほど、従属変数（生活全般満足度）は高い」といえる。
@@ -221,7 +221,7 @@ lm(satisfaction ~ living + bachelor + living*bachelor, data = data14) |> msummar
 
 ```{r}
 # まず、回帰分析の結果を、何らかのオブジェクトに格納
-result1 <- lm(satisfaction ~ living + bachelor + living*bachelor, data = data14)
+result1 <- lm(satisfaction ~ living + bachelor + living*bachelor, data = data)
 
 # marginaleffectsパッケージをインストールしてlibraryする
 #installed.packages("marginaleffects")
@@ -267,16 +267,16 @@ prediction1_df |>
 
 ```{r}
 # 年齢変数の元になる、ybirth（出生年）を確認
-data14 |> count(ybirth)
+data |> count(ybirth)
 
 # まずは、ybirth（出生年）から年齢変数（gae）を算出する
 # 現在は2026年なので、2026-ybirthで、おおよその年齢を算出する
-data14 <- data14 |>
+data <- data |>
   mutate(age = 2026 - ybirth)
-data14 |> count(ybirth, age)
+data |> count(ybirth, age)
 
 # とりあえず、このage変数をそのまま調整変数として投入してみる
-lm(satisfaction ~ living + age + living*age, data = data14) |> msummary(stars = TRUE)
+lm(satisfaction ~ living + age + living*age, data = data) |> msummary(stars = TRUE)
 ```
 
 　これで、ひとまずは推定ができた。暮らしむき、年齢の主効果、暮らしむき×年齢の交互作用効果はすべて統計的に有意である。しかし、よく見てみると、暮らしむきの主効果は負に有意である。上で推定した分析結果と異なる結果であるし、「暮らしむきがよくなるほど、生活全般満足度が悪くなる」というのは、あまり常識的な結果ではない。なぜ、このような結果になってしまうのだろう。
@@ -286,11 +286,11 @@ lm(satisfaction ~ living + age + living*age, data = data14) |> msummary(stars = 
 $$y_i = b_0 + b_1x_i + b_2z_i + b_3x_iz_i + e_i$$ 　ここで、$x$の主効果$b_1$は、調整変数$z=0$である場合の、独立変数$x$の効果を意味する。さて、先ほどの例では、調整変数$z$は年齢を意味していた。調査のサンプル上では、$40 \leq z \leq 54$であったが、先ほどのモデルにおける$x$の主効果は、この年齢$z$が0の場合、つまり年齢が0歳の時の$x$の効果量を意味している。0歳の場合の効果を推定することには特に意味はないはずなので、以下のように40歳を0歳として処理するか、多くの場合は**標準化**した上で回帰モデルに投入することが多い。
 
 ```{r}
-data14 <- data14 |>
+data <- data |>
   mutate(age2 = age - 40)
-data14 |> count(age, age2)
+data |> count(age, age2)
 
-lm(satisfaction ~ living + age2 + living*age2, data = data14) |> msummary(stars = TRUE)
+lm(satisfaction ~ living + age2 + living*age2, data = data) |> msummary(stars = TRUE)
 
 ```
 
@@ -299,7 +299,7 @@ lm(satisfaction ~ living + age2 + living*age2, data = data14) |> msummary(stars 
 　では続いて、先ほどと同様に、予測値をプロットしてみよう。
 
 ```{r}
-result2 <- lm(satisfaction ~ living + age2 + living*age2, data = data14)
+result2 <- lm(satisfaction ~ living + age2 + living*age2, data = data)
 prediction2 <- predictions(result2,
                            newdata = datagrid(living = c(1:5), 
                                               age2 = c(40,45,50)))
@@ -322,3 +322,7 @@ prediction2_df |>
 
 **「u001」のうち、皆さんの関心に従って、独立変数・従属変数・調整変数を設定し、実際に交互作用効果を推定し、その結果をプロットしてみよう。**
 :::
+
+```{r, include=FALSE}
+write.csv(data,"data.csv")
+```
