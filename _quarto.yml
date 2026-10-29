@@ -20,7 +20,6 @@ book:
     - Rlecture13.qmd
     - Rlecture14.qmd
     - Rlecture15.qmd
-    - Rlecture16.qmd
     - homework.qmd
 
 format:
